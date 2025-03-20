@@ -3,70 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filtro de Canales</title>
+    <title>Filtrar M3U8</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        input { margin-bottom: 10px; padding: 5px; width: 100%; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f4f4f4; }
-        img { max-width: 50px; }
+        body { font-family: Arial, sans-serif; }
+        #lista { width: 100%; height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }
     </style>
 </head>
 <body>
-
-    <h2>Filtro de Canales de TV</h2>
-    <textarea id="jsonInput" rows="6" style="width:100%;" placeholder="Pega aquí el JSON"></textarea>
-    <button onclick="loadData()">Cargar Datos</button>
-
-    <input type="text" id="search" onkeyup="filterTable()" placeholder="Buscar por nombre, país o categoría...">
-    
-    <table id="channelTable">
-        <thead>
-            <tr>
-                <th>Logo</th>
-                <th>Nombre</th>
-                <th>País</th>
-                <th>Categoría</th>
-                <th>Enlace</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    <h2>Filtrar y Buscar Enlaces M3U8</h2>
+    <input type="file" id="fileInput" accept=".txt,.json">
+    <input type="text" id="search" placeholder="Buscar...">
+    <button onclick="filtrarM3U8()">Filtrar M3U8</button>
+    <ul id="lista"></ul>
 
     <script>
-        function loadData() {
-            const input = document.getElementById("jsonInput").value;
-            try {
-                const channels = JSON.parse(input);
-                const tableBody = document.querySelector("#channelTable tbody");
-                tableBody.innerHTML = ""; 
-
-                channels.forEach(channel => {
-                    const row = `<tr>
-                        <td><img src="${channel.logo}" alt="Logo"></td>
-                        <td>${channel.name}</td>
-                        <td>${channel.country}</td>
-                        <td>${channel.categories.join(", ")}</td>
-                        <td><a href="${channel.website}" target="_blank">Ver</a></td>
-                    </tr>`;
-                    tableBody.innerHTML += row;
-                });
-            } catch (e) {
-                alert("Error en el formato del JSON");
-            }
-        }
-
-        function filterTable() {
-            const searchValue = document.getElementById("search").value.toLowerCase();
-            const rows = document.querySelectorAll("#channelTable tbody tr");
-
-            rows.forEach(row => {
-                const text = row.innerText.toLowerCase();
-                row.style.display = text.includes(searchValue) ? "" : "none";
+        let enlaces = [];
+        
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const contenido = e.target.result;
+                enlaces = contenido.split('\n').map(l => l.trim()).filter(l => l);
+                mostrarLista(enlaces);
+            };
+            reader.readAsText(file);
+        });
+        
+        function mostrarLista(lista) {
+            const ul = document.getElementById('lista');
+            ul.innerHTML = '';
+            lista.forEach(link => {
+                const li = document.createElement('li');
+                li.textContent = link;
+                ul.appendChild(li);
             });
         }
-    </script>
 
+        function filtrarM3U8() {
+            const filtro = enlaces.filter(url => url.includes('.m3u8'));
+            mostrarLista(filtro);
+        }
+        
+        document.getElementById('search').addEventListener('input', function() {
+            const filtro = this.value.toLowerCase();
+            const filtrados = enlaces.filter(url => url.toLowerCase().includes(filtro));
+            mostrarLista(filtrados);
+        });
+    </script>
 </body>
 </html>
