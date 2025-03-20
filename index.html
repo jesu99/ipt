@@ -6,23 +6,140 @@
     <title>IPTV Online</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        #lista { width: 100%; height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; text-align: left; }
-        video { width: 80%; max-width: 800px; margin-top: 20px; }
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        #lista { 
+            width: 100%; 
+            height: 400px; 
+            overflow-y: auto; 
+            border: 1px solid #ccc; 
+            padding: 10px; 
+            text-align: left;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        video { 
+            width: 100%; 
+            max-width: 800px; 
+            margin: 20px auto;
+            display: block;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+        .control-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        input[type="file"], input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .categoria-btn {
+            padding: 6px 12px;
+            margin: 5px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .categoria-btn:hover {
+            background-color: #0b7dda;
+        }
+        .categoria-btn.active {
+            background-color: #0b5394;
+        }
+        li {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        li:hover {
+            background-color: #f9f9f9;
+        }
+        .channel-name {
+            cursor: pointer;
+            flex-grow: 1;
+        }
+        .channel-category {
+            background-color: #f1f1f1;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            color: #555;
+        }
+        .status-bar {
+            margin-top: 10px;
+            color: #666;
+            font-size: 0.9em;
+        }
     </style>
 </head>
 <body>
-    <h2>IPTV Online - Reproductor M3U8</h2>
-    <input type="file" id="fileInput" accept=".txt,.json">
-    <input type="text" id="search" placeholder="Buscar...">
-    <button onclick="filtrarM3U8()">Filtrar M3U8</button>
-    <ul id="lista"></ul>
-    <video id="player" controls></video>
+    <div class="container">
+        <h2>IPTV Online - Reproductor M3U8</h2>
+        
+        <div class="control-panel">
+            <input type="file" id="fileInput" accept=".txt,.json,.m3u,.m3u8">
+            <input type="text" id="search" placeholder="Buscar...">
+            <button onclick="filtrarM3U8()">Filtrar M3U8</button>
+        </div>
+        
+        <div id="categorias">
+            <button class="categoria-btn active" data-categoria="todos">Todos</button>
+            <button class="categoria-btn" data-categoria="español">Español</button>
+            <button class="categoria-btn" data-categoria="deportes">Deportes</button>
+            <button class="categoria-btn" data-categoria="noticias">Noticias</button>
+            <button class="categoria-btn" data-categoria="películas">Películas</button>
+            <button class="categoria-btn" data-categoria="música">Música</button>
+            <button class="categoria-btn" data-categoria="infantil">Infantil</button>
+        </div>
+        
+        <ul id="lista"></ul>
+        <div class="status-bar" id="statusBar">Canales cargados: 0</div>
+        
+        <video id="player" controls></video>
+    </div>
     
     <script>
-        let enlaces = [];
+        let canales = [];
+        let categoriaActual = 'todos';
         const player = document.getElementById('player');
-
+        const statusBar = document.getElementById('statusBar');
+        
+        // Cargar archivo
         document.getElementById('fileInput').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -30,45 +147,219 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 const contenido = e.target.result;
-                enlaces = contenido.split('\n').map(l => l.trim()).filter(l => l);
-                mostrarLista(enlaces);
+                procesarContenido(contenido);
             };
             reader.readAsText(file);
         });
         
-        function mostrarLista(lista) {
+        // Procesar el contenido del archivo
+        function procesarContenido(contenido) {
+            // Detectar si es un archivo m3u/m3u8 o un archivo de texto/json con URLs
+            if (contenido.includes('#EXTM3U')) {
+                // Es un archivo m3u/m3u8
+                procesarM3U(contenido);
+            } else {
+                // Asumimos que es un archivo de texto con URLs
+                procesarTextoPlano(contenido);
+            }
+        }
+        
+        // Procesar archivo M3U
+        function procesarM3U(contenido) {
+            const lineas = contenido.split('\n');
+            canales = [];
+            let canalActual = null;
+            
+            for (let i = 0; i < lineas.length; i++) {
+                const linea = lineas[i].trim();
+                
+                if (linea.startsWith('#EXTINF:')) {
+                    // Extraer información del canal
+                    canalActual = {
+                        nombre: extraerNombre(linea),
+                        categorias: extraerCategorias(linea),
+                        info: linea
+                    };
+                } else if (linea && !linea.startsWith('#') && canalActual) {
+                    // Es una URL
+                    canalActual.url = linea;
+                    canales.push(canalActual);
+                    canalActual = null;
+                }
+            }
+            
+            mostrarCanales(canales);
+            statusBar.textContent = `Canales cargados: ${canales.length}`;
+        }
+        
+        // Procesar archivo de texto plano
+        function procesarTextoPlano(contenido) {
+            const lineas = contenido.split('\n').map(l => l.trim()).filter(l => l);
+            canales = lineas.map(url => {
+                return {
+                    nombre: obtenerNombreDesdeURL(url),
+                    url: url,
+                    categorias: []
+                };
+            });
+            
+            mostrarCanales(canales);
+            statusBar.textContent = `Enlaces cargados: ${canales.length}`;
+        }
+        
+        // Extraer nombre del canal desde la línea EXTINF
+        function extraerNombre(lineaExtinf) {
+            const match = lineaExtinf.match(/,(.+)$/);
+            return match ? match[1].trim() : "Canal sin nombre";
+        }
+        
+        // Extraer categorías del canal desde la línea EXTINF
+        function extraerCategorias(lineaExtinf) {
+            const categorias = [];
+            
+            // Palabras clave para cada categoría
+            const categoriasKeywords = {
+                'español': ['spain', 'españa', 'spanish', 'español', 'tve', 'telecinco', 'antena3', 'la sexta', 'cuatro'],
+                'deportes': ['sport', 'deporte', 'futbol', 'soccer', 'basketball', 'tenis', 'golf', 'racing', 'f1', 'motor'],
+                'noticias': ['news', 'noticias', 'cnn', 'bbc', 'fox news', '24h', 'information'],
+                'películas': ['movie', 'film', 'cine', 'películas', 'cinema', 'hbo', 'disney', 'netflix'],
+                'música': ['music', 'música', 'mtv', 'vh1', 'viva', 'hit'],
+                'infantil': ['kids', 'niños', 'cartoon', 'disney', 'nickelodeon', 'clan', 'boing', 'infantil']
+            };
+            
+            const lineaLower = lineaExtinf.toLowerCase();
+            
+            // Verificar cada categoría
+            for (const [categoria, keywords] of Object.entries(categoriasKeywords)) {
+                if (keywords.some(keyword => lineaLower.includes(keyword))) {
+                    categorias.push(categoria);
+                }
+            }
+            
+            return categorias;
+        }
+        
+        // Obtener nombre desde URL (para archivos de texto plano)
+        function obtenerNombreDesdeURL(url) {
+            try {
+                const urlObj = new URL(url);
+                const path = urlObj.pathname;
+                const nombrePosible = path.split('/').pop().split('.')[0];
+                return nombrePosible || url;
+            } catch (e) {
+                return url;
+            }
+        }
+        
+        // Mostrar lista de canales
+        function mostrarCanales(listaCanales) {
             const ul = document.getElementById('lista');
             ul.innerHTML = '';
-            lista.forEach(link => {
+            
+            const canalesFiltrados = filtrarCanalesPorCategoria(listaCanales, categoriaActual);
+            
+            canalesFiltrados.forEach(canal => {
                 const li = document.createElement('li');
-                li.textContent = link;
-                li.style.cursor = 'pointer';
-                li.onclick = () => reproducirM3U8(link);
+                
+                const channelName = document.createElement('span');
+                channelName.className = 'channel-name';
+                channelName.textContent = canal.nombre;
+                channelName.onclick = () => reproducirM3U8(canal.url);
+                
+                li.appendChild(channelName);
+                
+                // Mostrar categorías si existen
+                if (canal.categorias && canal.categorias.length > 0) {
+                    const categoriaSpan = document.createElement('span');
+                    categoriaSpan.className = 'channel-category';
+                    categoriaSpan.textContent = canal.categorias.join(', ');
+                    li.appendChild(categoriaSpan);
+                }
+                
                 ul.appendChild(li);
             });
         }
-
+        
+        // Filtrar por M3U8
         function filtrarM3U8() {
-            const filtro = enlaces.filter(url => url.includes('.m3u8'));
-            mostrarLista(filtro);
+            const filtrados = canales.filter(canal => canal.url && canal.url.includes('.m3u8'));
+            mostrarCanales(filtrados);
         }
         
+        // Filtrar por búsqueda de texto
         document.getElementById('search').addEventListener('input', function() {
             const filtro = this.value.toLowerCase();
-            const filtrados = enlaces.filter(url => url.toLowerCase().includes(filtro));
-            mostrarLista(filtrados);
+            const filtrados = canales.filter(canal => 
+                canal.nombre.toLowerCase().includes(filtro) || 
+                canal.url.toLowerCase().includes(filtro)
+            );
+            mostrarCanales(filtrados);
         });
         
+        // Filtrar canales por categoría
+        function filtrarCanalesPorCategoria(listaCanales, categoria) {
+            if (categoria === 'todos') {
+                return listaCanales;
+            }
+            
+            return listaCanales.filter(canal => 
+                canal.categorias && canal.categorias.includes(categoria)
+            );
+        }
+        
+        // Asignar eventos a los botones de categoría
+        document.querySelectorAll('.categoria-btn').forEach(boton => {
+            boton.addEventListener('click', function() {
+                // Quitar clase active de todos los botones
+                document.querySelectorAll('.categoria-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                
+                // Agregar clase active al botón clickeado
+                this.classList.add('active');
+                
+                // Actualizar categoría actual y mostrar canales filtrados
+                categoriaActual = this.getAttribute('data-categoria');
+                mostrarCanales(canales);
+            });
+        });
+        
+        // Reproducir M3U8
         function reproducirM3U8(url) {
             if (Hls.isSupported()) {
                 const hls = new Hls();
                 hls.loadSource(url);
                 hls.attachMedia(player);
+                hls.on(Hls.Events.ERROR, function(event, data) {
+                    console.error('Error HLS:', data);
+                    if (data.fatal) {
+                        switch(data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                console.log('Error de red, intentando recuperar...');
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                console.log('Error de medio, intentando recuperar...');
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                console.log('Error fatal, no se puede recuperar');
+                                break;
+                        }
+                    }
+                });
             } else if (player.canPlayType('application/vnd.apple.mpegurl')) {
                 player.src = url;
+            } else {
+                alert('Tu navegador no soporta la reproducción de streams HLS');
+                return;
             }
-            player.play();
+            
+            player.play().catch(e => {
+                console.error('Error al reproducir:', e);
+            });
         }
     </script>
+</div>
 </body>
 </html>
