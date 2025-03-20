@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtro de Canales</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        input { margin-bottom: 10px; padding: 5px; width: 100%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        img { max-width: 50px; }
+    </style>
+</head>
+<body>
+
+    <h2>Filtro de Canales de TV</h2>
+    <textarea id="jsonInput" rows="6" style="width:100%;" placeholder="Pega aquí el JSON"></textarea>
+    <button onclick="loadData()">Cargar Datos</button>
+
+    <input type="text" id="search" onkeyup="filterTable()" placeholder="Buscar por nombre, país o categoría...">
+    
+    <table id="channelTable">
+        <thead>
+            <tr>
+                <th>Logo</th>
+                <th>Nombre</th>
+                <th>País</th>
+                <th>Categoría</th>
+                <th>Enlace</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        function loadData() {
+            const input = document.getElementById("jsonInput").value;
+            try {
+                const channels = JSON.parse(input);
+                const tableBody = document.querySelector("#channelTable tbody");
+                tableBody.innerHTML = ""; 
+
+                channels.forEach(channel => {
+                    const row = `<tr>
+                        <td><img src="${channel.logo}" alt="Logo"></td>
+                        <td>${channel.name}</td>
+                        <td>${channel.country}</td>
+                        <td>${channel.categories.join(", ")}</td>
+                        <td><a href="${channel.website}" target="_blank">Ver</a></td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            } catch (e) {
+                alert("Error en el formato del JSON");
+            }
+        }
+
+        function filterTable() {
+            const searchValue = document.getElementById("search").value.toLowerCase();
+            const rows = document.querySelectorAll("#channelTable tbody tr");
+
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(searchValue) ? "" : "none";
+            });
+        }
+    </script>
+
+</body>
+</html>
