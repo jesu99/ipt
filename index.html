@@ -3,55 +3,469 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filtrar M3U8</title>
+    <title>Filtrador de Enlaces M3U8</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        #lista { width: 100%; height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .file-input-container {
+            position: relative;
+            flex-grow: 1;
+        }
+        .file-input-label {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .file-input-label:hover {
+            background-color: #2980b9;
+        }
+        #fileInput {
+            position: absolute;
+            left: -9999px;
+        }
+        #search {
+            flex-grow: 3;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .btn-primary {
+            background-color: #2ecc71;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #27ae60;
+        }
+        .btn-secondary {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #c0392b;
+        }
+        .lista-container {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            position: relative;
+        }
+        #lista {
+            height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            list-style-type: none;
+        }
+        .link-item {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            word-break: break-all;
+        }
+        .link-item:hover {
+            background-color: #f8f9fa;
+        }
+        .m3u8-link {
+            color: #2980b9;
+            font-weight: bold;
+        }
+        .stats {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .copy-btn {
+            background-color: transparent;
+            border: none;
+            color: #3498db;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .copy-btn:hover {
+            text-decoration: underline;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+        }
+        .player-container {
+            margin-top: 20px;
+            display: none;
+        }
+        #videoPlayer {
+            width: 100%;
+            border-radius: 4px;
+            height: 400px;
+            background-color: #000;
+        }
+        .alert {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: none;
+        }
+        .export-section {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
-    <h2>Filtrar y Buscar Enlaces M3U8</h2>
-    <input type="file" id="fileInput" accept=".txt,.json">
-    <input type="text" id="search" placeholder="Buscar...">
-    <button onclick="filtrarM3U8()">Filtrar M3U8</button>
-    <ul id="lista"></ul>
+    <div class="container">
+        <h2>Filtrador de Enlaces M3U8</h2>
+        <div class="controls">
+            <div class="file-input-container">
+                <label for="fileInput" class="file-input-label">Seleccionar Archivo</label>
+                <input type="file" id="fileInput" accept=".txt,.json,.m3u,.m3u8">
+            </div>
+            <input type="text" id="search" placeholder="Buscar enlaces...">
+            <button class="btn btn-primary" id="filtrarBtn">Filtrar M3U8</button>
+            <button class="btn btn-secondary" id="resetBtn">Mostrar Todo</button>
+        </div>
+        
+        <div class="alert" id="alertBox"></div>
+        
+        <div class="lista-container">
+            <ul id="lista">
+                <li class="empty-message">Cargue un archivo para comenzar...</li>
+            </ul>
+        </div>
+        
+        <div class="stats">
+            <div id="totalLinks">Total de enlaces: 0</div>
+            <div id="m3u8Links">Enlaces M3U8: 0</div>
+            <div>
+                <button class="btn btn-primary" id="exportBtn">Exportar M3U8</button>
+            </div>
+        </div>
+        
+        <div class="player-container" id="playerContainer">
+            <h3>Reproductor de prueba</h3>
+            <video id="videoPlayer" controls></video>
+        </div>
+    </div>
 
     <script>
         let enlaces = [];
+        let m3u8Enlaces = [];
+        let currentFileName = '';
         
-        document.getElementById('fileInput').addEventListener('change', function(event) {
+        // Elementos del DOM
+        const fileInput = document.getElementById('fileInput');
+        const searchInput = document.getElementById('search');
+        const filtrarBtn = document.getElementById('filtrarBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const listaElement = document.getElementById('lista');
+        const totalLinksElement = document.getElementById('totalLinks');
+        const m3u8LinksElement = document.getElementById('m3u8Links');
+        const exportBtn = document.getElementById('exportBtn');
+        const playerContainer = document.getElementById('playerContainer');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const alertBox = document.getElementById('alertBox');
+        
+        // Eventos
+        fileInput.addEventListener('change', cargarArchivo);
+        searchInput.addEventListener('input', buscarEnlaces);
+        filtrarBtn.addEventListener('click', filtrarM3U8);
+        resetBtn.addEventListener('click', resetFiltro);
+        exportBtn.addEventListener('click', exportarM3U8);
+        
+        // Función para cargar el archivo
+        function cargarArchivo(event) {
             const file = event.target.files[0];
             if (!file) return;
             
+            currentFileName = file.name.split('.')[0];
+            
             const reader = new FileReader();
             reader.onload = function(e) {
-                const contenido = e.target.result;
-                enlaces = contenido.split('\n').map(l => l.trim()).filter(l => l);
-                mostrarLista(enlaces);
+                try {
+                    const contenido = e.target.result;
+                    
+                    // Intenta analizar como JSON primero
+                    try {
+                        const jsonData = JSON.parse(contenido);
+                        procesarJSON(jsonData);
+                    } catch (e) {
+                        // Si no es JSON, procesar como texto normal
+                        procesarTexto(contenido);
+                    }
+                    
+                    actualizarEstadisticas();
+                    mostrarAlerta(`Archivo cargado correctamente: ${file.name}`, 'success');
+                } catch (error) {
+                    mostrarAlerta('Error al procesar el archivo: ' + error.message, 'error');
+                }
             };
+            
+            reader.onerror = function() {
+                mostrarAlerta('Error al leer el archivo', 'error');
+            };
+            
             reader.readAsText(file);
-        });
+        }
+        
+        function procesarJSON(jsonData) {
+            enlaces = [];
+            
+            // Buscar recursivamente URLs en el objeto JSON
+            function extraerURLs(obj) {
+                if (!obj) return;
+                
+                if (typeof obj === 'string') {
+                    obj = obj.trim();
+                    if (obj.includes('http')) enlaces.push(obj);
+                    return;
+                }
+                
+                if (Array.isArray(obj)) {
+                    obj.forEach(item => extraerURLs(item));
+                    return;
+                }
+                
+                if (typeof obj === 'object') {
+                    for (const key in obj) {
+                        extraerURLs(obj[key]);
+                    }
+                }
+            }
+            
+            extraerURLs(jsonData);
+            
+            if (enlaces.length === 0) {
+                mostrarAlerta('No se encontraron URLs en el archivo JSON', 'warning');
+            }
+            
+            mostrarLista(enlaces);
+        }
+        
+        function procesarTexto(contenido) {
+            // Separar por cualquier línea nueva o espacio que contenga http
+            const lineas = contenido.split(/[\n\r]+/);
+            enlaces = [];
+            
+            lineas.forEach(linea => {
+                linea = linea.trim();
+                if (linea && (linea.includes('http') || linea.includes('m3u8'))) {
+                    // Intentar extraer URLs de la línea
+                    const urlPattern = /(https?:\/\/[^\s"'<>,]+)/g;
+                    const matches = linea.match(urlPattern);
+                    
+                    if (matches) {
+                        enlaces.push(...matches);
+                    } else if (linea.includes('m3u8')) {
+                        enlaces.push(linea);
+                    }
+                }
+            });
+            
+            // Eliminar duplicados
+            enlaces = [...new Set(enlaces)];
+            
+            if (enlaces.length === 0) {
+                mostrarAlerta('No se encontraron URLs en el archivo', 'warning');
+            }
+            
+            mostrarLista(enlaces);
+        }
         
         function mostrarLista(lista) {
-            const ul = document.getElementById('lista');
-            ul.innerHTML = '';
+            listaElement.innerHTML = '';
+            
+            if (lista.length === 0) {
+                const emptyMsg = document.createElement('li');
+                emptyMsg.className = 'empty-message';
+                emptyMsg.textContent = 'No se encontraron enlaces';
+                listaElement.appendChild(emptyMsg);
+                return;
+            }
+            
             lista.forEach(link => {
                 const li = document.createElement('li');
+                li.className = 'link-item';
+                
+                // Verificar si es un enlace M3U8
+                const esM3U8 = link.toLowerCase().includes('.m3u8');
+                
+                if (esM3U8) {
+                    li.classList.add('m3u8-link');
+                }
+                
                 li.textContent = link;
-                ul.appendChild(li);
+                
+                // Agregar botón para copiar
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-btn';
+                copyBtn.textContent = 'Copiar';
+                copyBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    navigator.clipboard.writeText(link)
+                        .then(() => {
+                            copyBtn.textContent = 'Copiado!';
+                            setTimeout(() => {
+                                copyBtn.textContent = 'Copiar';
+                            }, 1500);
+                        })
+                        .catch(err => {
+                            mostrarAlerta('Error al copiar: ' + err, 'error');
+                        });
+                };
+                
+                // Si es M3U8, agregar botón para reproducir
+                if (esM3U8) {
+                    const playBtn = document.createElement('button');
+                    playBtn.className = 'copy-btn';
+                    playBtn.textContent = 'Reproducir';
+                    playBtn.onclick = function(e) {
+                        e.stopPropagation();
+                        reproducirStream(link);
+                    };
+                    li.appendChild(playBtn);
+                }
+                
+                li.appendChild(copyBtn);
+                listaElement.appendChild(li);
             });
-        }
-
-        function filtrarM3U8() {
-            const filtro = enlaces.filter(url => url.includes('.m3u8'));
-            mostrarLista(filtro);
+            
+            actualizarEstadisticas();
         }
         
-        document.getElementById('search').addEventListener('input', function() {
-            const filtro = this.value.toLowerCase();
+        function filtrarM3U8() {
+            m3u8Enlaces = enlaces.filter(url => url.toLowerCase().includes('.m3u8'));
+            
+            if (m3u8Enlaces.length === 0) {
+                mostrarAlerta('No se encontraron enlaces M3U8', 'warning');
+            }
+            
+            mostrarLista(m3u8Enlaces);
+        }
+        
+        function resetFiltro() {
+            searchInput.value = '';
+            mostrarLista(enlaces);
+        }
+        
+        function buscarEnlaces() {
+            const filtro = searchInput.value.toLowerCase();
             const filtrados = enlaces.filter(url => url.toLowerCase().includes(filtro));
             mostrarLista(filtrados);
-        });
+        }
+        
+        function actualizarEstadisticas() {
+            totalLinksElement.textContent = `Total de enlaces: ${enlaces.length}`;
+            const m3u8Count = enlaces.filter(url => url.toLowerCase().includes('.m3u8')).length;
+            m3u8LinksElement.textContent = `Enlaces M3U8: ${m3u8Count}`;
+        }
+        
+        function reproducirStream(url) {
+            videoPlayer.src = url;
+            playerContainer.style.display = 'block';
+            videoPlayer.play().catch(error => {
+                mostrarAlerta('Error al reproducir: ' + error.message, 'error');
+            });
+            
+            // Scroll al reproductor
+            playerContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function exportarM3U8() {
+            const m3u8Enlaces = enlaces.filter(url => url.toLowerCase().includes('.m3u8'));
+            
+            if (m3u8Enlaces.length === 0) {
+                mostrarAlerta('No hay enlaces M3U8 para exportar', 'warning');
+                return;
+            }
+            
+            // Crear contenido de archivo M3U
+            let contenido = '#EXTM3U\n';
+            
+            m3u8Enlaces.forEach((url, index) => {
+                contenido += `#EXTINF:-1,Stream ${index + 1}\n${url}\n`;
+            });
+            
+            // Crear y descargar el archivo
+            const blob = new Blob([contenido], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentFileName || 'enlaces'}_m3u8.m3u`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            mostrarAlerta(`Archivo con ${m3u8Enlaces.length} enlaces M3U8 exportado correctamente`, 'success');
+        }
+        
+        function mostrarAlerta(mensaje, tipo) {
+            alertBox.textContent = mensaje;
+            alertBox.style.display = 'block';
+            
+            if (tipo === 'error') {
+                alertBox.style.backgroundColor = '#f8d7da';
+                alertBox.style.color = '#721c24';
+            } else if (tipo === 'success') {
+                alertBox.style.backgroundColor = '#d4edda';
+                alertBox.style.color = '#155724';
+            } else if (tipo === 'warning') {
+                alertBox.style.backgroundColor = '#fff3cd';
+                alertBox.style.color = '#856404';
+            }
+            
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 5000);
+        }
     </script>
 </body>
 </html>
