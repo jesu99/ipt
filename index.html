@@ -4,13 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPTV Player</title>
-    <link href="https://vjs.zencdn.net/7.11.4/video-js.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
-    <h2>Reproductor IPTV</h2>
-    <video id="my-video" class="video-js vjs-default-skin" controls width="640" height="360">
-        <source src="http://goldfull.pro:8880/IptvNetmax028/8jhnyzu9aSdM/167728" type="application/x-mpegURL">
-    </video>
-    <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
+    <h2>DEPORTES | ESPN DEPORTES</h2>
+    <img src="http://goldfull.pro:8880/images/f4ba5e57ae936428596903dc26f482cc.png" width="150" alt="ESPN DEPORTES">
+    <video id="video" controls width="640" height="360"></video>
+
+    <script>
+        var video = document.getElementById('video');
+        var videoSrc = "http://goldfull.pro:8880/IptvNetmax028/8jhnyzu9aSdM/167728";
+
+        if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = videoSrc;
+        } else {
+            alert("Tu navegador no soporta la reproducción de este stream.");
+        }
+    </script>
 </body>
 </html>
