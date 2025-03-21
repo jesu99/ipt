@@ -105,6 +105,44 @@
             color: #666;
             font-size: 0.9em;
         }
+        #progress-container {
+            width: 100%;
+            margin: 20px 0;
+            display: none;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .progress-text {
+            margin-top: 5px;
+        }
+        .working-channel {
+            border-left: 4px solid #4CAF50;
+        }
+        .test-all-btn {
+            background-color: #FF9800;
+        }
+        .test-all-btn:hover {
+            background-color: #F57C00;
+        }
+        .estado-canal {
+            font-size: 0.8em;
+            margin-left: 5px;
+            color: #4CAF50;
+        }
+        .oculto {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -115,6 +153,14 @@
             <input type="file" id="fileInput" accept=".txt,.json,.m3u,.m3u8">
             <input type="text" id="search" placeholder="Buscar...">
             <button onclick="filtrarM3U8()">Filtrar M3U8</button>
+            <button class="test-all-btn" id="testAllBtn" onclick="probarTodosCanales()">Verificar canales disponibles</button>
+        </div>
+        
+        <div id="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Verificando canales: 0/0</div>
         </div>
         
         <div id="categorias">
@@ -125,6 +171,7 @@
             <button class="categoria-btn" data-categoria="películas">Películas</button>
             <button class="categoria-btn" data-categoria="música">Música</button>
             <button class="categoria-btn" data-categoria="infantil">Infantil</button>
+            <button class="categoria-btn" data-categoria="funcionando">✓ Funcionando</button>
         </div>
         
         <ul id="lista"></ul>
@@ -135,9 +182,13 @@
     
     <script>
         let canales = [];
+        let canalesFuncionando = [];
         let categoriaActual = 'todos';
         const player = document.getElementById('player');
         const statusBar = document.getElementById('statusBar');
+        const progressContainer = document.getElementById('progress-container');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
         
         // Cargar archivo
         document.getElementById('fileInput').addEventListener('change', function(event) {
@@ -178,7 +229,9 @@
                     canalActual = {
                         nombre: extraerNombre(linea),
                         categorias: extraerCategorias(linea),
-                        info: linea
+                        info: linea,
+                        estado: 'no_probado', // nuevo: estado del canal (no_probado, funcionando, error)
+                        mensaje: '' // nuevo: mensaje de error si hay alguno
                     };
                 } else if (linea && !linea.startsWith('#') && canalActual) {
                     // Es una URL
@@ -199,7 +252,9 @@
                 return {
                     nombre: obtenerNombreDesdeURL(url),
                     url: url,
-                    categorias: []
+                    categorias: [],
+                    estado: 'no_probado',
+                    mensaje: ''
                 };
             });
             
@@ -261,6 +316,11 @@
             canalesFiltrados.forEach(canal => {
                 const li = document.createElement('li');
                 
+                // Añadir clase si el canal está funcionando
+                if (canal.estado === 'funcionando') {
+                    li.classList.add('working-channel');
+                }
+                
                 const channelName = document.createElement('span');
                 channelName.className = 'channel-name';
                 channelName.textContent = canal.nombre;
@@ -274,6 +334,14 @@
                     categoriaSpan.className = 'channel-category';
                     categoriaSpan.textContent = canal.categorias.join(', ');
                     li.appendChild(categoriaSpan);
+                }
+                
+                // Mostrar estado si ha sido probado
+                if (canal.estado === 'funcionando') {
+                    const estadoSpan = document.createElement('span');
+                    estadoSpan.className = 'estado-canal';
+                    estadoSpan.textContent = '✓ Funcionando';
+                    li.appendChild(estadoSpan);
                 }
                 
                 ul.appendChild(li);
@@ -300,6 +368,8 @@
         function filtrarCanalesPorCategoria(listaCanales, categoria) {
             if (categoria === 'todos') {
                 return listaCanales;
+            } else if (categoria === 'funcionando') {
+                return listaCanales.filter(canal => canal.estado === 'funcionando');
             }
             
             return listaCanales.filter(canal => 
@@ -358,6 +428,171 @@
             player.play().catch(e => {
                 console.error('Error al reproducir:', e);
             });
+        }
+        
+        // NUEVA FUNCIÓN: Probar si un canal está funcionando
+        async function probarCanal(canal, timeout = 8000) {
+            return new Promise((resolve) => {
+                if (!canal.url || !canal.url.includes('.m3u8')) {
+                    canal.estado = 'error';
+                    canal.mensaje = 'URL no válida o no es un stream HLS';
+                    resolve(false);
+                    return;
+                }
+                
+                // Crear elementos temporales para probar el stream
+                const videoTemp = document.createElement('video');
+                videoTemp.style.display = 'none';
+                document.body.appendChild(videoTemp);
+                
+                let timeoutId = setTimeout(() => {
+                    // Si pasa el tiempo máximo, consideramos que el canal no funciona
+                    cleanup();
+                    canal.estado = 'error';
+                    canal.mensaje = 'Tiempo de espera agotado';
+                    resolve(false);
+                }, timeout);
+                
+                let errorOcurrido = false;
+                
+                // Función para limpiar recursos
+                const cleanup = () => {
+                    clearTimeout(timeoutId);
+                    if (hls) {
+                        hls.destroy();
+                    }
+                    document.body.removeChild(videoTemp);
+                };
+                
+                if (Hls.isSupported()) {
+                    const hls = new Hls({ 
+                        manifestLoadingTimeOut: timeout / 2,
+                        manifestLoadingMaxRetry: 1, 
+                        manifestLoadingRetryDelay: 500
+                    });
+                    
+                    // Evento cuando el stream se carga exitosamente
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                        cleanup();
+                        canal.estado = 'funcionando';
+                        resolve(true);
+                    });
+                    
+                    // Eventos de error
+                    hls.on(Hls.Events.ERROR, (event, data) => {
+                        if (data.fatal) {
+                            errorOcurrido = true;
+                            cleanup();
+                            canal.estado = 'error';
+                            canal.mensaje = `Error: ${data.type}`;
+                            resolve(false);
+                        }
+                    });
+                    
+                    // Evento cuando se carga el stream
+                    hls.on(Hls.Events.LEVEL_LOADED, () => {
+                        // Si se carga un nivel, el stream probablemente funciona
+                        if (!errorOcurrido) {
+                            cleanup();
+                            canal.estado = 'funcionando';
+                            resolve(true);
+                        }
+                    });
+                    
+                    hls.loadSource(canal.url);
+                    hls.attachMedia(videoTemp);
+                } else {
+                    // Fallback para navegadores con soporte nativo
+                    videoTemp.src = canal.url;
+                    videoTemp.addEventListener('loadedmetadata', () => {
+                        cleanup();
+                        canal.estado = 'funcionando';
+                        resolve(true);
+                    });
+                    
+                    videoTemp.addEventListener('error', () => {
+                        cleanup();
+                        canal.estado = 'error';
+                        canal.mensaje = 'Error al cargar el stream';
+                        resolve(false);
+                    });
+                    
+                    videoTemp.load();
+                }
+            });
+        }
+        
+        // NUEVA FUNCIÓN: Probar todos los canales
+        async function probarTodosCanales() {
+            if (canales.length === 0) {
+                alert('No hay canales para probar. Carga un archivo primero.');
+                return;
+            }
+            
+            const testAllBtn = document.getElementById('testAllBtn');
+            testAllBtn.disabled = true;
+            testAllBtn.textContent = 'Verificando canales...';
+            
+            // Mostrar barra de progreso
+            progressContainer.style.display = 'block';
+            progressFill.style.width = '0%';
+            progressText.textContent = `Verificando canales: 0/${canales.length}`;
+            
+            // Reiniciar contador de canales funcionando
+            canalesFuncionando = [];
+            
+            // Procesar canales por lotes para no sobrecargar el navegador
+            const batchSize = 5; // Número de canales a probar simultáneamente
+            const totalCanales = canales.length;
+            let procesados = 0;
+            
+            for (let i = 0; i < totalCanales; i += batchSize) {
+                const batch = canales.slice(i, i + batchSize);
+                const promesas = batch.map(async (canal) => {
+                    const funciona = await probarCanal(canal);
+                    procesados++;
+                    
+                    // Actualizar progreso
+                    const porcentaje = (procesados / totalCanales) * 100;
+                    progressFill.style.width = `${porcentaje}%`;
+                    progressText.textContent = `Verificando canales: ${procesados}/${totalCanales}`;
+                    
+                    if (funciona) {
+                        canalesFuncionando.push(canal);
+                    }
+                    
+                    // Actualizar la interfaz cada 5 canales procesados
+                    if (procesados % 5 === 0 || procesados === totalCanales) {
+                        // Si estamos en categoría "funcionando", actualizar la lista
+                        if (categoriaActual === 'funcionando') {
+                            mostrarCanales(canales);
+                        }
+                    }
+                });
+                
+                // Esperar a que se complete el lote actual antes de continuar
+                await Promise.all(promesas);
+            }
+            
+            // Completado
+            testAllBtn.disabled = false;
+            testAllBtn.textContent = 'Verificar canales disponibles';
+            
+            // Mostrar solo canales funcionando
+            document.querySelectorAll('.categoria-btn').forEach(b => {
+                b.classList.remove('active');
+            });
+            document.querySelector('[data-categoria="funcionando"]').classList.add('active');
+            categoriaActual = 'funcionando';
+            mostrarCanales(canales);
+            
+            // Actualizar barra de estado
+            statusBar.textContent = `Canales funcionando: ${canalesFuncionando.length}/${canales.length}`;
+            
+            // Ocultar barra de progreso después de un tiempo
+            setTimeout(() => {
+                progressContainer.style.display = 'none';
+            }, 3000);
         }
     </script>
 </div>
