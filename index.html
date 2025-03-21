@@ -3,27 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPTV Player</title>
+    <title>Reproductor IPTV</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
-    <h2>DEPORTES | ESPN DEPORTES</h2>
-    <img src="http://goldfull.pro:8880/images/f4ba5e57ae936428596903dc26f482cc.png" width="150" alt="ESPN DEPORTES">
+
+    <h2>Reproductor IPTV</h2>
     <video id="video" controls width="640" height="360"></video>
 
     <script>
         var video = document.getElementById('video');
-        var videoSrc = "http://goldfull.pro:8880/IptvNetmax028/8jhnyzu9aSdM/167728";
+        var videoSrc = "http://goldfull.pro:8880/IptvNetmax028/8jhnyzu9aSdM/167728"; // Reemplaza con tu URL
 
-        if (Hls.isSupported()) {
-            var hls = new Hls();
-            hls.loadSource(videoSrc);
-            hls.attachMedia(video);
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = videoSrc;
-        } else {
-            alert("Tu navegador no soporta la reproducción de este stream.");
-        }
+        // Hacemos una petición al servidor con el User-Agent de VLC
+        fetch(videoSrc, {
+            method: 'GET',
+            headers: {
+                "User-Agent": "VLC/3.0.11 LibVLC/3.0.11"
+            }
+        })
+        .then(response => {
+            if (!response.ok) throw new Error("Error al cargar el stream");
+            return response.blob(); // Convertimos la respuesta en un objeto Blob
+        })
+        .then(blob => {
+            var url = URL.createObjectURL(blob); // Creamos una URL para el blob
+            if (Hls.isSupported()) {
+                var hls = new Hls();
+                hls.loadSource(url);
+                hls.attachMedia(video);
+            } else {
+                video.src = url;
+            }
+        })
+        .catch(error => console.error("Error al cargar el video:", error));
     </script>
+
 </body>
 </html>
