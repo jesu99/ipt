@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reproductor IPTV</title>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <title>IPTV con Headers</title>
 </head>
 <body>
 
@@ -13,20 +12,21 @@
 
     <script>
         var video = document.getElementById('video');
-        var originalUrl = "http://goldfull.pro:8880/IptvNetmax028/8jhnyzu9aSdM/167728"; // URL original (bloqueada por HTTP)
-        var proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(originalUrl); // Proxy para evitar bloqueos HTTPS
+        var videoSrc = "http://goldfull.pro:8880/IptvNetmax028/8jhnyzu9aSdM/167728";
 
-        if (Hls.isSupported()) {
-            var hls = new Hls();
-            hls.loadSource(proxyUrl);
-            hls.attachMedia(video);
-        } else {
-            video.src = proxyUrl;
-        }
-
-        hls.on(Hls.Events.ERROR, function(event, data) {
-            console.error("Error al cargar el video:", data);
-        });
+        fetch(videoSrc, {
+            method: 'GET',
+            headers: {
+                "User-Agent": "VLC/3.0.11 LibVLC/3.0.11",  // Finge ser VLC
+                "Referer": "http://goldfull.pro/"
+            }
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            var url = URL.createObjectURL(blob);
+            video.src = url;
+        })
+        .catch(error => console.error("Error al cargar el video:", error));
     </script>
 
 </body>
