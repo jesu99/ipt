@@ -3,85 +3,682 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Películas Online</title>
+    <title>Películas Online Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #e50914;
+            --primary-dark: #b20710;
+            --secondary: #221f1f;
+            --background: #111;
+            --text: #ffffff;
+            --gray: #303030;
+            --gray-light: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            background-color: #111;
-            color: white;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        header {
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 1rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+        
+        /* Banner */
+        .banner {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/api/placeholder/1400/500');
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
+            padding: 0 20px;
         }
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background: #222;
-            border-radius: 10px;
+        
+        .banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
-        img {
+        
+        .banner p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+        
+        .search-bar {
+            max-width: 500px;
             width: 100%;
-            border-radius: 10px;
+            position: relative;
+            margin-bottom: 20px;
         }
-        .btn {
+        
+        .search-bar input {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: background-color 0.3s;
+        }
+        
+        .search-bar input:focus {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .search-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .search-bar button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        /* Main Content */
+        main {
+            padding: 2rem 5%;
+        }
+        
+        .category {
+            margin-bottom: 3rem;
+        }
+        
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 0.5rem;
+        }
+        
+        .category-header h2 {
+            font-size: 1.7rem;
+        }
+        
+        .category-header a {
+            color: var(--gray-light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .category-header a:hover {
+            color: var(--primary);
+        }
+        
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        /* Ad spaces */
+        .ad-banner {
+            background-color: var(--gray);
+            border-radius: 5px;
+            margin: 2rem 0;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ad-sidebar {
+            background-color: var(--gray);
+            border-radius: 5px;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        /* Movie Card */
+        .movie-card {
+            background-color: var(--secondary);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .movie-poster {
+            position: relative;
+            overflow: hidden;
+            padding-top: 150%; /* Aspect ratio 2:3 */
+        }
+        
+        .movie-poster img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .movie-card:hover .movie-poster img {
+            transform: scale(1.05);
+        }
+        
+        .movie-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1rem;
+        }
+        
+        .movie-card:hover .movie-overlay {
+            opacity: 1;
+        }
+        
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(229, 9, 20, 0.8);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            transition: background-color 0.3s;
+        }
+        
+        .play-button:hover {
+            background-color: var(--primary);
+        }
+        
+        .movie-info {
+            padding: 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .movie-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+        
+        .movie-meta {
+            font-size: 0.9rem;
+            color: var(--gray-light);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .movie-meta .rating {
+            margin-right: 10px;
+            color: #ffc107;
+        }
+        
+        .btn-watch {
             display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background: red;
+            background-color: var(--primary);
             color: white;
             text-decoration: none;
-            border-radius: 5px;
-            font-size: 18px;
+            padding: 0.6rem 1rem;
+            border-radius: 4px;
+            font-weight: 500;
+            text-align: center;
+            transition: background-color 0.3s;
+            margin-top: auto;
         }
-        .btn:hover {
-            background: darkred;
+        
+        .btn-watch:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--secondary);
+            padding: 2rem 5%;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-column ul li a {
+            color: var(--gray-light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--primary);
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-icons a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 36px;
+            height: 36px;
+            background-color: var(--gray);
+            color: white;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+        
+        .social-icons a:hover {
+            background-color: var(--primary);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--gray);
+            color: var(--gray-light);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .logo {
+                margin-bottom: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem;
+            }
+            
+            .banner {
+                height: 250px;
+            }
+            
+            .banner h1 {
+                font-size: 2rem;
+            }
+            
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .footer-content {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-
-    <div id="movies-container"></div>
-
+    <header>
+        <a href="#" class="logo">
+            <i class="fas fa-film"></i>CineMania
+        </a>
+        <nav>
+            <ul>
+                <li><a href="#"><i class="fas fa-home"></i> Inicio</a></li>
+                <li><a href="#"><i class="fas fa-fire"></i> Estrenos</a></li>
+                <li><a href="#"><i class="fas fa-star"></i> Populares</a></li>
+                <li><a href="#"><i class="fas fa-list"></i> Géneros</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <div class="banner">
+        <h1>Películas Online Premium</h1>
+        <p>Disfruta del mejor contenido en HD totalmente gratis</p>
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar películas...">
+            <button><i class="fas fa-search"></i></button>
+        </div>
+    </div>
+    
+    <!-- Ad Banner Principal -->
+    <div class="ad-banner">
+        <script async="async" data-cfasync="false" src="//pl26063295.effectiveratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
+        <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
+    </div>
+    
+    <main>
+        <div class="category">
+            <div class="category-header">
+                <h2><i class="fas fa-film"></i> Estrenos 2024</h2>
+                <a href="#">Ver todos <i class="fas fa-chevron-right"></i></a>
+            </div>
+            
+            <div class="movies-grid" id="estrenos-container">
+                <!-- Contenido dinámico -->
+            </div>
+        </div>
+        
+        <!-- Ad Banner Secundario -->
+        <div class="ad-banner">
+            <div id="ad-space-2">
+                <!-- Espacio para segundo bloque de anuncios -->
+                <img src="/api/placeholder/728/90" alt="Anuncio" style="max-width: 100%;">
+            </div>
+        </div>
+        
+        <div class="category">
+            <div class="category-header">
+                <h2><i class="fas fa-fire"></i> Acción</h2>
+                <a href="#">Ver todos <i class="fas fa-chevron-right"></i></a>
+            </div>
+            
+            <div class="movies-grid" id="accion-container">
+                <!-- Contenido dinámico -->
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>CineMania</h3>
+                <p>La mejor página para ver películas online en español latino HD sin cortes. Peliculas en excelente calidad Full HD.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Categorías</h3>
+                <ul>
+                    <li><a href="#">Acción</a></li>
+                    <li><a href="#">Comedia</a></li>
+                    <li><a href="#">Drama</a></li>
+                    <li><a href="#">Ciencia Ficción</a></li>
+                    <li><a href="#">Terror</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="#">Estrenos</a></li>
+                    <li><a href="#">Más Vistas</a></li>
+                    <li><a href="#">Mejor Valoradas</a></li>
+                    <li><a href="#">Series</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Aviso legal</a></li>
+                    <li><a href="#">Política de privacidad</a></li>
+                    <li><a href="#">Términos y condiciones</a></li>
+                    <li><a href="#">DMCA</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2025 CineMania - Todos los derechos reservados
+        </div>
+    </footer>
+    
     <script>
         const moviesList = `
         #EXTINF:-1 tvg-id="" tvg-name="Rebel Moon (Parte uno): Corte del director (2024)" tvg-logo="https://pics.filmaffinity.com/rebel_moon_chapter_one_chalice_of_blood-537420321-large.jpg" group-title="⭐️Estrenos 2024",Rebel Moon (Parte uno): Corte del director (2024)
-        http://goldfull.pro:8880/IptvNetmax026/MvEUWB5455UU/409988
-
+        http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409011.mp4
         #EXTINF:-1 tvg-id="" tvg-name="Otra Película (2023)" tvg-logo="https://example.com/otra-pelicula.jpg" group-title="⭐️Acción",Otra Película (2023)
         http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/123456.mp4
         `;
-
+        
         function parseMovies(moviesText) {
             const movies = [];
             const lines = moviesText.trim().split("\n");
             for (let i = 0; i < lines.length; i += 2) {
-                const info = lines[i].match(/tvg-name="(.*?)".*?tvg-logo="(.*?)"/);
-                const title = info ? info[1] : "Película Desconocida";
-                const logo = info ? info[2] : "";
-                const link = lines[i + 1] ? lines[i + 1].trim() : "#";
-                movies.push({ title, logo, link });
+                // Extraer información de la película
+                const infoMatch = lines[i].match(/tvg-name="(.*?)".*?tvg-logo="(.*?)".*?group-title="(.*?)"/);
+                
+                if (infoMatch) {
+                    const title = infoMatch[1] || "Película Desconocida";
+                    const logo = infoMatch[2] || "/api/placeholder/300/450";
+                    const category = infoMatch[3] ? infoMatch[3].replace('⭐️', '') : "Sin categoría";
+                    const link = lines[i + 1] ? lines[i + 1].trim() : "#";
+                    
+                    // Extraer año si está disponible en el título
+                    const yearMatch = title.match(/\((\d{4})\)/);
+                    const year = yearMatch ? yearMatch[1] : "2024";
+                    
+                    // Generar puntuación aleatoria para demo
+                    const rating = (Math.random() * (5 - 3) + 3).toFixed(1);
+                    
+                    movies.push({ title, logo, link, category, year, rating });
+                }
             }
             return movies;
         }
-
-        function renderMovies() {
+        
+        function renderMovieCard(movie) {
+            return `
+            <div class="movie-card">
+                <div class="movie-poster">
+                    <img src="${movie.logo}" alt="${movie.title}" onerror="this.src='/api/placeholder/300/450'">
+                    <div class="movie-overlay">
+                        <a href="${movie.link}" class="play-button">
+                            <i class="fas fa-play"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="movie-info">
+                    <h3 class="movie-title">${movie.title}</h3>
+                    <div class="movie-meta">
+                        <span class="rating">
+                            <i class="fas fa-star"></i> ${movie.rating}
+                        </span>
+                        <span>${movie.year}</span>
+                    </div>
+                    <a href="${movie.link}" class="btn-watch">Ver Ahora</a>
+                </div>
+            </div>
+            `;
+        }
+        
+        function renderMoviesByCategory() {
             const movies = parseMovies(moviesList);
-            const container = document.getElementById("movies-container");
-
+            
+            // Agrupar por categorías
+            const moviesByCategory = {};
             movies.forEach(movie => {
-                const movieElement = document.createElement("div");
-                movieElement.classList.add("container");
-                movieElement.innerHTML = `
-                    <h2>${movie.title}</h2>
-                    <img src="${movie.logo}" alt="Portada de ${movie.title}">
-                    <br>
-                    <a class="btn" href="${movie.link}" target="_blank">Ver Película</a>
-                `;
-                container.appendChild(movieElement);
+                if (!moviesByCategory[movie.category]) {
+                    moviesByCategory[movie.category] = [];
+                }
+                moviesByCategory[movie.category].push(movie);
+            });
+            
+            // Renderizar películas por categoría
+            for (const category in moviesByCategory) {
+                const containerId = category.toLowerCase().replace(/\s+/g, '-');
+                const container = document.getElementById(`${containerId}-container`);
+                
+                if (container) {
+                    moviesByCategory[category].forEach(movie => {
+                        container.innerHTML += renderMovieCard(movie);
+                    });
+                }
+            }
+            
+            // Si no hay películas en alguna categoría, añadir ejemplos de demostración
+            const categoriesContainers = ["estrenos-container", "accion-container"];
+            
+            categoriesContainers.forEach(containerId => {
+                const container = document.getElementById(containerId);
+                if (container && container.children.length < 1) {
+                    // Películas de ejemplo para demostración
+                    const demoMovies = [
+                        {
+                            title: "Dune: Parte 2 (2024)",
+                            logo: "/api/placeholder/300/450",
+                            year: "2024",
+                            rating: "4.8",
+                            link: "#"
+                        },
+                        {
+                            title: "Godzilla y Kong: El nuevo imperio (2024)",
+                            logo: "/api/placeholder/300/450",
+                            year: "2024",
+                            rating: "4.5",
+                            link: "#"
+                        },
+                        {
+                            title: "Bad Boys: Hasta la muerte (2024)",
+                            logo: "/api/placeholder/300/450",
+                            year: "2024",
+                            rating: "4.2",
+                            link: "#"
+                        },
+                        {
+                            title: "Deadpool & Wolverine (2024)",
+                            logo: "/api/placeholder/300/450",
+                            year: "2024",
+                            rating: "4.9",
+                            link: "#"
+                        }
+                    ];
+                    
+                    demoMovies.forEach(movie => {
+                        container.innerHTML += renderMovieCard(movie);
+                    });
+                }
             });
         }
-
-        renderMovies();
+        
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            renderMoviesByCategory();
+        });
     </script>
-
 </body>
 </html>
