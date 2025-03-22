@@ -3,226 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Películas Online Premium</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <title>Películas Online</title>
     <style>
-        :root {
-            --primary: #e50914;
-            --primary-dark: #b20710;
-            --secondary: #221f1f;
-            --background: #111;
-            --text: #ffffff;
-            --gray: #303030;
-            --gray-light: #6c757d;
-        }
-        
-        * {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #141414;
+            color: white;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
-        
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: var(--background);
-            color: var(--text);
-            line-height: 1.6;
-        }
-        
-        /* Header */
         header {
-            background-color: rgba(0, 0, 0, 0.9);
-            padding: 1rem 5%;
+            background-color: #111;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
-        
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--primary);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
+        h1 {
+            margin: 0;
+            color: red;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
-        
-        .logo i {
-            margin-right: 10px;
-        }
-        
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-        
-        nav ul li {
-            margin-left: 1.5rem;
-        }
-        
-        nav ul li a {
-            color: var(--text);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        nav ul li a:hover {
-            color: var(--primary);
-        }
-        
-        /* Banner */
-        .banner {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/api/placeholder/1400/500');
-            background-size: cover;
-            background-position: center;
-            height: 300px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 20px;
-        }
-        
-        .banner h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-        }
-        
-        .banner p {
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin-bottom: 2rem;
-        }
-        
-        .search-bar {
-            max-width: 500px;
-            width: 100%;
-            position: relative;
-            margin-bottom: 20px;
-        }
-        
-        .search-bar input {
-            width: 100%;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 30px;
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            transition: background-color 0.3s;
-        }
-        
-        .search-bar input:focus {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-        
-        .search-bar input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        .search-bar button {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-        
-        /* Main Content */
-        main {
-            padding: 2rem 5%;
-        }
-        
-        .category {
-            margin-bottom: 3rem;
-        }
-        
-        .category-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            border-bottom: 3px solid var(--primary);
-            padding-bottom: 0.5rem;
-        }
-        
-        .category-header h2 {
-            font-size: 1.7rem;
-        }
-        
-        .category-header a {
-            color: var(--gray-light);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .category-header a:hover {
-            color: var(--primary);
-        }
-        
-        .movies-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        /* Ad spaces */
-        .ad-banner {
-            background-color: var(--gray);
-            border-radius: 5px;
-            margin: 2rem 0;
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
-        
-        .ad-sidebar {
-            background-color: var(--gray);
-            border-radius: 5px;
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
+        .catalog {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
         }
-        
-        /* Movie Card */
         .movie-card {
-            background-color: var(--secondary);
+            background: rgba(34, 34, 34, 0.8);
             border-radius: 8px;
             overflow: hidden;
             transition: transform 0.3s, box-shadow 0.3s;
             height: 100%;
             display: flex;
             flex-direction: column;
-            position: relative;
         }
-        
         .movie-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
-        
         .movie-poster {
             position: relative;
             overflow: hidden;
-            padding-top: 150%; /* Aspect ratio 2:3 */
+            padding-top: 150%;
         }
-        
         .movie-poster img {
             position: absolute;
             top: 0;
@@ -230,380 +61,84 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s;
+            border-radius: 8px 8px 0 0;
         }
-        
-        .movie-card:hover .movie-poster img {
-            transform: scale(1.05);
-        }
-        
-        .movie-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 1rem;
-        }
-        
-        .movie-card:hover .movie-overlay {
-            opacity: 1;
-        }
-        
-        .play-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(229, 9, 20, 0.8);
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
-            transition: background-color 0.3s;
-        }
-        
-        .play-button:hover {
-            background-color: var(--primary);
-        }
-        
         .movie-info {
-            padding: 1rem;
+            padding: 15px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
-        
         .movie-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 0 10px 0;
             line-height: 1.3;
         }
-        
-        .movie-meta {
-            font-size: 0.9rem;
-            color: var(--gray-light);
-            margin-bottom: 0.8rem;
-            display: flex;
-            align-items: center;
-        }
-        
-        .movie-meta .rating {
-            margin-right: 10px;
-            color: #ffc107;
-        }
-        
-        .btn-watch {
+        .btn {
             display: inline-block;
-            background-color: var(--primary);
-            color: white;
-            text-decoration: none;
-            padding: 0.6rem 1rem;
-            border-radius: 4px;
-            font-weight: 500;
-            text-align: center;
-            transition: background-color 0.3s;
             margin-top: auto;
-        }
-        
-        .btn-watch:hover {
-            background-color: var(--primary-dark);
-        }
-        
-        /* Footer */
-        footer {
-            background-color: var(--secondary);
-            padding: 2rem 5%;
-            margin-top: 3rem;
-        }
-        
-        .footer-content {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-        
-        .footer-column {
-            flex: 1;
-            min-width: 200px;
-            margin-bottom: 1.5rem;
-        }
-        
-        .footer-column h3 {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 0.5rem;
-            display: inline-block;
-        }
-        
-        .footer-column ul {
-            list-style: none;
-        }
-        
-        .footer-column ul li {
-            margin-bottom: 0.5rem;
-        }
-        
-        .footer-column ul li a {
-            color: var(--gray-light);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer-column ul li a:hover {
-            color: var(--primary);
-        }
-        
-        .social-icons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .social-icons a {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 36px;
-            height: 36px;
-            background-color: var(--gray);
+            padding: 10px 0;
+            background: red;
             color: white;
-            border-radius: 50%;
-            transition: background-color 0.3s;
-        }
-        
-        .social-icons a:hover {
-            background-color: var(--primary);
-        }
-        
-        .copyright {
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
             text-align: center;
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--gray);
-            color: var(--gray-light);
-            font-size: 0.9rem;
+            transition: background 0.3s;
+            width: 100%;
         }
-        
-        /* Responsive */
+        .btn:hover {
+            background: darkred;
+        }
+        .btn i {
+            margin-right: 5px;
+        }
+        .search-bar {
+            max-width: 500px;
+            margin: 20px auto;
+            position: relative;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: none;
+            background: #333;
+            color: white;
+            font-size: 16px;
+        }
+        .search-bar input:focus {
+            outline: none;
+            background: #444;
+        }
         @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                padding: 1rem;
+            .catalog {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 15px;
             }
-            
-            .logo {
-                margin-bottom: 1rem;
-            }
-            
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            nav ul li {
-                margin: 0.5rem;
-            }
-            
-            .banner {
-                height: 250px;
-            }
-            
-            .banner h1 {
-                font-size: 2rem;
-            }
-            
-            .movies-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            }
-            
-            .footer-content {
-                flex-direction: column;
+            .movie-title {
+                font-size: 14px;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <a href="#" class="logo">
-            <i class="fas fa-film"></i>CineMania
-        </a>
-        <nav>
-            <ul>
-                <li><a href="#"><i class="fas fa-home"></i> Inicio</a></li>
-                <li><a href="#"><i class="fas fa-fire"></i> Estrenos</a></li>
-                <li><a href="#"><i class="fas fa-star"></i> Populares</a></li>
-                <li><a href="#"><i class="fas fa-list"></i> Géneros</a></li>
-            </ul>
-        </nav>
+        <h1>Películas Online</h1>
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Buscar películas...">
+        </div>
     </header>
     
-    <div class="banner">
-        <h1>Películas Online Premium</h1>
-        <p>Disfruta del mejor contenido en HD totalmente gratis</p>
-        <div class="search-bar">
-            <input type="text" placeholder="Buscar películas...">
-            <button><i class="fas fa-search"></i></button>
-        </div>
+    <div class="main-container">
+        <div id="movies-container" class="catalog"></div>
     </div>
-    
-    <!-- Ad Banner Principal -->
-    <div class="ad-banner">
-        <script async="async" data-cfasync="false" src="//pl26063295.effectiveratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
-        <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
-    </div>
-    
-    <main>
-        <div class="category">
-            <div class="category-header">
-                <h2><i class="fas fa-film"></i> Estrenos 2024</h2>
-                <a href="#">Ver todos <i class="fas fa-chevron-right"></i></a>
-            </div>
-            
-            <div class="movies-grid" id="estrenos-container">
-                <!-- Contenido dinámico -->
-            </div>
-        </div>
-        
-        <!-- Ad Banner Secundario -->
-        <div class="ad-banner">
-            <div id="ad-space-2">
-                <!-- Espacio para segundo bloque de anuncios -->
-                <img src="/api/placeholder/728/90" alt="Anuncio" style="max-width: 100%;">
-            </div>
-        </div>
-        
-        <div class="category">
-            <div class="category-header">
-                <h2><i class="fas fa-fire"></i> Acción</h2>
-                <a href="#">Ver todos <i class="fas fa-chevron-right"></i></a>
-            </div>
-            
-            <div class="movies-grid" id="accion-container">
-                <!-- Contenido dinámico -->
-            </div>
-        </div>
-    </main>
-    
-    <footer>
-        <div class="footer-content">
-            <div class="footer-column">
-                <h3>CineMania</h3>
-                <p>La mejor página para ver películas online en español latino HD sin cortes. Peliculas en excelente calidad Full HD.</p>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-telegram"></i></a>
-                </div>
-            </div>
-            
-            <div class="footer-column">
-                <h3>Categorías</h3>
-                <ul>
-                    <li><a href="#">Acción</a></li>
-                    <li><a href="#">Comedia</a></li>
-                    <li><a href="#">Drama</a></li>
-                    <li><a href="#">Ciencia Ficción</a></li>
-                    <li><a href="#">Terror</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-column">
-                <h3>Enlaces Rápidos</h3>
-                <ul>
-                    <li><a href="#">Estrenos</a></li>
-                    <li><a href="#">Más Vistas</a></li>
-                    <li><a href="#">Mejor Valoradas</a></li>
-                    <li><a href="#">Series</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-column">
-                <h3>Legal</h3>
-                <ul>
-                    <li><a href="#">Aviso legal</a></li>
-                    <li><a href="#">Política de privacidad</a></li>
-                    <li><a href="#">Términos y condiciones</a></li>
-                    <li><a href="#">DMCA</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="copyright">
-            &copy; 2025 CineMania - Todos los derechos reservados
-        </div>
-    </footer>
-    
+
     <script>
         const moviesList = `
         #EXTINF:-1 tvg-id="" tvg-name="Rebel Moon (Parte uno): Corte del director (2024)" tvg-logo="https://pics.filmaffinity.com/rebel_moon_chapter_one_chalice_of_blood-537420321-large.jpg" group-title="⭐️Estrenos 2024",Rebel Moon (Parte uno): Corte del director (2024)
-        http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409011.mp4
-        
-#EXTINF:-1 tvg-id="" tvg-name="Watchmen: Capítulo 2 (2024)" tvg-logo="http://goldfull.pro:8880/images/c0dfbdae9d68d041f00606eb447c23cb.jpg" group-title="⭐️Estrenos 2024",Watchmen: Capítulo 2 (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421759.mp4
-#EXTINF:-1 tvg-id="" tvg-name="El señor de los anillos: La guerra de los Rohirrim (2024) CAM" tvg-logo="http://goldfull.pro:8880/images/6d8a31252c1db32d175a996e250c21d0.jpg" group-title="⭐️Estrenos 2024",El señor de los anillos: La guerra de los Rohirrim (2024) CAM
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421760.mp4
-#EXTINF:-1 tvg-id="" tvg-name="SOLO LEVELING -segundo despertar- (2024)" tvg-logo="http://goldfull.pro:8880/images/592587cb6062f8caeb79ed939e36d250.jpg" group-title="⭐️Estrenos 2024",SOLO LEVELING -segundo despertar- (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421761.mp4
-#EXTINF:-1 tvg-id="" tvg-name="Shrek ogrorisa la Navidad (2007)" tvg-logo="http://goldfull.pro:8880/images/4d7ab0eba2d2f050b9f899ef78cf17f8.jpg" group-title="⭐️Navidad",Shrek ogrorisa la Navidad (2007)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421784.mp4
-#EXTINF:-1 tvg-id="" tvg-name="Mi Amigo El Pingüino (2024)" tvg-logo="http://goldfull.pro:8880/images/c451d723aa8afbb4e871a87bf1986ae1.jpg" group-title="⭐️Estrenos 2024",Mi Amigo El Pingüino (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421785.mp4
-
-#EXTINF:-1 tvg-id="" tvg-name="Amor en Bali (2024)" tvg-logo="http://goldfull.pro:8880/images/d2c1ff6967b8e45f7b8b16c3a06a6144.jpg" group-title="⭐️Estrenos 2024",Amor en Bali (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421117.mp4
-#EXTINF:-1 tvg-id="" tvg-name="Blitz (2024)" tvg-logo="http://goldfull.pro:8880/images/6f0051038f4fe3aec34ac82e114ceda6.jpg" group-title="⭐️Estrenos 2024",Blitz (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421118.mp4
-#EXTINF:-1 tvg-id="" tvg-name="Cambio de bebés 2 (2024)" tvg-logo="http://goldfull.pro:8880/images/d4efdf5abaa338ec8ead02c011258c34.jpg" group-title="⭐️Estrenos 2024",Cambio de bebés 2 (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421119.mp4
-#EXTINF:-1 tvg-id="" tvg-name="Querido Santa (2024)" tvg-logo="http://goldfull.pro:8880/images/0e9d42ce5d24564c4d6697333a89e384.jpg" group-title="⭐️Estrenos 2024",Querido Santa (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421120.mp4
-#EXTINF:-1 tvg-id="" tvg-name="El espejo del diablo (2024)" tvg-logo="http://goldfull.pro:8880/images/dd060fe98ca820563a5cdf610863c26c.jpg" group-title="⭐️Estrenos 2024",El espejo del diablo (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421121.mp4
-#EXTINF:-1 tvg-id="" tvg-name="Fuera de mí (2024)" tvg-logo="http://goldfull.pro:8880/images/888dded226deebeaa8949f3a69234edd.jpg" group-title="⭐️Estrenos 2024",Fuera de mí (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421122.mp4
-#EXTINF:-1 tvg-id="" tvg-name="GTMax (2024)" tvg-logo="http://goldfull.pro:8880/images/c77efce01507a5a09fe40987d8dc3373.jpg" group-title="⭐️Estrenos 2024",GTMax (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421123.mp4
-#EXTINF:-1 tvg-id="" tvg-name="Hechizados (2024)" tvg-logo="http://goldfull.pro:8880/images/0346462c0402a431eb1c641f62b1da77.jpg" group-title="⭐️Estrenos 2024",Hechizados (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421124.mp4
-#EXTINF:-1 tvg-id="" tvg-name="Joy (2024)" tvg-logo="http://goldfull.pro:8880/images/0116f6aa6482d8d5097b9ad9c93ff6a4.jpg" group-title="⭐️Estrenos 2024",Joy (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421125.mp4
-#EXTINF:-1 tvg-id="" tvg-name="Las tías (2024)" tvg-logo="http://goldfull.pro:8880/images/0a233f04c5b7a51e2f791cbb833ec211.jpg" group-title="⭐️Estrenos 2024",Las tías (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421126.mp4
-#EXTINF:-1 tvg-id="" tvg-name="La lección de piano (2024)" tvg-logo="http://goldfull.pro:8880/images/daa79b016efd04741116b1bb8c8d9e15.jpg" group-title="⭐️Estrenos 2024",La lección de piano (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421127.mp4
-#EXTINF:-1 tvg-id="" tvg-name="Pimpinero: Sangre y gasolina (2024)" tvg-logo="http://goldfull.pro:8880/images/12c7068a06bd2c36bffee68b48311400.jpg" group-title="⭐️Estrenos 2024",Pimpinero: Sangre y gasolina (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421128.mp4
-#EXTINF:-1 tvg-id="" tvg-name="Wicked (2024)" tvg-logo="http://goldfull.pro:8880/images/2899075f4d17bcf27a39b4ab30a654fc.jpg" group-title="⭐️Estrenos 2024",Wicked (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421129.mp4
-#EXTINF:-1 tvg-id="" tvg-name="AMP House Massacre (2024)" tvg-logo="http://goldfull.pro:8880/images/9b5262251ddcbe4347e7afda4a6724eb.jpg" group-title="⭐️Estrenos 2024",AMP House Massacre (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421130.mp4
-#EXTINF:-1 tvg-id="" tvg-name="Los festivos caballeros (2024)" tvg-logo="http://goldfull.pro:8880/images/f1ebe8fef8dabbd8ed45273a209ce214.jpg" group-title="⭐️Estrenos 2024",Los festivos caballeros (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421131.mp4
-#EXTINF:-1 tvg-id="" tvg-name="Cruel Intentions (1999)" tvg-logo="http://goldfull.pro:8880/images/cdff7c1e080734f716c8488374af82df.jpg" group-title="⭐️Romance",Cruel Intentions (1999)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421132.mp4
-#EXTINF:-1 tvg-id="" tvg-name="La creación de los dioses: el reino de las tormentas" tvg-logo="http://goldfull.pro:8880/images/6de71af26665c1becb8502ad696e27e4.jpg" group-title="⭐️Películas 2023",La creación de los dioses: el reino de las tormentas
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421133.mp4
-#EXTINF:-1 tvg-id="" tvg-name="El expreso polar" tvg-logo="http://goldfull.pro:8880/images/e3da452f689c88f6960d46283dab4a43.jpg" group-title="⭐️Navidad",El expreso polar
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421400.mp4
-
-
-
-
-        
+        http://goldfull.pro:8880/IptvNetmax026/MvEUWB5455UU/409988
         #EXTINF:-1 tvg-id="" tvg-name="Otra Película (2023)" tvg-logo="https://example.com/otra-pelicula.jpg" group-title="⭐️Acción",Otra Película (2023)
         http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/123456.mp4
         `;
@@ -612,125 +147,52 @@ http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/421400.mp4
             const movies = [];
             const lines = moviesText.trim().split("\n");
             for (let i = 0; i < lines.length; i += 2) {
-                // Extraer información de la película
-                const infoMatch = lines[i].match(/tvg-name="(.*?)".*?tvg-logo="(.*?)".*?group-title="(.*?)"/);
-                
-                if (infoMatch) {
-                    const title = infoMatch[1] || "Película Desconocida";
-                    const logo = infoMatch[2] || "/api/placeholder/300/450";
-                    const category = infoMatch[3] ? infoMatch[3].replace('⭐️', '') : "Sin categoría";
-                    const link = lines[i + 1] ? lines[i + 1].trim() : "#";
-                    
-                    // Extraer año si está disponible en el título
-                    const yearMatch = title.match(/\((\d{4})\)/);
-                    const year = yearMatch ? yearMatch[1] : "2024";
-                    
-                    // Generar puntuación aleatoria para demo
-                    const rating = (Math.random() * (5 - 3) + 3).toFixed(1);
-                    
-                    movies.push({ title, logo, link, category, year, rating });
-                }
+                const info = lines[i].match(/tvg-name="(.*?)".*?tvg-logo="(.*?)"/);
+                const title = info ? info[1] : "Película Desconocida";
+                const logo = info ? info[2] : "";
+                const link = lines[i + 1] ? lines[i + 1].trim() : "#";
+                movies.push({ title, logo, link });
             }
             return movies;
         }
         
-        function renderMovieCard(movie) {
-            return `
-            <div class="movie-card">
-                <div class="movie-poster">
-                    <img src="${movie.logo}" alt="${movie.title}" onerror="this.src='/api/placeholder/300/450'">
-                    <div class="movie-overlay">
-                        <a href="${movie.link}" class="play-button">
-                            <i class="fas fa-play"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="movie-info">
-                    <h3 class="movie-title">${movie.title}</h3>
-                    <div class="movie-meta">
-                        <span class="rating">
-                            <i class="fas fa-star"></i> ${movie.rating}
-                        </span>
-                        <span>${movie.year}</span>
-                    </div>
-                    <a href="${movie.link}" class="btn-watch">Ver Ahora</a>
-                </div>
-            </div>
-            `;
-        }
-        
-        function renderMoviesByCategory() {
+        function renderMovies(filterText = '') {
             const movies = parseMovies(moviesList);
+            const container = document.getElementById("movies-container");
+            container.innerHTML = '';
             
-            // Agrupar por categorías
-            const moviesByCategory = {};
-            movies.forEach(movie => {
-                if (!moviesByCategory[movie.category]) {
-                    moviesByCategory[movie.category] = [];
-                }
-                moviesByCategory[movie.category].push(movie);
-            });
-            
-            // Renderizar películas por categoría
-            for (const category in moviesByCategory) {
-                const containerId = category.toLowerCase().replace(/\s+/g, '-');
-                const container = document.getElementById(`${containerId}-container`);
+            const filteredMovies = filterText 
+                ? movies.filter(movie => movie.title.toLowerCase().includes(filterText.toLowerCase()))
+                : movies;
                 
-                if (container) {
-                    moviesByCategory[category].forEach(movie => {
-                        container.innerHTML += renderMovieCard(movie);
-                    });
-                }
+            if (filteredMovies.length === 0) {
+                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; font-size: 18px; margin: 50px 0;">No se encontraron películas con ese título</p>';
+                return;
             }
             
-            // Si no hay películas en alguna categoría, añadir ejemplos de demostración
-            const categoriesContainers = ["estrenos-container", "accion-container"];
-            
-            categoriesContainers.forEach(containerId => {
-                const container = document.getElementById(containerId);
-                if (container && container.children.length < 1) {
-                    // Películas de ejemplo para demostración
-                    const demoMovies = [
-                        {
-                            title: "Dune: Parte 2 (2024)",
-                            logo: "/api/placeholder/300/450",
-                            year: "2024",
-                            rating: "4.8",
-                            link: "#"
-                        },
-                        {
-                            title: "Godzilla y Kong: El nuevo imperio (2024)",
-                            logo: "/api/placeholder/300/450",
-                            year: "2024",
-                            rating: "4.5",
-                            link: "#"
-                        },
-                        {
-                            title: "Bad Boys: Hasta la muerte (2024)",
-                            logo: "/api/placeholder/300/450",
-                            year: "2024",
-                            rating: "4.2",
-                            link: "#"
-                        },
-                        {
-                            title: "Deadpool & Wolverine (2024)",
-                            logo: "/api/placeholder/300/450",
-                            year: "2024",
-                            rating: "4.9",
-                            link: "#"
-                        }
-                    ];
-                    
-                    demoMovies.forEach(movie => {
-                        container.innerHTML += renderMovieCard(movie);
-                    });
-                }
+            filteredMovies.forEach(movie => {
+                const movieElement = document.createElement("div");
+                movieElement.classList.add("movie-card");
+                movieElement.innerHTML = `
+                    <div class="movie-poster">
+                        <img src="${movie.logo}" alt="Portada de ${movie.title}" onerror="this.src='/api/placeholder/200/300'">
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">${movie.title}</h3>
+                        <a class="btn" href="${movie.link}" target="_blank"><i>▶</i> Ver Película</a>
+                    </div>
+                `;
+                container.appendChild(movieElement);
             });
         }
         
-        // Inicializar la página
-        document.addEventListener('DOMContentLoaded', function() {
-            renderMoviesByCategory();
+        // Inicializar el catálogo
+        renderMovies();
+        
+        // Implementar la búsqueda
+        const searchInput = document.getElementById('search-input');
+        searchInput.addEventListener('input', function() {
+            renderMovies(this.value);
         });
     </script>
 </body>
