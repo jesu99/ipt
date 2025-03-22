@@ -3,88 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Películas en Streaming</title>
+    <title>Reproductor de Películas</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #000;
-            color: #fff;
+            background-color: #111;
+            color: white;
             text-align: center;
         }
         .container {
             max-width: 800px;
             margin: 50px auto;
             padding: 20px;
-            background-color: #222;
+            background: #222;
             border-radius: 10px;
         }
         video {
             width: 100%;
             border-radius: 10px;
         }
-        .movie-list {
-            margin-top: 20px;
-        }
-        .movie-item {
-            display: flex;
-            align-items: center;
-            background-color: #444;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .movie-item img {
-            width: 50px;
-            height: 75px;
-            margin-right: 10px;
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: red;
+            color: white;
+            text-decoration: none;
             border-radius: 5px;
         }
-        .movie-item:hover {
-            background-color: #666;
+        .btn:hover {
+            background: darkred;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>Películas en Streaming</h1>
-        <video id="player" controls>
-            <source id="video-source" src="" type="video/mp4">
-            Tu navegador no soporta la reproducción de video.
+        <h2>Película en Streaming</h2>
+        
+        <video controls>
+            <source src="http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409011.mp4" type="video/mp4">
+            Tu navegador no soporta la reproducción de videos.
         </video>
-        <div class="movie-list" id="movie-list"></div>
+        
+        <br>
+        <a class="btn" href="http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409011.mp4" download>Descargar Película</a>
     </div>
-    
-    <script>
-        // Lista de películas (AGRÉGALAS AQUÍ)
-        const movies = [
-            { name: "A Ciegas (2020)", url: "http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/257381.mkv", img: "http://goldfull.pro:8880/images/fdee4dd297b7fd8db7039ee3a3b56700.jpg" },
-            { name: "Otra Película", url: "http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/257382.mp4", img: "http://goldfull.pro:8880/images/sample.jpg" }
-        ];
-        
-        const movieList = document.getElementById("movie-list");
-        const player = document.getElementById("player");
-        const videoSource = document.getElementById("video-source");
-        
-        movies.forEach(movie => {
-            let item = document.createElement("div");
-            item.classList.add("movie-item");
-            item.onclick = () => {
-                videoSource.src = movie.url;
-                player.load();
-                player.play();
-            };
-            
-            let img = document.createElement("img");
-            img.src = movie.img;
-            
-            let title = document.createElement("span");
-            title.textContent = movie.name;
-            
-            item.appendChild(img);
-            item.appendChild(title);
-            movieList.appendChild(item);
-        });
-    </script>
+
 </body>
 </html>
