@@ -7,313 +7,81 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #141414;
-            color: white;
-            margin: 0;
-            padding: 0;
-        }
-        header {
             background-color: #111;
-            padding: 20px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            color: white;
+            text-align: center;
         }
-        h1 {
-            margin: 0;
-            color: red;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-        .main-container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
             padding: 20px;
+            background: #222;
+            border-radius: 10px;
         }
-        .catalog {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        .movie-card {
-            background: rgba(34, 34, 34, 0.8);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-        .movie-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        }
-        .movie-poster {
-            position: relative;
-            overflow: hidden;
-            padding-top: 150%;
-        }
-        .movie-poster img {
-            position: absolute;
-            top: 0;
-            left: 0;
+        img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 8px 8px 0 0;
-        }
-        .movie-info {
-            padding: 15px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        .movie-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0 0 10px 0;
-            line-height: 1.3;
+            border-radius: 10px;
         }
         .btn {
             display: inline-block;
-            margin-top: auto;
-            padding: 10px 0;
+            margin-top: 15px;
+            padding: 10px 20px;
             background: red;
             color: white;
             text-decoration: none;
             border-radius: 5px;
-            font-size: 16px;
-            text-align: center;
-            transition: background 0.3s;
-            width: 100%;
+            font-size: 18px;
         }
         .btn:hover {
             background: darkred;
         }
-        .btn i {
-            margin-right: 5px;
-        }
-        .search-bar {
-            max-width: 500px;
-            margin: 20px auto;
-            position: relative;
-        }
-        .search-bar input {
-            width: 100%;
-            padding: 12px 20px;
-            border-radius: 30px;
-            border: none;
-            background: #333;
-            color: white;
-            font-size: 16px;
-        }
-        .search-bar input:focus {
-            outline: none;
-            background: #444;
-        }
-        /* Estilos para los contenedores de anuncios */
-        .ad-container {
-            text-align: center;
-            margin: 20px auto;
-            overflow: hidden;
-        }
-        .ad-container-sidebar {
-            float: right;
-            margin: 20px 0;
-            width: 160px;
-        }
-        .ad-banner {
-            width: 100%;
-            max-width: 728px;
-            margin: 20px auto;
-            overflow: hidden;
-        }
-        @media (max-width: 768px) {
-            .catalog {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-                gap: 15px;
-            }
-            .movie-title {
-                font-size: 14px;
-            }
-            .ad-container-sidebar {
-                float: none;
-                width: 100%;
-                margin: 20px auto;
-            }
-        }
     </style>
 </head>
 <body>
-    <header>
-        <div class="main-container">
-            <h1>Películas Online</h1>
-            <div class="search-bar">
-                <input type="text" id="search-input" placeholder="Buscar películas...">
-            </div>
-        </div>
-    </header>
-    
-    <!-- Banner de anuncios superior -->
-    <div class="ad-container ad-banner">
-        <script type="text/javascript">
-            atOptions = {
-                'key' : 'b330ccd204185aee9ef640adccf896d2',
-                'format' : 'iframe',
-                'height' : 90,
-                'width' : 728,
-                'params' : {}
-            };
-        </script>
-        <script type="text/javascript" src="//www.highperformanceformat.com/b330ccd204185aee9ef640adccf896d2/invoke.js"></script>
-    </div>
-    
-    <div class="main-container">
-        <!-- Anuncio lateral -->
-        <div class="ad-container-sidebar">
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : 'a55c7cdc78df0520f71c2b00e4046167',
-                    'format' : 'iframe',
-                    'height' : 300,
-                    'width' : 160,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="//www.highperformanceformat.com/a55c7cdc78df0520f71c2b00e4046167/invoke.js"></script>
-        </div>
-        
-        <!-- Contenedor principal de películas -->
-        <div id="movies-container" class="catalog"></div>
-        
-        <!-- Anuncio grande inferior -->
-        <div class="ad-container">
-            <script async="async" data-cfasync="false" src="//pl26063295.effectiveratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
-            <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
-        </div>
-    </div>
-    
-    <!-- Scripts de publicidad adicionales -->
-    <script type='text/javascript' src='//pl26063313.effectiveratecpm.com/93/61/3d/93613d042ce505fe468e829efbb21520.js'></script>
-    <script type='text/javascript' src='//pl26063307.effectiveratecpm.com/19/09/91/1909913ee893cee324321a2b56c090fa.js'></script>
-    
-    <!-- Script para el popunder -->
-    <script>
-        window.addEventListener('load', function() {
-            let script = document.createElement('script');
-            script.src = 'https://www.effectiveratecpm.com/wy4ysndt?key=12c98d265ef2e657283053a557f43edd';
-            document.body.appendChild(script);
-        });
-    </script>
+
+    <div id="movies-container"></div>
 
     <script>
-        // Lista de películas (ejemplo de formato IPTV)
         const moviesList = `
-#EXTINF:-1 tvg-id="" tvg-name="Vi el brillo del televisor (2024)" tvg-logo="http://goldfull.pro:8880/images/82ae015988458dc28a24d8361531c824.jpg" group-title="⭐️Estrenos 2024",Vi el brillo del televisor (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/413415.mp4
+        #EXTINF:-1 tvg-id="" tvg-name="Rebel Moon (Parte uno): Corte del director (2024)" tvg-logo="https://pics.filmaffinity.com/rebel_moon_chapter_one_chalice_of_blood-537420321-large.jpg" group-title="⭐️Estrenos 2024",Rebel Moon (Parte uno): Corte del director (2024)
+        http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409011.mp4
+
+        #EXTINF:-1 tvg-id="" tvg-name="Otra Película (2023)" tvg-logo="https://example.com/otra-pelicula.jpg" group-title="⭐️Acción",Otra Película (2023)
+        http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/123456.mp4
         `;
-        
-        // Función para analizar la lista de películas del formato IPTV
+
         function parseMovies(moviesText) {
             const movies = [];
             const lines = moviesText.trim().split("\n");
-            
-            for (let i = 0; i < lines.length - 1; i += 2) {
-                if (lines[i].startsWith('#EXTINF')) {
-                    // Extraer información con regex mejorada
-                    const titleMatch = lines[i].match(/tvg-name="([^"]+)"/);
-                    const logoMatch = lines[i].match(/tvg-logo="([^"]+)"/);
-                    
-                    // Título y URL de la imagen
-                    const title = titleMatch ? titleMatch[1] : "Película Desconocida";
-                    const logo = logoMatch ? logoMatch[1] : "";
-                    
-                    // URL del video
-                    const link = i + 1 < lines.length ? lines[i + 1].trim() : "#";
-                    
-                    // Registrar para depuración
-                    console.log("Película encontrada:", title, logo, link);
-                    
-                    // Añadir a la lista
-                    movies.push({ 
-                        title: title, 
-                        logo: logo, 
-                        link: link 
-                    });
-                }
+            for (let i = 0; i < lines.length; i += 2) {
+                const info = lines[i].match(/tvg-name="(.*?)".*?tvg-logo="(.*?)"/);
+                const title = info ? info[1] : "Película Desconocida";
+                const logo = info ? info[2] : "";
+                const link = lines[i + 1] ? lines[i + 1].trim() : "#";
+                movies.push({ title, logo, link });
             }
-            
             return movies;
         }
-        
-        // Función para renderizar las películas en el DOM
-        function renderMovies(filterText = '') {
+
+        function renderMovies() {
             const movies = parseMovies(moviesList);
             const container = document.getElementById("movies-container");
-            container.innerHTML = '';
-            
-            // Filtrar películas si hay texto de búsqueda
-            const filteredMovies = filterText 
-                ? movies.filter(movie => movie.title.toLowerCase().includes(filterText.toLowerCase()))
-                : movies;
-                
-            // Mostrar mensaje si no hay resultados
-            if (filteredMovies.length === 0) {
-                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; font-size: 18px; margin: 50px 0;">No se encontraron películas con ese título</p>';
-                return;
-            }
-            
-            // Renderizar cada película
-            filteredMovies.forEach(movie => {
+
+            movies.forEach(movie => {
                 const movieElement = document.createElement("div");
-                movieElement.classList.add("movie-card");
-                
-                // Crear la estructura de la tarjeta de película
+                movieElement.classList.add("container");
                 movieElement.innerHTML = `
-                    <div class="movie-poster">
-                        <img src="${movie.logo}" alt="Portada de ${movie.title}" onerror="this.onerror=null; this.src='https://via.placeholder.com/200x300/333333/FFFFFF?text=No+Imagen'">
-                    </div>
-                    <div class="movie-info">
-                        <h3 class="movie-title">${movie.title}</h3>
-                        <a class="btn" href="${movie.link}" target="_blank"><i>▶</i> Ver Película</a>
-                    </div>
+                    <h2>${movie.title}</h2>
+                    <img src="${movie.logo}" alt="Portada de ${movie.title}">
+                    <br>
+                    <a class="btn" href="${movie.link}" target="_blank">Ver Película</a>
                 `;
-                
                 container.appendChild(movieElement);
             });
         }
-        
-        // Inicializar el catálogo al cargar la página
-        document.addEventListener('DOMContentLoaded', function() {
-            renderMovies();
-            console.log("Catálogo inicializado");
-        });
-        
-        // Implementar la búsqueda
-        const searchInput = document.getElementById('search-input');
-        searchInput.addEventListener('input', function() {
-            renderMovies(this.value);
-        });
-        
-        // Función para mostrar un anuncio aleatorio después de una acción del usuario
-        function showRandomAd() {
-            // Probabilidad del 50% de mostrar un popup
-            if (Math.random() > 0.5) {
-                const adScript = document.createElement('script');
-                adScript.src = 'https://www.effectiveratecpm.com/wy4ysndt?key=12c98d265ef2e657283053a557f43edd';
-                document.body.appendChild(adScript);
-            }
-        }
-        
-        // Evento para mostrar anuncios en interacción del usuario
-        document.addEventListener('click', function() {
-            // Solo ejecutar una vez por sesión
-            if (!window.adShown) {
-                window.adShown = true;
-                showRandomAd();
-            }
-        });
+
+        renderMovies();
     </script>
+
 </body>
 </html>
