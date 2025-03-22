@@ -4,40 +4,205 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Extract Movie Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+        }
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 15px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .preview-image {
+            max-width: 100px;
+            max-height: 100px;
+            cursor: pointer;
+        }
+        #downloadAllBtn {
+            background-color: #2196F3;
+        }
+        #downloadAllBtn:hover {
+            background-color: #0b7dda;
+        }
+    </style>
 </head>
 <body>
     <h2>Lista de Películas</h2>
     <textarea id="inputData" placeholder="Pega los datos aquí, un nombre y un enlace de imagen por línea"></textarea>
-    <button onclick="processData()">Cargar Películas</button>
+    <div class="button-container">
+        <div>
+            <button onclick="processData()">Cargar Películas</button>
+            <button id="downloadAllBtn" onclick="downloadCSV()" disabled>Descargar Lista (CSV)</button>
+        </div>
+        <div>
+            <label for="fileName">Nombre del archivo: </label>
+            <input type="text" id="fileName" value="peliculas" />
+        </div>
+    </div>
     <table border="1">
         <thead>
             <tr>
                 <th>Nombre</th>
-                <th>Enlace de Imagen</th>
+                <th>Imagen</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody id="movieTable"></tbody>
     </table>
-
     <script>
+        // Arreglo global para almacenar los datos de películas
+        let moviesData = [];
+
+        // Función principal para procesar los datos
         function processData() {
             const inputData = document.getElementById("inputData").value;
             const lines = inputData.split('\n');
             const tableBody = document.getElementById("movieTable");
             tableBody.innerHTML = "";
+            moviesData = [];
 
             for (let i = 0; i < lines.length; i += 2) {
-                const movieName = lines[i].trim();
+                const movieName = lines[i]?.trim();
                 const imageUrl = lines[i + 1]?.trim();
                 
                 if (movieName && imageUrl) {
-                    const row = `<tr>
-                        <td>${movieName}</td>
-                        <td><a href="${imageUrl}" target="_blank">Descargar Imagen</a></td>
-                    </tr>`;
-                    tableBody.innerHTML += row;
+                    // Agregar al array de datos
+                    moviesData.push({name: movieName, url: imageUrl});
+                    
+                    // Crear la fila de la tabla
+                    const row = document.createElement('tr');
+                    
+                    // Celda del nombre
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = movieName;
+                    row.appendChild(nameCell);
+                    
+                    // Celda de la imagen con vista previa
+                    const imageCell = document.createElement('td');
+                    const img = document.createElement('img');
+                    img.src = imageUrl;
+                    img.className = 'preview-image';
+                    img.onclick = function() { window.open(imageUrl, '_blank'); };
+                    img.onerror = function() { this.src = '/api/placeholder/100/100'; this.alt = 'Error de carga'; };
+                    imageCell.appendChild(img);
+                    row.appendChild(imageCell);
+                    
+                    // Celda de acciones
+                    const actionsCell = document.createElement('td');
+                    
+                    // Enlace para descargar
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = "#";
+                    downloadLink.textContent = "Descargar Imagen";
+                    downloadLink.onclick = function(e) {
+                        e.preventDefault();
+                        downloadImage(imageUrl, getFileName(movieName));
+                    };
+                    actionsCell.appendChild(downloadLink);
+                    
+                    row.appendChild(actionsCell);
+                    tableBody.appendChild(row);
                 }
             }
+            
+            // Habilitar el botón de descarga CSV si hay datos
+            document.getElementById("downloadAllBtn").disabled = moviesData.length === 0;
+        }
+
+        // Función para descargar una imagen
+        function downloadImage(url, fileName) {
+            fetch(url)
+                .then(response => response.blob())
+                .then(blob => {
+                    const blobUrl = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = blobUrl;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(blobUrl);
+                })
+                .catch(error => {
+                    console.error('Error al descargar la imagen:', error);
+                    alert('No se pudo descargar la imagen. Por favor, intenta nuevamente.');
+                });
+        }
+
+        // Función para generar un nombre de archivo basado en el nombre de la película
+        function getFileName(movieName) {
+            // Reemplazar espacios y caracteres especiales
+            return movieName.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_').toLowerCase() + '.jpg';
+        }
+
+        // Función para descargar los datos como CSV
+        function downloadCSV() {
+            const baseFileName = document.getElementById("fileName").value || "peliculas";
+            const fileName = baseFileName + ".csv";
+            
+            // Crear contenido CSV
+            let csvContent = "Nombre,URL\n";
+            moviesData.forEach(movie => {
+                // Escapar comillas en los campos
+                const escapedName = movie.name.replace(/"/g, '""');
+                const escapedUrl = movie.url.replace(/"/g, '""');
+                csvContent += `"${escapedName}","${escapedUrl}"\n`;
+            });
+            
+            // Crear y descargar el archivo
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
     </script>
 </body>
