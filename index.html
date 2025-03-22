@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extractor de Imágenes de Películas</title>
+    <title>Extractor de Imágenes IPTV</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -73,9 +73,9 @@
     </style>
 </head>
 <body>
-    <h2>Extractor de Imágenes de Películas</h2>
-    <textarea id="inputData" placeholder="Pega los datos aquí, un nombre y un enlace de imagen por línea"></textarea>
-    <button onclick="processData()">Cargar Películas</button>
+    <h2>Extractor de Imágenes IPTV</h2>
+    <textarea id="inputData" placeholder="Pega los datos IPTV aquí (formato #EXTINF con tvg-logo y nombre de película)"></textarea>
+    <button onclick="processData()">Procesar Datos</button>
     <table>
         <thead>
             <tr>
@@ -93,41 +93,68 @@
             const tableBody = document.getElementById("movieTable");
             tableBody.innerHTML = "";
             
-            for (let i = 0; i < lines.length; i += 2) {
-                const movieName = lines[i]?.trim();
-                const imageUrl = lines[i + 1]?.trim();
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
                 
-                if (movieName && imageUrl) {
-                    // Crear una nueva fila
-                    const row = document.createElement('tr');
+                // Buscar líneas que comienzan con #EXTINF
+                if (line.startsWith('#EXTINF')) {
+                    // Extraer la URL de la imagen del atributo tvg-logo
+                    const logoMatch = line.match(/tvg-logo="([^"]+)"/);
+                    const imageUrl = logoMatch ? logoMatch[1] : null;
                     
-                    // Celda para el nombre
-                    const nameCell = document.createElement('td');
-                    nameCell.textContent = movieName;
-                    row.appendChild(nameCell);
+                    // Extraer el nombre de la película
+                    let movieName = "";
                     
-                    // Celda para la vista previa
-                    const previewCell = document.createElement('td');
-                    const img = document.createElement('img');
-                    img.src = imageUrl;
-                    img.className = 'preview-image';
-                    img.onerror = function() { this.src = '/api/placeholder/100/100'; this.alt = 'Error de carga'; };
-                    previewCell.appendChild(img);
-                    row.appendChild(previewCell);
+                    // Método 1: Obtener desde tvg-name si existe
+                    const nameMatch = line.match(/tvg-name="([^"]+)"/);
+                    if (nameMatch) {
+                        movieName = nameMatch[1];
+                        // Eliminar el año entre paréntesis si existe
+                        movieName = movieName.replace(/\s*\(\d{4}\)$/, '');
+                    }
                     
-                    // Celda para el botón de descarga
-                    const downloadCell = document.createElement('td');
-                    const downloadBtn = document.createElement('button');
-                    downloadBtn.textContent = "Descargar JPG";
-                    downloadBtn.className = "download-btn";
-                    downloadBtn.onclick = function() {
-                        downloadImage(imageUrl, getFileName(movieName));
-                    };
-                    downloadCell.appendChild(downloadBtn);
-                    row.appendChild(downloadCell);
+                    // Método 2: Obtener desde el final de la línea después de la última coma
+                    if (!movieName) {
+                        const commaIndex = line.lastIndexOf(',');
+                        if (commaIndex !== -1) {
+                            movieName = line.substring(commaIndex + 1).trim();
+                            // Eliminar el año entre paréntesis si existe
+                            movieName = movieName.replace(/\s*\(\d{4}\)$/, '');
+                        }
+                    }
                     
-                    // Agregar la fila a la tabla
-                    tableBody.appendChild(row);
+                    if (imageUrl && movieName) {
+                        // Crear una nueva fila
+                        const row = document.createElement('tr');
+                        
+                        // Celda para el nombre
+                        const nameCell = document.createElement('td');
+                        nameCell.textContent = movieName;
+                        row.appendChild(nameCell);
+                        
+                        // Celda para la vista previa
+                        const previewCell = document.createElement('td');
+                        const img = document.createElement('img');
+                        img.src = imageUrl;
+                        img.className = 'preview-image';
+                        img.onerror = function() { this.src = '/api/placeholder/100/100'; this.alt = 'Error de carga'; };
+                        previewCell.appendChild(img);
+                        row.appendChild(previewCell);
+                        
+                        // Celda para el botón de descarga
+                        const downloadCell = document.createElement('td');
+                        const downloadBtn = document.createElement('button');
+                        downloadBtn.textContent = "Descargar JPG";
+                        downloadBtn.className = "download-btn";
+                        downloadBtn.onclick = function() {
+                            downloadImage(imageUrl, getFileName(movieName));
+                        };
+                        downloadCell.appendChild(downloadBtn);
+                        row.appendChild(downloadCell);
+                        
+                        // Agregar la fila a la tabla
+                        tableBody.appendChild(row);
+                    }
                 }
             }
         }
