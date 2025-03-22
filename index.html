@@ -70,18 +70,29 @@
         .download-btn:hover {
             background-color: #0b7dda;
         }
+        .message {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            display: none;
+        }
     </style>
 </head>
 <body>
     <h2>Extractor de Imágenes IPTV</h2>
     <textarea id="inputData" placeholder="Pega los datos IPTV aquí (formato #EXTINF con tvg-logo y nombre de película)"></textarea>
     <button onclick="processData()">Procesar Datos</button>
+    <div id="errorMessage" class="message"></div>
     <table>
         <thead>
             <tr>
                 <th>Nombre de Película</th>
                 <th>Vista Previa</th>
-                <th>Descargar JPG</th>
+                <th>URL de Imagen</th>
+                <th>Acción</th>
             </tr>
         </thead>
         <tbody id="movieTable"></tbody>
@@ -92,6 +103,12 @@
             const lines = inputData.split('\n');
             const tableBody = document.getElementById("movieTable");
             tableBody.innerHTML = "";
+            
+            const errorDiv = document.getElementById("errorMessage");
+            errorDiv.style.display = "none";
+            errorDiv.textContent = "";
+            
+            let moviesFound = 0;
             
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
@@ -124,6 +141,8 @@
                     }
                     
                     if (imageUrl && movieName) {
+                        moviesFound++;
+                        
                         // Crear una nueva fila
                         const row = document.createElement('tr');
                         
@@ -137,25 +156,72 @@
                         const img = document.createElement('img');
                         img.src = imageUrl;
                         img.className = 'preview-image';
-                        img.onerror = function() { this.src = '/api/placeholder/100/100'; this.alt = 'Error de carga'; };
+                        img.onerror = function() { 
+                            this.src = '/api/placeholder/100/100'; 
+                            this.alt = 'Error de carga'; 
+                        };
                         previewCell.appendChild(img);
                         row.appendChild(previewCell);
                         
-                        // Celda para el botón de descarga
-                        const downloadCell = document.createElement('td');
-                        const downloadBtn = document.createElement('button');
-                        downloadBtn.textContent = "Descargar JPG";
-                        downloadBtn.className = "download-btn";
-                        downloadBtn.onclick = function() {
-                            downloadImage(imageUrl, getFileName(movieName));
+                        // Celda para mostrar la URL de la imagen
+                        const urlCell = document.createElement('td');
+                        const urlInput = document.createElement('input');
+                        urlInput.type = 'text';
+                        urlInput.value = imageUrl;
+                        urlInput.style.width = '100%';
+                        urlInput.readOnly = true;
+                        urlInput.onclick = function() { this.select(); };
+                        urlCell.appendChild(urlInput);
+                        row.appendChild(urlCell);
+                        
+                        // Celda para las acciones
+                        const actionCell = document.createElement('td');
+                        
+                        // Enlace directo para abrir la imagen en una nueva pestaña
+                        const openLink = document.createElement('a');
+                        openLink.href = imageUrl;
+                        openLink.target = '_blank';
+                        openLink.textContent = 'Abrir imagen';
+                        openLink.style.marginRight = '10px';
+                        actionCell.appendChild(openLink);
+                        
+                        // Botón para copiar la URL
+                        const copyBtn = document.createElement('button');
+                        copyBtn.textContent = 'Copiar URL';
+                        copyBtn.className = 'download-btn';
+                        copyBtn.style.marginLeft = '10px';
+                        copyBtn.onclick = function() {
+                            navigator.clipboard.writeText(imageUrl)
+                                .then(() => {
+                                    const originalText = copyBtn.textContent;
+                                    copyBtn.textContent = '¡Copiado!';
+                                    setTimeout(() => {
+                                        copyBtn.textContent = originalText;
+                                    }, 1500);
+                                })
+                                .catch(err => {
+                                    console.error('Error al copiar: ', err);
+                                });
                         };
-                        downloadCell.appendChild(downloadBtn);
-                        row.appendChild(downloadCell);
+                        actionCell.appendChild(copyBtn);
+                        
+                        // Texto instructivo
+                        const helpText = document.createElement('div');
+                        helpText.innerHTML = `<small>Nombre de archivo sugerido: ${getFileName(movieName)}</small>`;
+                        helpText.style.marginTop = '5px';
+                        actionCell.appendChild(helpText);
+                        
+                        row.appendChild(actionCell);
                         
                         // Agregar la fila a la tabla
                         tableBody.appendChild(row);
                     }
                 }
+            }
+            
+            if (moviesFound === 0) {
+                errorDiv.textContent = "No se encontraron datos de películas en el formato esperado. Asegúrate de pegar contenido con líneas que empiecen con #EXTINF y contengan tvg-logo.";
+                errorDiv.style.display = "block";
             }
         }
         
@@ -163,26 +229,6 @@
         function getFileName(movieName) {
             // Reemplazar espacios y caracteres especiales
             return movieName.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_').toLowerCase() + '.jpg';
-        }
-        
-        // Función para descargar la imagen como JPG
-        function downloadImage(url, fileName) {
-            fetch(url)
-                .then(response => response.blob())
-                .then(blob => {
-                    const blobUrl = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = blobUrl;
-                    a.download = fileName;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(blobUrl);
-                })
-                .catch(error => {
-                    console.error('Error al descargar la imagen:', error);
-                    alert('No se pudo descargar la imagen. Por favor, intenta nuevamente.');
-                });
         }
     </script>
 </body>
