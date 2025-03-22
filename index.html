@@ -9,196 +9,85 @@
             font-family: Arial, sans-serif;
             background-color: #111;
             color: white;
-            margin: 0;
-            padding: 20px;
+            text-align: center;
         }
         .container {
             max-width: 800px;
-            margin: 30px auto;
+            margin: 20px auto;
             padding: 20px;
             background: #222;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s;
         }
-        .container:hover {
-            transform: translateY(-5px);
-        }
-        h1 {
-            text-align: center;
-            color: #e50914;
-            margin-bottom: 30px;
-        }
-        h2 {
-            color: #e6e6e6;
-        }
-        .movie-poster {
+        img {
             width: 100%;
-            height: 400px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
         }
         .btn {
             display: inline-block;
-            margin-top: 15px;
-            padding: 12px 25px;
-            background: #e50914;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: red;
             color: white;
             text-decoration: none;
             border-radius: 5px;
             font-size: 18px;
-            transition: background 0.3s, transform 0.2s;
-            border: none;
-            cursor: pointer;
         }
         .btn:hover {
-            background: #b20710;
-            transform: scale(1.05);
-        }
-        .movie-info {
-            text-align: center;
-        }
-        .genre {
-            display: inline-block;
-            background: #333;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 14px;
-            margin-right: 5px;
-            margin-bottom: 5px;
-        }
-        .error-placeholder {
-            width: 100%;
-            height: 400px;
-            background-color: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            font-size: 18px;
-            color: #aaa;
+            background: darkred;
         }
     </style>
 </head>
 <body>
-    <h1>Películas Online</h1>
+
     <div id="movies-container"></div>
-    
+
     <script>
         const moviesList = `
-        #EXTINF:-1 tvg-id="" tvg-name="Rebel Moon (Parte uno): Corte del director (2024)" tvg-logo="https://pics.filmaffinity.com/rebel_moon_chapter_one_chalice_of_blood-537420321-large.jpg" group-title="⭐️Estrenos 2024",Rebel Moon (Parte uno): Corte del director (2024)
+        #EXTINF:-1 tvg-name="Rebel Moon (2024)" tvg-logo="https://pics.filmaffinity.com/rebel_moon.jpg",Rebel Moon (2024)
         http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409011.mp4
-        #EXTINF:-1 tvg-id="" tvg-name="Una maniobra arriesgada (2024)" tvg-logo="http://goldfull.pro:8880/images/9f00635c31a9500037e646f8126f7f6e.jpg" group-title="⭐️Estrenos 2024",Una maniobra arriesgada (2024)
-        http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/410114.mp4
-        #EXTINF:-1 tvg-id="" tvg-name="Avatar: El Camino del Agua (2022)" tvg-logo="https://pics.filmaffinity.com/avatar_the_way_of_water-987654321-large.jpg" group-title="⭐️Ciencia Ficción",Avatar: El Camino del Agua (2022)
+
+        #EXTINF:-1 tvg-name="John Wick 4 (2023)" tvg-logo="https://pics.filmaffinity.com/john_wick_4.jpg",John Wick 4 (2023)
+        http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/987654.mp4
+
+        #EXTINF:-1 tvg-name="Avatar 2 (2022)" tvg-logo="https://pics.filmaffinity.com/avatar_2.jpg",Avatar 2 (2022)
         http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/654321.mp4
         `;
 
-        // Función para parsear la lista de películas
-        function parseMovies(moviesText) {
+        function parseMovies(text) {
             const movies = [];
-            const lines = moviesText.trim().split("\n").map(line => line.trim());
-            
+            const lines = text.trim().split("\n");
+
             for (let i = 0; i < lines.length; i += 2) {
-                if (lines.length <= i + 1 || !lines[i] || !lines[i + 1]) continue;
-                
-                // Extraer el nombre de la película
-                const nameMatch = lines[i].match(/tvg-name="([^"]+)"/);
-                const title = nameMatch ? nameMatch[1].trim() : "Sin título";
-                
-                // Extraer la URL de la imagen
-                const logoMatch = lines[i].match(/tvg-logo="([^"]+)"/);
-                const logo = logoMatch ? logoMatch[1].trim() : "";
-                
-                // Extraer el género/categoría
-                const groupMatch = lines[i].match(/group-title="([^"]+)"/);
-                const genre = groupMatch ? groupMatch[1].trim() : "Sin categoría";
-                
-                // URL del video
-                const link = lines[i + 1].trim();
-                
-                // Año (extraído del título si está disponible)
-                const yearMatch = title.match(/\((\d{4})\)/);
-                const year = yearMatch ? yearMatch[1] : "";
-                
-                movies.push({ 
-                    title, 
-                    logo, 
-                    link, 
-                    genre,
-                    year
-                });
+                let info = lines[i].match(/tvg-name="(.*?)".*?tvg-logo="(.*?)"/);
+                let title = info ? info[1] : "Película Desconocida";
+                let logo = info ? info[2] : "";
+                let link = lines[i + 1] ? lines[i + 1].trim() : "#";
+
+                movies.push({ title, logo, link });
             }
             return movies;
         }
 
-        // Función para mostrar las películas en la página
         function renderMovies() {
             const movies = parseMovies(moviesList);
             const container = document.getElementById("movies-container");
-            container.innerHTML = ""; // Limpia el contenedor
-            
-            if (movies.length === 0) {
-                container.innerHTML = "<p>No se encontraron películas para mostrar.</p>";
-                return;
-            }
-            
+            container.innerHTML = "";
+
             movies.forEach(movie => {
                 const movieElement = document.createElement("div");
                 movieElement.classList.add("container");
-                
-                // Extraer el título limpio (sin el año)
-                let cleanTitle = movie.title;
-                if (movie.year) {
-                    cleanTitle = movie.title.replace(`(${movie.year})`, "").trim();
-                }
-                
                 movieElement.innerHTML = `
-                    <div class="movie-info">
-                        <h2>${cleanTitle}</h2>
-                        ${movie.year ? `<p>${movie.year}</p>` : ''}
-                        <div>
-                            <span class="genre">${movie.genre}</span>
-                        </div>
-                    </div>
-                    <div class="poster-container">
-                        <img 
-                            class="movie-poster" 
-                            src="${movie.logo}" 
-                            alt="Portada de ${cleanTitle}" 
-                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                        >
-                        <div class="error-placeholder" style="display:none;">
-                            <p>Imagen no disponible</p>
-                        </div>
-                    </div>
-                    <div style="text-align: center;">
-                        <a class="btn" href="${movie.link}" target="_blank">Ver Película</a>
-                    </div>
+                    <h2>${movie.title}</h2>
+                    <img src="${movie.logo}" alt="Portada de ${movie.title}" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x600?text=No+Disponible';">
+                    <br>
+                    <a class="btn" href="${movie.link}" target="_blank">Ver Película</a>
                 `;
                 container.appendChild(movieElement);
             });
-
-            // Verificar que todas las imágenes sean cargadas correctamente
-            const images = document.querySelectorAll('.movie-poster');
-            images.forEach(img => {
-                // Probar la carga de la imagen
-                const testImage = new Image();
-                testImage.src = img.src;
-                
-                testImage.onerror = function() {
-                    img.style.display = 'none';
-                    img.nextElementSibling.style.display = 'flex';
-                };
-            });
         }
 
-        // Carga las películas cuando la página se cargue
-        document.addEventListener('DOMContentLoaded', renderMovies);
-        // También las carga inmediatamente por si el evento ya pasó
         renderMovies();
     </script>
+
 </body>
 </html>
