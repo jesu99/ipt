@@ -39,16 +39,49 @@
 </head>
 <body>
 
-    <div class="container">
-        <h2>A Ciegas (2020)</h2>
-        
-        <!-- Imagen de la portada -->
-        <img src="http://goldfull.pro:8880/images/fdee4dd297b7fd8db7039ee3a3b56700.jpg" alt="Portada de la película">
-        
-        <br>
-        <!-- Botón para ver la película -->
-        <a class="btn" href="http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409011.mp4" target="_blank">Ver Película</a>
-    </div>
+    <div id="movies-container"></div>
+
+    <script>
+        const moviesList = `
+        #EXTINF:-1 tvg-id="" tvg-name="Rebel Moon (Parte uno): Corte del director (2024)" tvg-logo="https://pics.filmaffinity.com/rebel_moon_chapter_one_chalice_of_blood-537420321-large.jpg" group-title="⭐️Estrenos 2024",Rebel Moon (Parte uno): Corte del director (2024)
+        http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409011.mp4
+
+        #EXTINF:-1 tvg-id="" tvg-name="Otra Película (2023)" tvg-logo="https://example.com/otra-pelicula.jpg" group-title="⭐️Acción",Otra Película (2023)
+        http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/123456.mp4
+        `;
+
+        function parseMovies(moviesText) {
+            const movies = [];
+            const lines = moviesText.trim().split("\n");
+            for (let i = 0; i < lines.length; i += 2) {
+                const info = lines[i].match(/tvg-name="(.*?)".*?tvg-logo="(.*?)"/);
+                const title = info ? info[1] : "Película Desconocida";
+                const logo = info ? info[2] : "";
+                const link = lines[i + 1] ? lines[i + 1].trim() : "#";
+                movies.push({ title, logo, link });
+            }
+            return movies;
+        }
+
+        function renderMovies() {
+            const movies = parseMovies(moviesList);
+            const container = document.getElementById("movies-container");
+
+            movies.forEach(movie => {
+                const movieElement = document.createElement("div");
+                movieElement.classList.add("container");
+                movieElement.innerHTML = `
+                    <h2>${movie.title}</h2>
+                    <img src="${movie.logo}" alt="Portada de ${movie.title}">
+                    <br>
+                    <a class="btn" href="${movie.link}" target="_blank">Ver Película</a>
+                `;
+                container.appendChild(movieElement);
+            });
+        }
+
+        renderMovies();
+    </script>
 
 </body>
 </html>
