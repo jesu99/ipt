@@ -3,91 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Películas Online</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #111;
-            color: white;
-            text-align: center;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #222;
-            border-radius: 10px;
-        }
-        img {
-            width: 100%;
-            border-radius: 10px;
-        }
-        .btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 20px;
-            background: red;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 18px;
-        }
-        .btn:hover {
-            background: darkred;
-        }
-    </style>
+    <title>Imagen de Película</title>
 </head>
 <body>
-
-    <div id="movies-container"></div>
-
-    <script>
-        const moviesList = `
-        #EXTINF:-1 tvg-name="Rebel Moon (2024)" tvg-logo="https://pics.filmaffinity.com/rebel_moon.jpg",Rebel Moon (2024)
-        http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409011.mp4
-
-        #EXTINF:-1 tvg-name="John Wick 4 (2023)" tvg-logo="https://pics.filmaffinity.com/john_wick_4.jpg",John Wick 4 (2023)
-        http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/987654.mp4
-
-        #EXTINF:-1 tvg-name="Avatar 2 (2022)" tvg-logo="https://pics.filmaffinity.com/avatar_2.jpg",Avatar 2 (2022)
-        http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/654321.mp4
-        `;
-
-        function parseMovies(text) {
-            const movies = [];
-            const lines = text.trim().split("\n");
-
-            for (let i = 0; i < lines.length; i += 2) {
-                let info = lines[i].match(/tvg-name="(.*?)".*?tvg-logo="(.*?)"/);
-                let title = info ? info[1] : "Película Desconocida";
-                let logo = info ? info[2] : "";
-                let link = lines[i + 1] ? lines[i + 1].trim() : "#";
-
-                movies.push({ title, logo, link });
-            }
-            return movies;
-        }
-
-        function renderMovies() {
-            const movies = parseMovies(moviesList);
-            const container = document.getElementById("movies-container");
-            container.innerHTML = "";
-
-            movies.forEach(movie => {
-                const movieElement = document.createElement("div");
-                movieElement.classList.add("container");
-                movieElement.innerHTML = `
-                    <h2>${movie.title}</h2>
-                    <img src="${movie.logo}" alt="Portada de ${movie.title}" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x600?text=No+Disponible';">
-                    <br>
-                    <a class="btn" href="${movie.link}" target="_blank">Ver Película</a>
-                `;
-                container.appendChild(movieElement);
-            });
-        }
-
-        renderMovies();
-    </script>
-
+    <img src="http://goldfull.pro:8880/images/9f00635c31a9500037e646f8126f7f6e.jpg" alt="Portada de la película" width="300">
 </body>
 </html>
