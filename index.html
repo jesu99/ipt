@@ -3,11 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ver Imagen</title>
+    <title>Película</title>
+    <style>
+        body { text-align: center; background-color: #111; color: white; font-family: Arial, sans-serif; }
+        .container { max-width: 600px; margin: 50px auto; background: #222; padding: 20px; border-radius: 10px; }
+        img { width: 100%; border-radius: 10px; }
+        .btn { 
+            display: inline-block; margin-top: 15px; padding: 10px 20px; background: red; 
+            color: white; text-decoration: none; border-radius: 5px; font-size: 18px;
+        }
+        .btn:hover { background: darkred; }
+    </style>
 </head>
 <body>
-    <a href="http://goldfull.pro:8880/images/9f00635c31a9500037e646f8126f7f6e.jpg" target="_blank">
-        Ver Imagen
-    </a>
+
+    <div class="container">
+        <h2>Una maniobra arriesgada (2024)</h2>
+        <img src="http://goldfull.pro:8880/images/9f00635c31a9500037e646f8126f7f6e.jpg" alt="Portada">
+        <br>
+        <a class="btn" href="http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/410114.mp4" target="_blank">
+            Ver Película
+        </a>
+    </div>
+
 </body>
 </html>
