@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reproductor de Películas</title>
+    <title>Películas Online</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,7 +18,7 @@
             background: #222;
             border-radius: 10px;
         }
-        video {
+        img {
             width: 100%;
             border-radius: 10px;
         }
@@ -30,6 +30,7 @@
             color: white;
             text-decoration: none;
             border-radius: 5px;
+            font-size: 18px;
         }
         .btn:hover {
             background: darkred;
@@ -39,15 +40,14 @@
 <body>
 
     <div class="container">
-        <h2>Película en Streaming</h2>
+        <h2>A Ciegas (2020)</h2>
         
-        <video controls>
-            <source src="http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409011.mp4" type="video/mp4">
-            Tu navegador no soporta la reproducción de videos.
-        </video>
+        <!-- Imagen de la portada -->
+        <img src="http://goldfull.pro:8880/images/fdee4dd297b7fd8db7039ee3a3b56700.jpg" alt="Portada de la película">
         
         <br>
-        <a class="btn" href="http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409011.mp4" download>Descargar Película</a>
+        <!-- Botón para ver la película -->
+        <a class="btn" href="http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409011.mp4" target="_blank">Ver Película</a>
     </div>
 
 </body>
