@@ -7,25 +7,35 @@
 </head>
 <body>
     <h2>Archivo M3U Modificado</h2>
+    <textarea id="m3uInput" rows="10" cols="80" placeholder="Pega aquí tu archivo M3U"></textarea>
+    <br>
+    <textarea id="replaceList" rows="10" cols="80" placeholder="Pega aquí la lista de reemplazo (URL antigua - URL nueva, una por línea)"></textarea>
+    <br>
+    <button onclick="replaceImages()">Reemplazar Imágenes</button>
+    <h3>Resultado:</h3>
     <pre id="output"></pre>
 
     <script>
-        let m3uData = `#EXTINF:-1 tvg-id="" tvg-name="El Cuervo (2024)" tvg-logo="http://goldfull.pro:8880/images/ba8d8ab1d29c23d8c0bc497686d6c878.jpg" group-title="⭐️Estrenos 2024",El Cuervo (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/414395.mp4`;
+        function replaceImages() {
+            let m3uData = document.getElementById("m3uInput").value;
+            let replacements = document.getElementById("replaceList").value.split("\n");
 
-        // Lista de reemplazos (clave: URL antigua, valor: URL nueva)
-        const replacements = {
-            "http://goldfull.pro:8880/images/ba8d8ab1d29c23d8c0bc497686d6c878.jpg": "https://i.postimg.cc/g0mbGW9K/El-Cuervo.jpg"
-        };
+            let replaceMap = {};
+            replacements.forEach(line => {
+                let parts = line.split(" -> "); // Separador para reemplazo
+                if (parts.length === 2) {
+                    replaceMap[parts[0].trim()] = parts[1].trim();
+                }
+            });
 
-        // Reemplazar enlaces en el archivo M3U
-        for (const oldUrl in replacements) {
-            const newUrl = replacements[oldUrl];
-            m3uData = m3uData.replace(oldUrl, newUrl);
+            // Reemplazar enlaces antiguos por los nuevos
+            for (const oldUrl in replaceMap) {
+                const newUrl = replaceMap[oldUrl];
+                m3uData = m3uData.replaceAll(oldUrl, newUrl);
+            }
+
+            document.getElementById("output").textContent = m3uData;
         }
-
-        // Mostrar el resultado en pantalla
-        document.getElementById("output").textContent = m3uData;
     </script>
 </body>
 </html>
