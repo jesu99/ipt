@@ -3,52 +3,551 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Películas</title>
+    <title>Películas</title>
 </head>
 <body>
     <h2>Lista de Películas</h2>
-    <div id="movieList"></div>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Reproducir</th>
+            </tr>
+        </thead>
+        <tbody id="movieTable"></tbody>
+    </table>
 
     <script>
-        const m3uData = `#EXTINF:-1 tvg-id="" tvg-name="As Neves (2024)" tvg-logo="http://goldfull.pro:8880/images/1bfdc1a81edf859e2bc5dbc95496037d.jpg" group-title="⭐️Estrenos 2024",As Neves (2024)
+        const m3uData = `
+#EXTINF:-1 tvg-id="" tvg-name="As Neves (2024)" tvg-logo="http://goldfull.pro:8880/images/1bfdc1a81edf859e2bc5dbc95496037d.jpg" group-title="⭐️Estrenos 2024",As Neves (2024)
 http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416454.mp4
 #EXTINF:-1 tvg-id="" tvg-name="Correr Para Vivir (2024)" tvg-logo="http://goldfull.pro:8880/images/c32dab0cb0d49916b74ad1091643ee71.jpg" group-title="⭐️Estrenos 2024",Correr Para Vivir (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416455.mp4`;
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416455.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Rebel Ridge (2024)" tvg-logo="http://goldfull.pro:8880/images/cc06b4ae6c079f56312294a20fd3c9a6.jpg" group-title="⭐️Estrenos 2024",Rebel Ridge (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416456.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Descubriendo A Mi Hijo (2024)" tvg-logo="http://goldfull.pro:8880/images/56e2b8ec0e605d7263fe84a328bf92c2.jpg" group-title="⭐️Estrenos 2024",Descubriendo A Mi Hijo (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416457.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Technoboys (2024)" tvg-logo="http://goldfull.pro:8880/images/fdbeaf0f7be85d1592ff243488b7cd41.jpg" group-title="⭐️Estrenos 2024",Technoboys (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416471.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Mejor viuda que mal acompañada (2024)" tvg-logo="http://goldfull.pro:8880/images/ad087e9cf531682914b93e1cec5d72e0.jpg" group-title="⭐️Estrenos 2024",Mejor viuda que mal acompañada (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416534.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Boxeador (2024)" tvg-logo="http://goldfull.pro:8880/images/549e389452029f944450d01b399b6f7d.jpg" group-title="⭐️Estrenos 2024",Boxeador (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416535.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Yolo - solo se vive una vez (2024)" tvg-logo="http://goldfull.pro:8880/images/e779868cc8245e06554c7c1dd3afdffd.jpg" group-title="⭐️Estrenos 2024",Yolo - solo se vive una vez (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416536.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Bienvenidos al paraíso (2024)" tvg-logo="http://goldfull.pro:8880/images/2a413975994678c5b44558f8c0024e48.jpg" group-title="⭐️Estrenos 2024",Bienvenidos al paraíso (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416537.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Disco, Ibiza, Locomía (2024)" tvg-logo="http://goldfull.pro:8880/images/4d3775b08b227fcdc695f1303c120564.jpg" group-title="⭐️Estrenos 2024",Disco, Ibiza, Locomía (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416538.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Half Baked: Totally High (2024)" tvg-logo="http://goldfull.pro:8880/images/f017dc93eca0aeaf55c0471a927a73ef.jpg" group-title="⭐️Estrenos 2024",Half Baked: Totally High (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416539.mp4
+#EXTINF:-1 tvg-id="" tvg-name="No hables con extraños (2024) CAM" tvg-logo="http://goldfull.pro:8880/images/4bfb8f4be411d89a51ca237d366fa594.jpg" group-title="⭐️Estrenos 2024",No hables con extraños (2024) CAM
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416540.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Los feos (2024)" tvg-logo="http://goldfull.pro:8880/images/cb42f732b45bdce7ea18e4e78e7c3fea.jpg" group-title="⭐️Estrenos 2024",Los feos (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416541.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Agente cinturón negro (2024)" tvg-logo="http://goldfull.pro:8880/images/ecca43e8ca06b4a512c37ca9df9785bf.jpg" group-title="⭐️Estrenos 2024",Agente cinturón negro (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416542.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Hermanos por accidente (2024)" tvg-logo="http://goldfull.pro:8880/images/ac1208be73acda59552da6957cd62ec7.jpg" group-title="⭐️Estrenos 2024",Hermanos por accidente (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416790.mp4
+#EXTINF:-1 tvg-id="" tvg-name="You Gotta Believe (2024)" tvg-logo="http://goldfull.pro:8880/images/f478ef9574201be89a64ff1ea72652ff.jpg" group-title="⭐️Estrenos 2024",You Gotta Believe (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416791.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Perros de Guerra (2024)" tvg-logo="http://goldfull.pro:8880/images/03033ffda7f4eb5c7c8b338504a4d0c3.jpg" group-title="⭐️Estrenos 2024",Perros de Guerra (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416792.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Dìdi (弟弟) (2024)" tvg-logo="http://goldfull.pro:8880/images/e85b2e44c1798318b5590c25ed446d24.jpg" group-title="⭐️Estrenos 2024",Dìdi (弟弟) (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416793.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Parpadea dos veces (2024)" tvg-logo="http://goldfull.pro:8880/images/e188e31182eba6ef069897155a8a69f3.jpg" group-title="⭐️Estrenos 2024",Parpadea dos veces (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416794.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Bandida: La Número Uno (2024)" tvg-logo="http://goldfull.pro:8880/images/171196b15b549cc97a72ea006b5ee4e2.jpg" group-title="⭐️Estrenos 2024",Bandida: La Número Uno (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416795.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Parano-IA (2024)" tvg-logo="http://goldfull.pro:8880/images/a0a14eb50a0b5838038a74e4cd1ed9e9.jpg" group-title="⭐️Estrenos 2024",Parano-IA (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416796.mp4
+#EXTINF:-1 tvg-id="" tvg-name="El exorcismo de Georgetown (2024)" tvg-logo="http://goldfull.pro:8880/images/437e6bd0f1b5f2368ff931d10bb5f8f1.jpg" group-title="⭐️Estrenos 2024",El exorcismo de Georgetown (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416797.mp4
+#EXTINF:-1 tvg-id="" tvg-name="V de Víctor (2024)" tvg-logo="http://goldfull.pro:8880/images/a3f2f6b398409008b764fe0834074fe8.jpg" group-title="⭐️Estrenos 2024",V de Víctor (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416798.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Sector 36 (2024)" tvg-logo="http://goldfull.pro:8880/images/5ab5b4f844c59da21121e4b3cfbbf0bc.jpg" group-title="⭐️Estrenos 2024",Sector 36 (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416799.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Skinford 2: The Curse (2024)" tvg-logo="http://goldfull.pro:8880/images/c429edd8c0fdc0015bc7e9692d587c2b.jpg" group-title="⭐️Estrenos 2024",Skinford 2: The Curse (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416800.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Las tres hijas (2024)" tvg-logo="http://goldfull.pro:8880/images/9639cbe684f7bbf9a8fc6191eca611c8.jpg" group-title="⭐️Estrenos 2024",Las tres hijas (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416801.mp4
+#EXTINF:-1 tvg-id="" tvg-name="De Noche Con El Diablo (2024)" tvg-logo="http://goldfull.pro:8880/images/467126e1180d278439c464d28fd9d760.jpg" group-title="⭐️Estrenos 2024",De Noche Con El Diablo (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416802.mp4
+#EXTINF:-1 tvg-id="" tvg-name="La Sustancia (2024)" tvg-logo="http://goldfull.pro:8880/images/fc6ae3bdfb78f45adbc98efd85ed84b4.jpg" group-title="⭐️Estrenos 2024",La Sustancia (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416803.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Hellboy: The Crooked Man (2024)" tvg-logo="http://goldfull.pro:8880/images/e5ff3f3c6e821f401b4d6e4c888cef50.jpg" group-title="⭐️Estrenos 2024",Hellboy: The Crooked Man (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416871.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Transformers Uno (2024)" tvg-logo="http://goldfull.pro:8880/images/eba6a3a599860b6e1eea2975e5b2c3f5.jpg" group-title="⭐️Estrenos 2024",Transformers Uno (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416873.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Una Propuesta indecorosa (1993)" tvg-logo="http://goldfull.pro:8880/images/96394b0027a0aef0815b5c3d4c757a57.jpg" group-title="⭐️Romance",Una Propuesta indecorosa (1993)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417313.mp4
+#EXTINF:-1 tvg-id="" tvg-name="El hombre celoso (2024)" tvg-logo="http://goldfull.pro:8880/images/76eae5c92c54581c6a6e512fce2bc264.jpg" group-title="⭐️Estrenos 2024",El hombre celoso (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417314.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Sed de Venganza 2 (2024)" tvg-logo="http://goldfull.pro:8880/images/d4ea09e048f40e3e133295d09d34c553.jpg" group-title="⭐️Estrenos 2024",Sed de Venganza 2 (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417315.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Misión suicida (2024)" tvg-logo="http://goldfull.pro:8880/images/e9ab2421462302e7b1f324e1fe05bccc.jpg" group-title="⭐️Estrenos 2024",Misión suicida (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417316.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Watchmen: Capítulo 1 (2024)" tvg-logo="http://goldfull.pro:8880/images/8340a7b9b3a6bddc29953815da2a6d6f.jpg" group-title="⭐️Estrenos 2024",Watchmen: Capítulo 1 (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417317.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Un auténtico caballero (2024)" tvg-logo="http://goldfull.pro:8880/images/772acc48a44c3c0261e71f5e148d6ccd.jpg" group-title="⭐️Estrenos 2024",Un auténtico caballero (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417318.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Divorciados (2024)" tvg-logo="http://goldfull.pro:8880/images/b0972cbd68996bcfbdac0725a1eb08c5.jpg" group-title="⭐️Estrenos 2024",Divorciados (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417319.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Robot salvaje (2024)" tvg-logo="http://goldfull.pro:8880/images/c27192c9e4392409220cd9f7fa4901b0.jpg" group-title="⭐️Estrenos 2024",Robot salvaje (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417321.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Corrupción en Bangkok: Entre el cielo y el infierno (2024)" tvg-logo="http://goldfull.pro:8880/images/73bba7ca2694f5e02704111f0f8776fb.jpg" group-title="⭐️Estrenos 2024",Corrupción en Bangkok: Entre el cielo y el infierno (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417322.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Lobos (2024)" tvg-logo="http://goldfull.pro:8880/images/99b7df588140e653c5681e06bb72b92e.jpg" group-title="⭐️Estrenos 2024",Lobos (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417323.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Rez Ball (2024)" tvg-logo="http://goldfull.pro:8880/images/875b52adfa20b6c9a7c64ed6236eee00.jpg" group-title="⭐️Estrenos 2024",Rez Ball (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417324.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Radio Portal 90" tvg-logo="http://goldfull.pro:8880/images/3d2326e18963d4b6198b07fdb276014a.png" group-title="⭐️ RADIOS CHILE",Radio Portal 90
+http://goldfull.pro:8880/IptvNetmax026/MvEUWB5455UU/417325
+#EXTINF:-1 tvg-id="" tvg-name="Departamento 7A (2024)" tvg-logo="http://goldfull.pro:8880/images/d48a09e094131944f41188d94c15860d.jpg" group-title="⭐️Estrenos 2024",Departamento 7A (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417399.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Flow (2024)" tvg-logo="http://goldfull.pro:8880/images/bbc92d45221453000035c1af75a532a7.jpg" group-title="⭐️Estrenos 2024",Flow (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417400.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Vico C: La vida del filósofo (2017)" tvg-logo="http://goldfull.pro:8880/images/4cd6c5e96b6f8ce3b62827ae818600ea.jpg" group-title="⭐️Drama",Vico C: La vida del filósofo (2017)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417402.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Desafío al Tiempo (2000)" tvg-logo="http://goldfull.pro:8880/images/98ddba883d6065e262eebf01c7cd1ba6.jpg" group-title="⭐️Ciencia Ficción",Desafío al Tiempo (2000)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417403.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Guasón 2: Folie à Deux (2024)" tvg-logo="http://goldfull.pro:8880/images/8677e012446927bd073ef0da3c4d0789.jpg" group-title="⭐️Estrenos 2024",Guasón 2: Folie à Deux (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417615.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Faro (2024)" tvg-logo="http://goldfull.pro:8880/images/b61347b74a6fcb7fcecb00a5826b6670.jpg" group-title="⭐️Estrenos 2024",Faro (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417726.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Mascotas En Apuros (2024)" tvg-logo="http://goldfull.pro:8880/images/d2ef431b5c1beb8872bdbe3310d2d7a6.jpg" group-title="⭐️Estrenos 2024",Mascotas En Apuros (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417727.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Instintos asesinos (2024)" tvg-logo="http://goldfull.pro:8880/images/54c3aba01656bee852cd64ebfaf64474.jpg" group-title="⭐️Estrenos 2024",Instintos asesinos (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417728.mp4
+#EXTINF:-1 tvg-id="" tvg-name="No hables con extraños (2024)" tvg-logo="http://goldfull.pro:8880/images/c1ec336c508c8cb58f1508fd232e12c8.jpg" group-title="⭐️Estrenos 2024",No hables con extraños (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417729.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Culpa cero (2024)" tvg-logo="http://goldfull.pro:8880/images/9b58a788b3201583ffbf6e43764206b0.jpg" group-title="⭐️Estrenos 2024",Culpa cero (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417730.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Aguanta la respiración (2024)" tvg-logo="http://goldfull.pro:8880/images/800dbaf4221473f22fd5dc524a36fcdb.jpg" group-title="⭐️Estrenos 2024",Aguanta la respiración (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417731.mp4
+#EXTINF:-1 tvg-id="" tvg-name="El misterio de Salem's Lot (2024)" tvg-logo="http://goldfull.pro:8880/images/6e261d5f5aea4b5ac46a7df0e974a1d3.jpg" group-title="⭐️Estrenos 2024",El misterio de Salem's Lot (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417732.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Los iniciados: El diario de las sombras (2024)" tvg-logo="http://goldfull.pro:8880/images/bc0c0496dbc98b868d4c9ae755db0712.jpg" group-title="⭐️Estrenos 2024",Los iniciados: El diario de las sombras (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417733.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Lo que hay dentro (2024)" tvg-logo="http://goldfull.pro:8880/images/6b220735f97a53745177b90d2253929d.jpg" group-title="⭐️Estrenos 2024",Lo que hay dentro (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417734.mp4
+#EXTINF:-1 tvg-id="" tvg-name="El hoyo 2 (2024)" tvg-logo="http://goldfull.pro:8880/images/6d2536f6803deae0ee72fc731ffc84b6.jpg" group-title="⭐️Estrenos 2024",El hoyo 2 (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417735.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Problemas... (2024)" tvg-logo="http://goldfull.pro:8880/images/7c75670ac4798bd3cc70e75534ece52d.jpg" group-title="⭐️Estrenos 2024",Problemas... (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417736.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Los tipos malos: ¿Truco o atraco? (2024)" tvg-logo="http://goldfull.pro:8880/images/5675d1bb331971391570201f8e1cbe59.jpg" group-title="⭐️Estrenos 2024",Los tipos malos: ¿Truco o atraco? (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417737.mp4
+#EXTINF:-1 tvg-id="" tvg-name="El universo de Óliver (2024)" tvg-logo="http://goldfull.pro:8880/images/2f08bdc696c4b2d9e00f604810384358.jpg" group-title="⭐️Estrenos 2024",El universo de Óliver (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417738.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Anticristo - El Exorcismo de Lara (2023)" tvg-logo="http://goldfull.pro:8880/images/c89838af45166a52db5594bfa5737fb9.jpg" group-title="⭐️Películas 2023",Anticristo - El Exorcismo de Lara (2023)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417739.mp4
+#EXTINF:-1 tvg-id="" tvg-name="El diario (2024)" tvg-logo="http://goldfull.pro:8880/images/c858348957aff111311af956d2bff8b1.jpg" group-title="⭐️Estrenos 2024",El diario (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417740.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Las Voces (2014)" tvg-logo="http://goldfull.pro:8880/images/02746d4c3b5f9f9fce7aad8add703756.jpg" group-title="⭐️Terror",Las Voces (2014)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417818.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Padre no hay más que uno 4: Campanas de boda (2024)" tvg-logo="http://goldfull.pro:8880/images/44630619148ec12270450945a65ad239.jpg" group-title="⭐️Estrenos 2024",Padre no hay más que uno 4: Campanas de boda (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417864.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Línea mortal: al límite (2017)" tvg-logo="http://goldfull.pro:8880/images/f7ea52dbe2e4585363ee57cd98c2bbe3.jpg" group-title="⭐️Terror",Línea mortal: al límite (2017)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417877.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Guasón (2019)" tvg-logo="http://goldfull.pro:8880/images/bfae0fbc2537a72d794f5ff5f789f8f5.jpg" group-title="⭐️Crímen y Suspenso",Guasón (2019)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417986.mkv
+#EXTINF:-1 tvg-id="" tvg-name="Vida Bandida (2001)" tvg-logo="http://goldfull.pro:8880/images/53b39b8f0b2acd0dee342feedf5b0a99.jpg" group-title="⭐️Crímen y Suspenso",Vida Bandida (2001)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417987.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Al diablo con el amor (2009)" tvg-logo="http://goldfull.pro:8880/images/f245aededdba2ab8131351d85e20d536.jpg" group-title="⭐️Comedía",Al diablo con el amor (2009)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/417988.mkv
+#EXTINF:-1 tvg-id="" tvg-name="La decisión más difícil (2009)" tvg-logo="http://goldfull.pro:8880/images/9839b977aaf76fb5a8a5eef559b74022.jpg" group-title="⭐️Amazon Prime",La decisión más difícil (2009)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/418146.mp4
+#EXTINF:-1 tvg-id="" tvg-name="One Piece: Estampida (2019)" tvg-logo="http://goldfull.pro:8880/images/3804185ebb05962967320316902171ee.jpg" group-title="⭐️Anime",One Piece: Estampida (2019)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/418179.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Debieron irse (2020)" tvg-logo="http://goldfull.pro:8880/images/626b5053be8fd420d42a867c48d15c44.jpg" group-title="⭐️Terror",Debieron irse (2020)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/415693.mp4
+#EXTINF:-1 tvg-id="" tvg-name="El ataque del cocadrilo (2024)" tvg-logo="http://goldfull.pro:8880/images/bfc84ee0b77ffddd6e6e55da0fe8d100.jpg" group-title="⭐️Estrenos 2024",El ataque del cocadrilo (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416073.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Amigos Sem Compromisso (2024)" tvg-logo="http://goldfull.pro:8880/images/3367757409c2d5303a64229e24e0ede8.jpg" group-title="⭐️Estrenos 2024",Amigos Sem Compromisso (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416074.mp4
+#EXTINF:-1 tvg-id="" tvg-name="The Killer (2024)" tvg-logo="http://goldfull.pro:8880/images/5752c4ebba7ace28202994ca5f215011.jpg" group-title="⭐️Estrenos 2024",The Killer (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416075.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Beetlejuice Beetlejuice (2024)" tvg-logo="http://goldfull.pro:8880/images/fccaec14a0b9fc68bf82e456d14c13b8.jpg" group-title="⭐️Estrenos 2024",Beetlejuice Beetlejuice (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416077.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Within Desde adentro (2016)" tvg-logo="http://goldfull.pro:8880/images/726b48d5881f832fff239509b2c2c7cb.jpg" group-title="⭐️Terror",Within Desde adentro (2016)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416104.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Friend Request (2016)" tvg-logo="http://goldfull.pro:8880/images/af7ad834b5cdf3eca367cb57a80236b9.jpg" group-title="⭐️Terror",Friend Request (2016)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/415625.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Luck (2022)" tvg-logo="http://goldfull.pro:8880/images/9ffe2c77ca447139b5cd9ea6ad9afb8f.jpg" group-title="⭐️Películas 2022",Luck (2022)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/415626.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Borderlands: El destino del universo está en juego (2024)" tvg-logo="http://goldfull.pro:8880/images/b1d33532c6f239f4bc2b272ad44a4594.jpg" group-title="⭐️Estrenos 2024",Borderlands: El destino del universo está en juego (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/415627.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Harold y su crayón mágico (2024)" tvg-logo="http://goldfull.pro:8880/images/3216a5696d8d2eaa0aa0798b37b6cc36.jpg" group-title="⭐️Estrenos 2024",Harold y su crayón mágico (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/415628.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Longlegs: Coleccionista de almas (2024)" tvg-logo="http://goldfull.pro:8880/images/8c3685a4d2f491f802372c52b9c4c091.jpg" group-title="⭐️Estrenos 2024",Longlegs: Coleccionista de almas (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/415629.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Tipos de gentileza (2024)" tvg-logo="http://goldfull.pro:8880/images/fcaddf831e0aa1a6564768f87236c8b2.jpg" group-title="⭐️Estrenos 2024",Tipos de gentileza (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/415630.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Príncipes salvajes (2024)" tvg-logo="http://goldfull.pro:8880/images/fd37ec73219aeacb70d0fa8b798b58ae.jpg" group-title="⭐️Estrenos 2024",Príncipes salvajes (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/415631.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Contaminados por el miedo (2024)" tvg-logo="http://goldfull.pro:8880/images/3a7b058314b8bd550c7d2ebfe031853e.jpg" group-title="⭐️Estrenos 2024",Contaminados por el miedo (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/415632.mp4
+#EXTINF:-1 tvg-id="" tvg-name="La liberación (2024)" tvg-logo="http://goldfull.pro:8880/images/ec5b116433fe24ad7858d88f23881e8f.jpg" group-title="⭐️Estrenos 2024",La liberación (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/415633.mp4
+#EXTINF:-1 tvg-id="" tvg-name="La trampa (2024)" tvg-logo="http://goldfull.pro:8880/images/afff1bd215acc0d856f2cfc7b9f0c1b3.jpg" group-title="⭐️Estrenos 2024",La trampa (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/415634.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Las hermanas fantásticas (2024)" tvg-logo="http://goldfull.pro:8880/images/252e7dea4ff1d669afc6b29d1b6805a3.jpg" group-title="⭐️Estrenos 2024",Las hermanas fantásticas (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/415635.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Blanquita (2023)" tvg-logo="http://goldfull.pro:8880/images/6732f7f8ab8a80b1aa4190b194abf0ef.jpg" group-title="⭐️Películas 2023",Blanquita (2023)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398120.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Monstruo de las Profundidades (2023)" tvg-logo="http://goldfull.pro:8880/images/9cd2cb2a1e8ecddec51d5ebd9bed884d.jpg" group-title="⭐️Películas 2023",Monstruo de las Profundidades (2023)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398121.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Campo de batalla: La caída del mundo (2023)" tvg-logo="http://goldfull.pro:8880/images/1810f56f4c01967f5511e48fa9b7439a.jpg" group-title="⭐️Películas 2023",Campo de batalla: La caída del mundo (2023)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398122.mp4
+#EXTINF:-1 tvg-id="" tvg-name="El demonio entre nosotros (2023)" tvg-logo="http://goldfull.pro:8880/images/4685b00198738a71628a2d4546fdf590.jpg" group-title="⭐️Películas 2023",El demonio entre nosotros (2023)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398123.mp4
+#EXTINF:-1 tvg-id="" tvg-name="El espiritu de las tinieblas (2023)" tvg-logo="http://goldfull.pro:8880/images/946b34866a927a2039ee1121ca9a05de.jpg" group-title="⭐️Películas 2023",El espiritu de las tinieblas (2023)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398124.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Godless: The Eastfield Exorcism (2023)" tvg-logo="http://goldfull.pro:8880/images/c89838af45166a52db5594bfa5737fb9.jpg" group-title="⭐️Películas 2023",Godless: The Eastfield Exorcism (2023)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398125.mp4
+#EXTINF:-1 tvg-id="" tvg-name="El Monstruo Guerrero (2023)" tvg-logo="http://goldfull.pro:8880/images/5bdf10f2b4aecd29da38b95831171aa4.jpg" group-title="⭐️Películas 2023",El Monstruo Guerrero (2023)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398126.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Tempestad de hielo (2023)" tvg-logo="http://goldfull.pro:8880/images/e2a534fa8079417ef7ca7dbf969fc783.jpg" group-title="⭐️Películas 2023",Tempestad de hielo (2023)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398127.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Fancy Dance: Una danza ceremonial (2024)" tvg-logo="http://goldfull.pro:8880/images/e78dc095ee4a743da8e8c4e3c2fda992.jpg" group-title="⭐️Películas 2023",Fancy Dance: Una danza ceremonial (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398128.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Rafa Márquez: El capitán (2024)" tvg-logo="http://goldfull.pro:8880/images/30c4b9202950ece2b73651466bbb6fef.jpg" group-title="⭐️Estrenos 2024",Rafa Márquez: El capitán (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398129.mp4
+#EXTINF:-1 tvg-id="" tvg-name="La Familia del Barrio: La Película (2024)" tvg-logo="http://goldfull.pro:8880/images/e4d72fd9638f4a2b6cb45b1be68c84a1.jpg" group-title="⭐️Estrenos 2024",La Familia del Barrio: La Película (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398130.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Almamula (2024)" tvg-logo="http://goldfull.pro:8880/images/ddfef7fb155771d2688c97161c1d2d8d.jpg" group-title="⭐️Estrenos 2024",Almamula (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398131.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Problemista (2024)" tvg-logo="http://goldfull.pro:8880/images/dda1dc0d7b74f9bf9e4bf4eed936e102.jpg" group-title="⭐️Estrenos 2024",Problemista (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398132.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Satán (2024)" tvg-logo="http://goldfull.pro:8880/images/6f3282b31817678e2d8990bd9bb4ccac.jpg" group-title="⭐️Estrenos 2024",Satán (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398133.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Un asunto familiar (2024)" tvg-logo="http://goldfull.pro:8880/images/5885ae53a3480dd76d8ee82a270af734.jpg" group-title="⭐️Estrenos 2024",Un asunto familiar (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398134.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Un Gato con Suerte (2024)" tvg-logo="http://goldfull.pro:8880/images/7cb6406ad5013b195c32b4933d24a2e9.jpg" group-title="⭐️Estrenos 2024",Un Gato con Suerte (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398135.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Juanpis González: El presidente de la gente (2024)" tvg-logo="http://goldfull.pro:8880/images/ee37ecec697ca17e2793b2e6ee280354.jpg" group-title="⭐️Estrenos 2024",Juanpis González: El presidente de la gente (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398136.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Un detective suelto en Hollywood: Axel F. (2024)" tvg-logo="http://goldfull.pro:8880/images/da060e438b57c583e19e2490e64e2f85.jpg" group-title="⭐️Estrenos 2024",Un detective suelto en Hollywood: Axel F. (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398137.mp4
+#EXTINF:-1 tvg-id="" tvg-name="El imaginario (2024)" tvg-logo="http://goldfull.pro:8880/images/a716460118134ff349a64ca2abb5b47d.jpg" group-title="⭐️Estrenos 2024",El imaginario (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398138.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Goyo (2024)" tvg-logo="http://goldfull.pro:8880/images/864cccad0d6c292a9b8da81a801a6bc9.jpg" group-title="⭐️Estrenos 2024",Goyo (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398139.mp4
+#EXTINF:-1 tvg-id="" tvg-name="La monja mala 3 (2024)" tvg-logo="http://goldfull.pro:8880/images/fd18aa83ce5a65860263b5b9567086de.jpg" group-title="⭐️Estrenos 2024",La monja mala 3 (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398140.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Garfield: Fuera de Casa (2024)" tvg-logo="http://goldfull.pro:8880/images/43eae348723145b1812b52999b4904a8.jpg" group-title="⭐️Estrenos 2024",Garfield: Fuera de Casa (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398736.mp4
+#EXTINF:-1 tvg-id="" tvg-name="El planeta de los simios: Nuevo reino (2024)" tvg-logo="http://goldfull.pro:8880/images/9a8e7a2219ab5ee779631a63f1ca822b.jpg" group-title="⭐️Estrenos 2024",El planeta de los simios: Nuevo reino (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/398737.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Canceled (2023)" tvg-logo="http://goldfull.pro:8880/images/091c45778c7ee3d39218e01106c9dae2.jpg" group-title="⭐️Películas 2023",Canceled (2023)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/400409.mp4
+#EXTINF:-1 tvg-id="" tvg-name="La Guerra de los Mundos: El Ataque (2023)" tvg-logo="http://goldfull.pro:8880/images/c989ce192cdc048729683c7762ba64a7.jpg" group-title="⭐️Películas 2023",La Guerra de los Mundos: El Ataque (2023)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/400410.mp4
+#EXTINF:-1 tvg-id="" tvg-name="La Pequeña Serena: Un Océano de Aventuras (2023)" tvg-logo="http://goldfull.pro:8880/images/d23f3543be686086862054bef1ed5d13.jpg" group-title="⭐️Películas 2023",La Pequeña Serena: Un Océano de Aventuras (2023)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/400411.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Quizás es cierto lo que dicen de nosotras (2024)" tvg-logo="http://goldfull.pro:8880/images/79e622970f7f26519e5c0754310c3a97.jpg" group-title="⭐️Estrenos 2024",Quizás es cierto lo que dicen de nosotras (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/400412.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Desaparecidos en la noche (2024)" tvg-logo="http://goldfull.pro:8880/images/76ce8fbaf165d09a3154c108975744bc.jpg" group-title="⭐️Estrenos 2024",Desaparecidos en la noche (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/400413.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Wild Wild Punjab (2024)" tvg-logo="http://goldfull.pro:8880/images/74a28101d1def8b31de3604edf1ea18c.jpg" group-title="⭐️Estrenos 2024",Wild Wild Punjab (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/400414.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Lobola Man (2024)" tvg-logo="http://goldfull.pro:8880/images/edcf39cad19cc4011701ff7f268b3d3b.jpg" group-title="⭐️Estrenos 2024",Lobola Man (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/400415.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Solo una noche de juegos (2024)" tvg-logo="http://goldfull.pro:8880/images/e7bfe6e63f486982ea72a5e79670558f.jpg" group-title="⭐️Estrenos 2024",Solo una noche de juegos (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/400416.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Descendientes: el ascenso de Red (2024)" tvg-logo="http://goldfull.pro:8880/images/e79eb3416144b7abd4f58e2137a57380.jpg" group-title="⭐️Estrenos 2024",Descendientes: el ascenso de Red (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/400417.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Divorcio en negro, de Tyler Perry (2024)" tvg-logo="http://goldfull.pro:8880/images/28448dad2a19ca13b8a2cdb1086bd001.jpg" group-title="⭐️Estrenos 2024",Divorcio en negro, de Tyler Perry (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/400418.mp4
+#EXTINF:-1 tvg-id="" tvg-name="KonoSuba: La Película. La Leyenda del Carmesí (2019)" tvg-logo="http://goldfull.pro:8880/images/d22d7aac2eaa0c7a340559e620d08978.jpg" group-title="⭐️Anime",KonoSuba: La Película. La Leyenda del Carmesí (2019)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/403250.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Liga de la Justicia: Crisis en Tierras Infinitas – Parte 3 (2024)" tvg-logo="http://goldfull.pro:8880/images/fb8e99bd74cd5aa8754d199b6dda0200.jpg" group-title="⭐️Estrenos 2024",Liga de la Justicia: Crisis en Tierras Infinitas – Parte 3 (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/403729.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Hasta El Fin Del Mundo (2024)" tvg-logo="http://goldfull.pro:8880/images/d15945948fee1a59be758c212dab73e8.jpg" group-title="⭐️Estrenos 2024",Hasta El Fin Del Mundo (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/403730.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Horizon: An American Saga - Capítulo 1 (2024)" tvg-logo="http://goldfull.pro:8880/images/843061445c335e74026d9400310191f8.jpg" group-title="⭐️Estrenos 2024",Horizon: An American Saga - Capítulo 1 (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/403731.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Cacería Humana (2024)" tvg-logo="http://goldfull.pro:8880/images/6da803a503f4748f7872c3a96598a3a0.jpg" group-title="⭐️Estrenos 2024",Cacería Humana (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/403811.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Grandes Espías: Misión Italia (2024)" tvg-logo="http://goldfull.pro:8880/images/5b90caceaf746097f21ebd85480d29f6.jpg" group-title="⭐️Estrenos 2024",Grandes Espías: Misión Italia (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/404067.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Capitán Avispa (2024)" tvg-logo="http://goldfull.pro:8880/images/e562f775688fbe8a55a30ca0b390c351.jpg" group-title="⭐️Estrenos 2024",Capitán Avispa (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/404068.mp4
+#EXTINF:-1 tvg-id="" tvg-name="La Joven y El Mar (2024)" tvg-logo="http://goldfull.pro:8880/images/f1f1b705c33da9973a9325d03e5a82f5.jpg" group-title="⭐️Estrenos 2024",La Joven y El Mar (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/404069.mp4
+#EXTINF:-1 tvg-id="" tvg-name="La barbería 3: El siguiente corte (2016)" tvg-logo="http://goldfull.pro:8880/images/6084b87369aeea5da74d78d405e05202.jpg" group-title="⭐️Comedía",La barbería 3: El siguiente corte (2016)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/406305.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Find Me Falling (2024)" tvg-logo="http://goldfull.pro:8880/images/4889648b4c76e843faf3bf90bc203f4b.jpg" group-title="⭐️Estrenos 2024",Find Me Falling (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/406307.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Skywalkers: Una historia de amor (2024)" tvg-logo="http://goldfull.pro:8880/images/9046d3ebb2715cacd90e104f1c978a9f.jpg" group-title="⭐️Estrenos 2024",Skywalkers: Una historia de amor (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/406308.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Bad Boys: Hasta la muerte (2024)" tvg-logo="http://goldfull.pro:8880/images/100c08a72c41131b8bfa6cf6f712892e.jpg" group-title="⭐️Estrenos 2024",Bad Boys: Hasta la muerte (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/406309.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Presa (2024)" tvg-logo="http://goldfull.pro:8880/images/bf36fea0a049bcb80f961524a0bcad8a.jpg" group-title="⭐️Estrenos 2024",Presa (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/407875.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Carnada (2024)" tvg-logo="http://goldfull.pro:8880/images/7cf3b7423bd3a4329c8c121b59cf0ddf.jpg" group-title="⭐️Estrenos 2024",Carnada (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/407876.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Trampa en alta mar (2024)" tvg-logo="http://goldfull.pro:8880/images/95ae60327b06487c90007047c21f2fce.jpg" group-title="⭐️Estrenos 2024",Trampa en alta mar (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/407877.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Al borde del abismo (2024)" tvg-logo="http://goldfull.pro:8880/images/4889648b4c76e843faf3bf90bc203f4b.jpg" group-title="⭐️Estrenos 2024",Al borde del abismo (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/407878.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Un lugar en silencio: Día uno (2024)" tvg-logo="http://goldfull.pro:8880/images/ef4886be22fc4e0b4783a98e7f0f3668.jpg" group-title="⭐️Estrenos 2024",Un lugar en silencio: Día uno (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/407879.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Deadpool & Wolverine (2024)" tvg-logo="http://goldfull.pro:8880/images/8c19abafa80bd883656087dc196f7a1a.jpg" group-title="⭐️Estrenos 2024",Deadpool & Wolverine (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/407880.mp4
+#EXTINF:-1 tvg-id="" tvg-name="No negociable (2024)" tvg-logo="http://goldfull.pro:8880/images/9869136e62241f0e7ba87c4e7001052f.jpg" group-title="⭐️Estrenos 2024",No negociable (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/408961.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Al rescate de Fondo de Bikini: La película de Arenita Mejillas (2024)" tvg-logo="http://goldfull.pro:8880/images/65c3478ae60f3c630a65ca6e90c0e106.jpg" group-title="⭐️Estrenos 2024",Al rescate de Fondo de Bikini: La película de Arenita Mejillas (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409002.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Un Extraño en el Bosque (2024)" tvg-logo="http://goldfull.pro:8880/images/21b70680b5bf14bcc9b2e625cb008af6.jpg" group-title="⭐️Estrenos 2024",Un Extraño en el Bosque (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409003.mp4
+#EXTINF:-1 tvg-id="" tvg-name="La Dinastía Ga’a (2024)" tvg-logo="http://goldfull.pro:8880/images/1b0314e6f9d23222725985cb09f67781.jpg" group-title="⭐️Estrenos 2024",La Dinastía Ga’a (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409004.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Wonderland (2024)" tvg-logo="http://goldfull.pro:8880/images/4058d876e6eb64d505da79df14fd2c8f.jpg" group-title="⭐️Estrenos 2024",Wonderland (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409006.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Guerra sin reglas (2024)" tvg-logo="http://goldfull.pro:8880/images/2aadeee18253f4fc7143fd9813771884.jpg" group-title="⭐️Estrenos 2024",Guerra sin reglas (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409007.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Niebla sin fronteras (2024)" tvg-logo="http://goldfull.pro:8880/images/9d32d62dd7cdc5b1a52f734512698a0c.jpg" group-title="⭐️Estrenos 2024",Niebla sin fronteras (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409008.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Vacaciones intercambiadas (2024)" tvg-logo="http://goldfull.pro:8880/images/37a1bbedc3bc624ede28be0acc2c5f52.jpg" group-title="⭐️Estrenos 2024",Vacaciones intercambiadas (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409009.mp4
+#EXTINF:-1 tvg-id="" tvg-name="MaXXXine (2024)" tvg-logo="http://goldfull.pro:8880/images/40c65510e2834b4cbf0786dca3b28c97.jpg" group-title="⭐️Estrenos 2024",MaXXXine (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409010.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Rebel Moon (Parte uno): Corte del director (2024)" tvg-logo="https://pics.filmaffinity.com/rebel_moon_chapter_one_chalice_of_blood-537420321-large.jpg" group-title="⭐️Estrenos 2024",Rebel Moon (Parte uno): Corte del director (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/409011.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Misiones Cruzadas (2024)" tvg-logo="http://goldfull.pro:8880/images/75cc980e8b885c6a04ae3fd085ed3217.jpg" group-title="⭐️Estrenos 2024",Misiones Cruzadas (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/410108.mp4
+#EXTINF:-1 tvg-id="" tvg-name="La Niña Del Mar (2024)" tvg-logo="http://goldfull.pro:8880/images/f4851bfe89fdf2bf9e724cb8697e0af8.jpg" group-title="⭐️Estrenos 2024",La Niña Del Mar (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/410109.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Incitadores (2024)" tvg-logo="http://goldfull.pro:8880/images/d6006200a06881fa471e6b3b9dc4a59e.jpg" group-title="⭐️Estrenos 2024",Incitadores (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/410110.mp4
+#EXTINF:-1 tvg-id="" tvg-name="La belleza y el enigma vuelven (2024)" tvg-logo="http://goldfull.pro:8880/images/9957c8c4bf456270966a8960d764d6d2.jpg" group-title="⭐️Estrenos 2024",La belleza y el enigma vuelven (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/410111.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Mon Laferte, te amo (2024)" tvg-logo="http://goldfull.pro:8880/images/9ddcd1b54c7d3f1a508fa2ce3e152c59.jpg" group-title="⭐️Estrenos 2024",Mon Laferte, te amo (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/410112.mp4
+#EXTINF:-1 tvg-id="" tvg-name="El Abuelo y Kid (2024)" tvg-logo="http://goldfull.pro:8880/images/8339cdaa458ef6cf2266ea38aeb687f6.jpg" group-title="⭐️Estrenos 2024",El Abuelo y Kid (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/410113.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Una maniobra arriesgada (2024)" tvg-logo="http://goldfull.pro:8880/images/9f00635c31a9500037e646f8126f7f6e.jpg" group-title="⭐️Estrenos 2024",Una maniobra arriesgada (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/410114.mp4
+#EXTINF:-1 tvg-id="" tvg-name="En la mente de un perro (2024)" tvg-logo="http://goldfull.pro:8880/images/56a02a12349bb94e30ce994d0b9fe814.jpg" group-title="⭐️Estrenos 2024",En la mente de un perro (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/410115.mp4
+#EXTINF:-1 tvg-id="" tvg-name="El Secuestro del Papa (2023)" tvg-logo="http://goldfull.pro:8880/images/7cca454ec2f914061f05848214535b24.jpg" group-title="⭐️Películas 2023",El Secuestro del Papa (2023)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/413412.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Tornados (2024)" tvg-logo="http://goldfull.pro:8880/images/3f0b492f25323495b58d3c296e2a269f.jpg" group-title="⭐️Estrenos 2024",Tornados (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/413413.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Exhuma: La Tumba Del Diablo (2024)" tvg-logo="http://goldfull.pro:8880/images/e4d5f3c0135b6855fd41f1fb0b421f34.jpg" group-title="⭐️Estrenos 2024",Exhuma: La Tumba Del Diablo (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/413414.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Vi el brillo del televisor (2024)" tvg-logo="http://goldfull.pro:8880/images/82ae015988458dc28a24d8361531c824.jpg" group-title="⭐️Estrenos 2024",Vi el brillo del televisor (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/413415.mp4
+#EXTINF:-1 tvg-id="" tvg-name="La otra cara de la Luna (2024)" tvg-logo="http://goldfull.pro:8880/images/459616feef3c9b32932f0281dc2d2d08.jpg" group-title="⭐️Estrenos 2024",La otra cara de la Luna (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/413416.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Romper el círculo (2024)" tvg-logo="http://goldfull.pro:8880/images/6b605d1f2a70d4e833b36b7a61c2635c.jpg" group-title="⭐️Estrenos 2024",Romper el círculo (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/413417.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Jackpot: Lotería Mortal (2024)" tvg-logo="http://goldfull.pro:8880/images/f43d2b4ead3a5d3131d6da4c56de5b5d.jpg" group-title="⭐️Estrenos 2024",Jackpot: Lotería Mortal (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/413419.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Alien: Romulus (2024)" tvg-logo="http://goldfull.pro:8880/images/5eddcf4e2ccc984408c50e70df71f43b.jpg" group-title="⭐️Estrenos 2024",Alien: Romulus (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/413486.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Una Boda y Otros Desastres (2024)" tvg-logo="http://goldfull.pro:8880/images/cc14d8bb6d3f28d5af0e2905cc11781d.jpg" group-title="⭐️Estrenos 2024",Una Boda y Otros Desastres (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/414391.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Inexpertos (2024)" tvg-logo="http://goldfull.pro:8880/images/ef02b43155126990e779cd84288c8b50.jpg" group-title="⭐️Estrenos 2024",Inexpertos (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/414392.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Las chicas de Niza (2024)" tvg-logo="http://goldfull.pro:8880/images/afa66ac89334db078127226bd4006435.jpg" group-title="⭐️Estrenos 2024",Las chicas de Niza (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/414393.mp4
+#EXTINF:-1 tvg-id="" tvg-name="Tòkunbọ̀ (2024)" tvg-logo="http://goldfull.pro:8880/images/ae181a060054c481efaffb29bd8faa2b.jpg" group-title="⭐️Estrenos 2024",Tòkunbọ̀ (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/414394.mp4
+#EXTINF:-1 tvg-id="" tvg-name="El Cuervo (2024)" tvg-logo="http://goldfull.pro:8880/images/ba8d8ab1d29c23d8c0bc497686d6c878.jpg" group-title="⭐️Estrenos 2024",El Cuervo (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/414395.mp4`;
 
-        // Mapa de reemplazo de imágenes (original -> nueva URL)
-        const imageReplacements = {
-            "http://goldfull.pro:8880/images/1bfdc1a81edf859e2bc5dbc95496037d.jpg": "https://i.postimg.cc/Y2ZchgK0/As-Neves.jpg",
-            "http://goldfull.pro:8880/images/c32dab0cb0d49916b74ad1091643ee71.jpg": "https://i.postimg.cc/g0mbGW9K/Correr-Para-Vivir.jpg"
-        };
+        // Lista de imágenes desde PostImage
+        const imageLinks = `
+https://i.postimg.cc/gJbXzrzT/Aguanta-la-respiraci-n.jpg
+https://i.postimg.cc/DZQW8Fmy/Al-borde-del-abismo.jpg
+https://i.postimg.cc/zvJyhMRw/Al-diablo-con-el-amor.jpg
+https://i.postimg.cc/wxVyz6Sw/Al-rescate-de-Fondo-de-Bikini.jpg
+https://i.postimg.cc/65b87M6R/Alien.jpg
+https://i.postimg.cc/02y62TvP/Almamula.jpg
+https://i.postimg.cc/vZ1c55DK/Amigos-Sem-Compromisso.jpg
+https://i.postimg.cc/g2frsrZ2/Anticristo-El-Exorcismo-de-Lara.jpg
+https://i.postimg.cc/j5h5RXkD/As-Neves.jpg
+https://i.postimg.cc/KYBjHFPr/Bad-Boys.jpg
+https://i.postimg.cc/Ss4R05V0/Bandida.jpg
+https://i.postimg.cc/MHKGHQhd/Beetlejuice-Beetlejuice.jpg
+https://i.postimg.cc/MHPpQGwx/Bienvenidos-al-para-so.jpg
+https://i.postimg.cc/nV0z53D5/Blanquita.jpg
+https://i.postimg.cc/9F0MjyPf/Borderlands.jpg
+https://i.postimg.cc/2SBS1mKR/Boxeador.jpg
+https://i.postimg.cc/wTrBx3FQ/Cacer-a-Humana.jpg
+https://i.postimg.cc/mrf2Mqvc/Campo-de-batalla.jpg
+https://i.postimg.cc/76XxFLf7/Canceled.jpg
+https://i.postimg.cc/bvxYRgPm/Capit-n-Avispa.jpg
+https://i.postimg.cc/fLMzqdTD/Carnada.jpg
+https://i.postimg.cc/4ydJsT90/Contaminados-por-el-miedo.jpg
+https://i.postimg.cc/y6Q1nkqC/Correr-Para-Vivir.jpg
+https://i.postimg.cc/RVWMY496/Corrupci-n-en-Bangkok.jpg
+https://i.postimg.cc/rsPqpYGw/Culpa-cero.jpg
+https://i.postimg.cc/28gzRM8H/De-Noche-Con-El-Diablo.jpg
+https://i.postimg.cc/636KfNYQ/Deadpool-Wolverine.jpg
+https://i.postimg.cc/zfr83hhK/Debieron-irse.jpg
+https://i.postimg.cc/vZ9GQh4G/Departamento-7-A.jpg
+https://i.postimg.cc/RFPBPbDL/Desaf-o-al-Tiempo.jpg
+https://i.postimg.cc/PqQhDqbc/Desaparecidos-en-la-noche.jpg
+https://i.postimg.cc/PJPk0QGs/Descendientes.jpg
+https://i.postimg.cc/kgrdhSfz/Descubriendo-A-Mi-Hijo.jpg
+https://i.postimg.cc/Fz8Qvkmf/D-di.jpg
+https://i.postimg.cc/Dy4Tg6d1/Disco.jpg
+https://i.postimg.cc/nVPxBg7H/Divorciados.jpg
+https://i.postimg.cc/kgxdr5H4/Divorcio-en-negro.jpg
+https://i.postimg.cc/CK7T1QSp/El-Abuelo-y-Kid.jpg
+https://i.postimg.cc/KzYXgD8k/El-ataque-del-cocadrilo.jpg
+https://i.postimg.cc/g0mbGW9K/El-Cuervo.jpg
+https://i.postimg.cc/PxVgbvC6/El-demonio-entre-nosotros.jpg
+https://i.postimg.cc/zvL9xDWq/El-diario.jpg
+https://i.postimg.cc/Y2ZchgK0/El-espiritu-de-las-tinieblas.jpg
+https://i.postimg.cc/Rhj2yrQK/El-exorcismo-de-Georgetown.jpg
+https://i.postimg.cc/yYZM9dsP/El-hombre-celoso.jpg
+https://i.postimg.cc/8zgqbSCV/El-hoyo-2.jpg
+https://i.postimg.cc/g0YQfHRS/El-imaginario.jpg
+https://i.postimg.cc/rwG7nPdR/El-misterio-de-Salem-s-Lot.jpg
+https://i.postimg.cc/QtCPMNfc/El-Monstruo-Guerrero.jpg
+https://i.postimg.cc/DZNN4VNH/El-planeta-de-los-simios.jpg
+https://i.postimg.cc/Pq29hvQt/El-Secuestro-del-Papa.jpg
+https://i.postimg.cc/c1gx9ddK/El-universo-de-live.jpg
+https://i.postimg.cc/mkF5QXfD/En-la-mente-de-un-perro.jpg
+https://i.postimg.cc/yW4rnmsT/Fancy-Dance.jpg
+https://i.postimg.cc/wxC6nnBw/Faro.jpg
+https://i.postimg.cc/QxcXDS9h/Flow.jpg
+https://i.postimg.cc/g2dG2R8R/Friend-Reques.jpg
+https://i.postimg.cc/GmQd82xf/Garfield.jpg
+https://i.postimg.cc/VNk1j87k/Goyo.jpg
+https://i.postimg.cc/JhY8x2gc/Grandes-Esp-as.jpg
+https://i.postimg.cc/NMWcqrQK/Guas-n.jpg
+https://i.postimg.cc/4dKgS1RC/Guas-n-2.jpg
+https://i.postimg.cc/fymhwTbB/Guerra-sin-reglas.jpg
+https://i.postimg.cc/HWym03tX/Half-Baked.jpg
+https://i.postimg.cc/qMHT1nmY/Harold-y-su-cray-n-m-gico.jpg
+https://i.postimg.cc/65VNg3gQ/Hasta-El-Fin-Del-Mundo.jpg
+https://i.postimg.cc/0y8qsv10/Hellboy.jpg
+https://i.postimg.cc/mrkfPSDc/Hermanos-por-accidente.jpg
+https://i.postimg.cc/JzPC7F1V/Horizon.jpg
+https://i.postimg.cc/4dHD5Nps/Incitadores.jpg
+https://i.postimg.cc/7LRv0TGK/Inexpertos.jpg
+https://i.postimg.cc/cCqV5ycY/Instintos-asesinos.jpg
+https://i.postimg.cc/qq8WPbmF/Juanpis-Gonz-lez.jpg
+https://i.postimg.cc/bYkXSrzR/Kono-Subajpg.jpg
+https://i.postimg.cc/L63rvWgY/La-barber-a-3.jpg
+https://i.postimg.cc/CLg3G05p/La-belleza-y-el-enigma-vuelven.jpg
+https://i.postimg.cc/2SjgtxnH/La-decisi-n-m-s-dif-cil.jpg
+https://i.postimg.cc/fRH1Q0KM/La-Dinast-a-Ga-a.jpg
+https://i.postimg.cc/YShZrqnY/La-Familia-del-Barrio.jpg
+https://i.postimg.cc/TwbsbNXP/La-Guerra-de-los-Mundos.jpg
+https://i.postimg.cc/3wV6d5V6/La-Joven-y-El-Mar.jpg
+https://i.postimg.cc/VvcVW9YW/La-liberaci-n.jpg
+https://i.postimg.cc/MZy4KLDP/La-monja-mala-3.jpg
+https://i.postimg.cc/Hn4PZJnD/La-Ni-a-Del-Mar.jpg
+https://i.postimg.cc/vHbK1v2Q/La-otra-cara-de-la-Luna.jpg
+https://i.postimg.cc/YqRsQmTQ/La-Peque-a-Serena.jpg
+https://i.postimg.cc/T3PH03XF/La-Sustancia.jpg
+https://i.postimg.cc/bwFVBfyJ/La-trampapg.jpg
+https://i.postimg.cc/4372C2y1/La-Tumba-Del-Diablo.jpg
+https://i.postimg.cc/Xq3sCV82/Las-chicas-de-Niza.jpg
+https://i.postimg.cc/43DLXvhR/Las-hermanas-fant-sticas.jpg
+https://i.postimg.cc/1tDWXgpn/Las-tres-hijas.jpg
+https://i.postimg.cc/90pJPvgc/Las-Voces.jpg
+https://i.postimg.cc/yY1f68Wx/Liga-de-la-Justicia.jpg
+https://i.postimg.cc/tRtSHxq8/L-nea-mortal.jpg
+https://i.postimg.cc/L6xxJFZT/Lo-que-hay-dentro.jpg
+https://i.postimg.cc/Gm9qYgF1/Lobola-Man.jpg
+https://i.postimg.cc/BnyNC5pP/Lobos.jpg
+https://i.postimg.cc/9f7bg4g8/Longlegs.jpg
+https://i.postimg.cc/d1cBbqzq/Los-feos.jpg
+https://i.postimg.cc/qRcL0PT2/Los-iniciados.jpg
+https://i.postimg.cc/6q9hQMWg/Los-tipos-malos.jpg
+https://i.postimg.cc/y6PPGCnH/Loter-a-Mortal.jpg
+https://i.postimg.cc/br39S1dJ/Luckjpg.jpg
+https://i.postimg.cc/zXGjZ2PR/Mascotas-En-Apuros.jpg
+https://i.postimg.cc/hPZ0S8HZ/Mejor-viuda-que-mal-acompa-ada.jpg
+https://i.postimg.cc/zGLF3bNz/Misi-n-suicida.jpg
+https://i.postimg.cc/jSGQfxqz/Misiones-Cruzadas.jpg
+https://i.postimg.cc/YSYNf5jT/Mon-Laferte-te-amo.jpg
+https://i.postimg.cc/ydKmfLZx/Monstruo-de-las-Profundidades.jpg
+https://i.postimg.cc/RFTc2w7R/Niebla-sin-fronteras.jpg
+https://i.postimg.cc/cC4QW6TN/No-hables-con-extra-os.jpg
+https://i.postimg.cc/QC4cdsnK/No-negociablejpg.jpg
+https://i.postimg.cc/mgF7Bv3h/One-Piece.jpg
+https://i.postimg.cc/TY1rHLpV/Padre-no-hay-m-s-que-uno-4.jpg
+https://i.postimg.cc/RCX7RQVC/Parano.jpg
+https://i.postimg.cc/Ghfk0LyZ/Parpadea-dos-veces.jpg
+https://i.postimg.cc/LstfZjbp/Perros-de-Guerra.jpg
+https://i.postimg.cc/3R9vtYhf/Presa.jpg
+https://i.postimg.cc/ZqtpRwjH/Pr-ncipes-salvajes.jpg
+https://i.postimg.cc/KzmT746g/Problemas.jpg
+https://i.postimg.cc/vTN6dhcW/Problemista.jpg
+https://i.postimg.cc/1XtNT25m/Quiz-s-es-cierto-lo-que-dicen-de-nosotras.jpg
+https://i.postimg.cc/X7rCkRzx/Rafa-M-rquez.jpg
+https://i.postimg.cc/L4CPf9Nn/Rebel-Ridge.jpg
+https://i.postimg.cc/J4SB6Tw8/Rez-Ball.jpg
+https://i.postimg.cc/W4wF4Tdp/Robot-salvaje.jpg
+https://i.postimg.cc/fRXS6xZ9/Romper-el-c-rculo.jpg
+https://i.postimg.cc/pdH5xpX1/Sat-n.jpg
+https://i.postimg.cc/0Q56MFSY/Sector-36.jpg
+https://i.postimg.cc/vBP4Wh7p/Sed-de-Venganza-2.jpg
+https://i.postimg.cc/05B6jtyS/Skinford-2.jpg
+https://i.postimg.cc/J0GGKXPt/Skywalkersjpg.jpg
+https://i.postimg.cc/Zn20QqMH/Solo-una-noche-de-juegos.jpg
+https://i.postimg.cc/15V8qp8j/Technoboys.jpg
+https://i.postimg.cc/Bv4bkkMr/Tempestad-de-hielo.jpg
+https://i.postimg.cc/mgxtNtM2/The-Killer.jpg
+https://i.postimg.cc/TP0160sp/Tipos-de-gentileza.jpg
+https://i.postimg.cc/mgQhdBN3/T-kunb.jpg
+https://i.postimg.cc/W343brRS/Tornados.jpg
+https://i.postimg.cc/pT1d9TRv/Trampa-en-alta-mar.jpg
+https://i.postimg.cc/cCp4mbv5/Transformers-Uno.jpg
+https://i.postimg.cc/2ybSnDSZ/Un-asunto-familiar.jpg
+https://i.postimg.cc/RCyF4NgQ/Un-aut-ntico-caballero.jpg
+https://i.postimg.cc/PrDqxTcG/Un-detective-suelto-en-Hollywood.jpg
+https://i.postimg.cc/6pL5rztY/Un-Extra-o-en-el-Bosque.jpg
+https://i.postimg.cc/8zVzfxQ7/Un-Gato-con-Suerte.jpg
+https://i.postimg.cc/25kj2v5m/Un-lugar-en-silencio.jpg
+https://i.postimg.cc/6QMWS37Z/Una-Boda-y-Otros-Desastres.jpg
+https://i.postimg.cc/bJdyjhbB/Una-maniobra-arriesgada.jpg
+https://i.postimg.cc/Jng1r254/Una-Propuesta-indecorosa.jpg
+https://i.postimg.cc/T1DTpJtj/V-de-V-ctor.jpg
+https://i.postimg.cc/bdfpbS57/Vi-el-brillo-del-televisor.jpg
+https://i.postimg.cc/tRZ630fk/Vico-C.jpg
+https://i.postimg.cc/8k26wKgS/Vida-Bandida.jpg
+https://i.postimg.cc/nhZQfXLS/Watchmen.jpg
+https://i.postimg.cc/15DNdGyN/Wild-Wild-Punjab.jpg
+https://i.postimg.cc/8zHfpTJp/Within-Desde-adentro.jpg
+https://i.postimg.cc/mrgzhKCQ/Wonderland.jpg
+https://i.postimg.cc/76C5n7Bh/Yolojpg.jpg
+https://i.postimg.cc/Bv78FNBR/You-Gotta-Believe.jpg
+
+        `.trim().split("\n").map(link => link.trim());
 
         const lines = m3uData.split("\n");
-        const movieList = document.getElementById("movieList");
+        const tableBody = document.getElementById("movieTable");
+        let imageIndex = 0;
 
         for (let i = 0; i < lines.length; i += 2) {
             const infoLine = lines[i];
-            const videoUrl = lines[i + 1];
+            const videoLink = lines[i + 1];
 
             const nameMatch = infoLine.match(/tvg-name="(.*?)"/);
             const logoMatch = infoLine.match(/tvg-logo="(.*?)"/);
 
             if (nameMatch && logoMatch) {
                 const movieName = nameMatch[1];
-                let imageUrl = logoMatch[1];
+                const imageUrl = imageLinks[imageIndex] || logoMatch[1]; // Usa la imagen nueva o la original
+                imageIndex++; // Pasa a la siguiente imagen
 
-                // Reemplazar imagen si está en el mapa
-                if (imageReplacements[imageUrl]) {
-                    imageUrl = imageReplacements[imageUrl];
-                }
+                const row = `<tr>
+                    <td><img src="${imageUrl}" width="100"></td>
+                    <td>${movieName}</td>
+                    <td><a href="${videoLink}" target="_blank">Ver</a></td>
+                </tr>`;
 
-                const movieItem = document.createElement("div");
-                movieItem.innerHTML = `
-                    <h3>${movieName}</h3>
-                    <a href="${videoUrl}" target="_blank">
-                        <img src="${imageUrl}" alt="${movieName}" style="width:200px; cursor:pointer;">
-                    </a>
-                    <hr>
-                `;
-                movieList.appendChild(movieItem);
+                tableBody.innerHTML += row;
             }
         }
     </script>
