@@ -4,10 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Películas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        img {
+            border-radius: 5px;
+            max-width: 100px;
+            height: auto;
+        }
+        a {
+            color: #0066cc;
+            text-decoration: none;
+            padding: 5px 10px;
+            background-color: #e1f0ff;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        a:hover {
+            background-color: #cce5ff;
+        }
+    </style>
 </head>
 <body>
     <h2>Lista de Películas</h2>
-    <table border="1">
+    <table>
         <thead>
             <tr>
                 <th>Imagen</th>
@@ -17,8 +55,40 @@
         </thead>
         <tbody id="movieTable"></tbody>
     </table>
-
     <script>
+        // Función para procesar el archivo M3U
+        function parseM3U(m3uData) {
+            const movies = [];
+            const lines = m3uData.split('\n');
+            
+            for (let i = 0; i < lines.length; i++) {
+                // Buscar líneas que comienzan con #EXTINF
+                if (lines[i].startsWith('#EXTINF')) {
+                    const infoLine = lines[i];
+                    const urlLine = lines[i + 1] || ''; // URL en la siguiente línea
+                    
+                    // Extraer el nombre de la película
+                    const nameMatch = infoLine.match(/tvg-name="(.*?)"/);
+                    // Extraer la URL de la imagen
+                    const logoMatch = infoLine.match(/tvg-logo="(.*?)"/);
+                    
+                    if (nameMatch && urlLine) {
+                        movies.push({
+                            name: nameMatch[1],
+                            url: urlLine.trim(),
+                            logo: logoMatch ? logoMatch[1] : ''
+                        });
+                    }
+                    
+                    // Saltar la siguiente línea que contiene la URL
+                    i++;
+                }
+            }
+            
+            return movies;
+        }
+        
+        // Datos de M3U a procesar
         const m3uData = `
 #EXTINF:-1 tvg-id="" tvg-name="As Neves (2024)" tvg-logo="http://goldfull.pro:8880/images/1bfdc1a81edf859e2bc5dbc95496037d.jpg" group-title="⭐️Estrenos 2024",As Neves (2024)
 http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416454.mp4
@@ -359,7 +429,7 @@ http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/414394.mp4
 #EXTINF:-1 tvg-id="" tvg-name="El Cuervo (2024)" tvg-logo="http://goldfull.pro:8880/images/ba8d8ab1d29c23d8c0bc497686d6c878.jpg" group-title="⭐️Estrenos 2024",El Cuervo (2024)
 http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/414395.mp4`;
 
-        // 🔹 Aquí simplemente pegas los enlaces de las imágenes, uno por línea, SIN comas ni comillas
+        // Enlaces de imágenes personalizadas
         const imageLinks = `
 https://i.postimg.cc/gJbXzrzT/Aguanta-la-respiraci-n.jpg
 https://i.postimg.cc/DZQW8Fmy/Al-borde-del-abismo.jpg
@@ -522,41 +592,33 @@ https://i.postimg.cc/8zHfpTJp/Within-Desde-adentro.jpg
 https://i.postimg.cc/mrgzhKCQ/Wonderland.jpg
 https://i.postimg.cc/76C5n7Bh/Yolojpg.jpg
 https://i.postimg.cc/Bv78FNBR/You-Gotta-Believe.jpg
-
         `;
-
-        // 🔹 Convertir lista de imágenes en un mapa { "Nombre de Película" -> "URL de la imagen" }
+        
+        // Crear mapa de imágenes
         const imageMap = {};
         imageLinks.trim().split("\n").forEach(url => {
-            const fileName = url.split("/").pop().replace(".jpg", "").replace(/-/g, " "); // Extrae el nombre de la imagen
-            imageMap[fileName.trim()] = url.trim();
-        });
-
-        const lines = m3uData.split("\n");
-        const tableBody = document.getElementById("movieTable");
-
-        for (let i = 0; i < lines.length; i += 2) {
-            const infoLine = lines[i];
-            const videoLink = lines[i + 1];
-
-            const nameMatch = infoLine.match(/tvg-name="(.*?)"/);
-
-            if (nameMatch) {
-                const movieName = nameMatch[1];
-                const simpleName = movieName.replace(/\(.*?\)/g, "").trim(); // Quita el año
-
-                // 🔹 Busca coincidencia en el mapa de imágenes
-                const imageUrl = imageMap[simpleName] || "https://via.placeholder.com/100";
-
-                const row = `<tr>
-                    <td><img src="${imageUrl}" width="100"></td>
-                    <td>${movieName}</td>
-                    <td><a href="${videoLink}" target="_blank">Ver</a></td>
-                </tr>`;
-
-                tableBody.innerHTML += row;
+            if (url.trim() !== '') {
+                const fileName = url.split("/").pop().replace(".jpg", "").replace(/-/g, " ");
+                imageMap[fileName.trim()] = url.trim();
             }
-        }
+        });
+        
+        // Procesar los datos y mostrar las películas
+        const movies = parseM3U(m3uData);
+        const tableBody = document.getElementById("movieTable");
+        
+        movies.forEach(movie => {
+            const simpleName = movie.name.replace(/\(.*?\)/g, "").trim(); // Quitar el año
+            const imageUrl = imageMap[simpleName] || movie.logo || "https://via.placeholder.com/100";
+            
+            const row = `<tr>
+                <td><img src="${imageUrl}" alt="${simpleName}"></td>
+                <td>${movie.name}</td>
+                <td><a href="${movie.url}" target="_blank">Ver</a></td>
+            </tr>`;
+            
+            tableBody.innerHTML += row;
+        });
     </script>
 </body>
 </html>
