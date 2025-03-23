@@ -3,233 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extractor de Imágenes IPTV</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h2 {
-            color: #333;
-            text-align: center;
-        }
-        textarea {
-            width: 100%;
-            min-height: 150px;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 10px;
-            margin-bottom: 15px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        .preview-image {
-            max-width: 100px;
-            max-height: 100px;
-        }
-        .download-btn {
-            background-color: #2196F3;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .download-btn:hover {
-            background-color: #0b7dda;
-        }
-        .message {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-            border-radius: 4px;
-            display: none;
-        }
-    </style>
+    <title>Reemplazar Enlaces de Imágenes</title>
 </head>
 <body>
-    <h2>Extractor de Imágenes IPTV</h2>
-    <textarea id="inputData" placeholder="Pega los datos IPTV aquí (formato #EXTINF con tvg-logo y nombre de película)"></textarea>
-    <button onclick="processData()">Procesar Datos</button>
-    <div id="errorMessage" class="message"></div>
-    <table>
-        <thead>
-            <tr>
-                <th>Nombre de Película</th>
-                <th>Vista Previa</th>
-                <th>URL de Imagen</th>
-                <th>Acción</th>
-            </tr>
-        </thead>
-        <tbody id="movieTable"></tbody>
-    </table>
+    <h2>Archivo M3U Modificado</h2>
+    <pre id="output"></pre>
+
     <script>
-        function processData() {
-            const inputData = document.getElementById("inputData").value;
-            const lines = inputData.split('\n');
-            const tableBody = document.getElementById("movieTable");
-            tableBody.innerHTML = "";
-            
-            const errorDiv = document.getElementById("errorMessage");
-            errorDiv.style.display = "none";
-            errorDiv.textContent = "";
-            
-            let moviesFound = 0;
-            
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i].trim();
-                
-                // Buscar líneas que comienzan con #EXTINF
-                if (line.startsWith('#EXTINF')) {
-                    // Extraer la URL de la imagen del atributo tvg-logo
-                    const logoMatch = line.match(/tvg-logo="([^"]+)"/);
-                    const imageUrl = logoMatch ? logoMatch[1] : null;
-                    
-                    // Extraer el nombre de la película
-                    let movieName = "";
-                    
-                    // Método 1: Obtener desde tvg-name si existe
-                    const nameMatch = line.match(/tvg-name="([^"]+)"/);
-                    if (nameMatch) {
-                        movieName = nameMatch[1];
-                        // Eliminar el año entre paréntesis si existe
-                        movieName = movieName.replace(/\s*\(\d{4}\)$/, '');
-                    }
-                    
-                    // Método 2: Obtener desde el final de la línea después de la última coma
-                    if (!movieName) {
-                        const commaIndex = line.lastIndexOf(',');
-                        if (commaIndex !== -1) {
-                            movieName = line.substring(commaIndex + 1).trim();
-                            // Eliminar el año entre paréntesis si existe
-                            movieName = movieName.replace(/\s*\(\d{4}\)$/, '');
-                        }
-                    }
-                    
-                    if (imageUrl && movieName) {
-                        moviesFound++;
-                        
-                        // Crear una nueva fila
-                        const row = document.createElement('tr');
-                        
-                        // Celda para el nombre
-                        const nameCell = document.createElement('td');
-                        nameCell.textContent = movieName;
-                        row.appendChild(nameCell);
-                        
-                        // Celda para la vista previa
-                        const previewCell = document.createElement('td');
-                        const img = document.createElement('img');
-                        img.src = imageUrl;
-                        img.className = 'preview-image';
-                        img.onerror = function() { 
-                            this.src = '/api/placeholder/100/100'; 
-                            this.alt = 'Error de carga'; 
-                        };
-                        previewCell.appendChild(img);
-                        row.appendChild(previewCell);
-                        
-                        // Celda para mostrar la URL de la imagen
-                        const urlCell = document.createElement('td');
-                        const urlInput = document.createElement('input');
-                        urlInput.type = 'text';
-                        urlInput.value = imageUrl;
-                        urlInput.style.width = '100%';
-                        urlInput.readOnly = true;
-                        urlInput.onclick = function() { this.select(); };
-                        urlCell.appendChild(urlInput);
-                        row.appendChild(urlCell);
-                        
-                        // Celda para las acciones
-                        const actionCell = document.createElement('td');
-                        
-                        // Enlace directo para abrir la imagen en una nueva pestaña
-                        const openLink = document.createElement('a');
-                        openLink.href = imageUrl;
-                        openLink.target = '_blank';
-                        openLink.textContent = 'Abrir imagen';
-                        openLink.style.marginRight = '10px';
-                        actionCell.appendChild(openLink);
-                        
-                        // Botón para copiar la URL
-                        const copyBtn = document.createElement('button');
-                        copyBtn.textContent = 'Copiar URL';
-                        copyBtn.className = 'download-btn';
-                        copyBtn.style.marginLeft = '10px';
-                        copyBtn.onclick = function() {
-                            navigator.clipboard.writeText(imageUrl)
-                                .then(() => {
-                                    const originalText = copyBtn.textContent;
-                                    copyBtn.textContent = '¡Copiado!';
-                                    setTimeout(() => {
-                                        copyBtn.textContent = originalText;
-                                    }, 1500);
-                                })
-                                .catch(err => {
-                                    console.error('Error al copiar: ', err);
-                                });
-                        };
-                        actionCell.appendChild(copyBtn);
-                        
-                        // Texto instructivo
-                        const helpText = document.createElement('div');
-                        helpText.innerHTML = `<small>Nombre de archivo sugerido: ${getFileName(movieName)}</small>`;
-                        helpText.style.marginTop = '5px';
-                        actionCell.appendChild(helpText);
-                        
-                        row.appendChild(actionCell);
-                        
-                        // Agregar la fila a la tabla
-                        tableBody.appendChild(row);
-                    }
-                }
-            }
-            
-            if (moviesFound === 0) {
-                errorDiv.textContent = "No se encontraron datos de películas en el formato esperado. Asegúrate de pegar contenido con líneas que empiecen con #EXTINF y contengan tvg-logo.";
-                errorDiv.style.display = "block";
-            }
+        let m3uData = `#EXTINF:-1 tvg-id="" tvg-name="El Cuervo (2024)" tvg-logo="http://goldfull.pro:8880/images/ba8d8ab1d29c23d8c0bc497686d6c878.jpg" group-title="⭐️Estrenos 2024",El Cuervo (2024)
+http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/414395.mp4`;
+
+        // Lista de reemplazos (clave: URL antigua, valor: URL nueva)
+        const replacements = {
+            "http://goldfull.pro:8880/images/ba8d8ab1d29c23d8c0bc497686d6c878.jpg": "https://i.postimg.cc/g0mbGW9K/El-Cuervo.jpg"
+        };
+
+        // Reemplazar enlaces en el archivo M3U
+        for (const oldUrl in replacements) {
+            const newUrl = replacements[oldUrl];
+            m3uData = m3uData.replace(oldUrl, newUrl);
         }
-        
-        // Función para generar un nombre de archivo basado en el nombre de la película
-        function getFileName(movieName) {
-            // Reemplazar espacios y caracteres especiales
-            return movieName.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_').toLowerCase() + '.jpg';
-        }
+
+        // Mostrar el resultado en pantalla
+        document.getElementById("output").textContent = m3uData;
     </script>
 </body>
 </html>
