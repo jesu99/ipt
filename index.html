@@ -3,42 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Películas</title>
+    <title>Reemplazar Enlaces de Imágenes</title>
 </head>
 <body>
-    <h2>Lista de Películas</h2>
-    <div id="movieList"></div>
+    <h2>Archivo M3U Modificado</h2>
+    <textarea id="m3uInput" rows="10" cols="80" placeholder="Pega aquí tu archivo M3U"></textarea>
+    <br>
+    <textarea id="replaceList" rows="10" cols="80" placeholder="Pega aquí la lista de reemplazo (URL antigua - URL nueva, una por línea)"></textarea>
+    <br>
+    <button onclick="replaceImages()">Reemplazar Imágenes</button>
+    <h3>Resultado:</h3>
+    <pre id="output"></pre>
 
     <script>
-        const m3uData = `#EXTINF:-1 tvg-id="" tvg-name="As Neves (2024)" tvg-logo="http://goldfull.pro:8880/images/1bfdc1a81edf859e2bc5dbc95496037d.jpg" group-title="⭐️Estrenos 2024",As Neves (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416454.mp4
-#EXTINF:-1 tvg-id="" tvg-name="Correr Para Vivir (2024)" tvg-logo="http://goldfull.pro:8880/images/c32dab0cb0d49916b74ad1091643ee71.jpg" group-title="⭐️Estrenos 2024",Correr Para Vivir (2024)
-http://goldfull.pro:8880/movie/IptvNetmax026/MvEUWB5455UU/416455.mp4`;
+        function replaceImages() {
+            let m3uData = document.getElementById("m3uInput").value;
+            let replacements = document.getElementById("replaceList").value.split("\n");
 
-        const lines = m3uData.split("\n");
-        const movieList = document.getElementById("movieList");
+            let replaceMap = {};
+            replacements.forEach(line => {
+                let parts = line.split(" -> "); // Separador para reemplazo
+                if (parts.length === 2) {
+                    replaceMap[parts[0].trim()] = parts[1].trim();
+                }
+            });
 
-        for (let i = 0; i < lines.length; i += 2) {
-            const infoLine = lines[i];
-            const videoUrl = lines[i + 1];
-
-            const nameMatch = infoLine.match(/tvg-name="(.*?)"/);
-            const logoMatch = infoLine.match(/tvg-logo="(.*?)"/);
-
-            if (nameMatch && logoMatch) {
-                const movieName = nameMatch[1];
-                const imageUrl = logoMatch[1];
-
-                const movieItem = document.createElement("div");
-                movieItem.innerHTML = `
-                    <h3>${movieName}</h3>
-                    <a href="${videoUrl}" target="_blank">
-                        <img src="${imageUrl}" alt="${movieName}" style="width:200px; cursor:pointer;">
-                    </a>
-                    <hr>
-                `;
-                movieList.appendChild(movieItem);
+            // Reemplazar enlaces antiguos por los nuevos
+            for (const oldUrl in replaceMap) {
+                const newUrl = replaceMap[oldUrl];
+                m3uData = m3uData.replaceAll(oldUrl, newUrl);
             }
+
+            document.getElementById("output").textContent = m3uData;
         }
     </script>
 </body>
