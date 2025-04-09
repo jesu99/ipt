@@ -43,17 +43,11 @@
       margin-bottom: 15px;
     }
     
-    .movie-row {
-      display: flex;
-      overflow-x: auto;
-      padding: 10px 0;
-      scrollbar-width: none; /* Oculta la barra de desplazamiento en Firefox */
-      -webkit-overflow-scrolling: touch; /* Mejora el desplazamiento en iOS */
-      gap: 15px; /* Espacio consistente entre tarjetas */
-    }
-    
-    .movie-row::-webkit-scrollbar {
-      display: none; /* Oculta la barra de desplazamiento en Chrome/Safari */
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
     }
     
     .movie-card {
@@ -61,10 +55,7 @@
       border-radius: 4px;
       overflow: hidden;
       transition: transform 0.3s, box-shadow 0.3s;
-      min-width: 140px;
-      width: 140px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-      flex-shrink: 0; /* Evita que las tarjetas se compriman */
     }
     
     .movie-card:hover {
@@ -77,14 +68,14 @@
       width: 100%;
       height: 200px;
       object-fit: cover;
-      display: block; /* Elimina espacios en blanco debajo de las imágenes */
+      display: block;
     }
     
     .movie-info {
       padding: 10px;
       display: flex;
       flex-direction: column;
-      height: 160px; /* Altura fija para uniformidad */
+      height: 160px;
       justify-content: space-between;
     }
     
@@ -118,7 +109,7 @@
       font-size: 14px;
       transition: background-color 0.2s;
       text-align: center;
-      margin-top: auto; /* Empuja el botón hacia abajo */
+      margin-top: auto;
     }
     
     .btn:hover {
@@ -161,11 +152,26 @@
     }
     
     .ad-container {
-      margin: 20px auto;
+      margin: 0;
       text-align: center;
-      max-width: 100%;
+      width: 100%;
       overflow: hidden;
       border-radius: 4px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .ad-card {
+      background-color: #2c2c2c;
+      border-radius: 4px;
+      overflow: hidden;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
     
     .mode-switch {
@@ -214,9 +220,9 @@
         padding: 20px 40px;
       }
       
-      .movie-card {
-        min-width: 180px;
-        width: 180px;
+      .movie-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
       }
       
       .movie-card img {
@@ -263,13 +269,9 @@
     }
     
     @media (min-width: 1024px) {
-      .movie-row {
-        gap: 20px;
-      }
-      
-      .movie-card {
-        min-width: 200px;
-        width: 200px;
+      .movie-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 25px;
       }
       
       .movie-card img {
@@ -278,12 +280,6 @@
       
       .movie-info {
         height: 190px;
-      }
-      
-      .side-ad {
-        display: block !important;
-        float: right;
-        margin: 0 0 20px 20px;
       }
     }
     
@@ -300,9 +296,9 @@
         font-size: 20px;
       }
       
-      .movie-card {
-        min-width: 120px;
-        width: 120px;
+      .movie-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
       }
       
       .movie-card img {
@@ -324,10 +320,6 @@
         box-sizing: border-box;
         padding: 6px 12px;
         font-size: 13px;
-      }
-      
-      .movie-row {
-        gap: 10px;
       }
     }
   </style>
@@ -353,22 +345,9 @@
       </div>
     </div>
     
-    <!-- Banner Ad - Responsive -->
-    <div class="ad-container">
-      <script type="text/javascript">
-        atOptions = {
-          'key' : 'b330ccd204185aee9ef640adccf896d2',
-          'format' : 'iframe',
-          'height' : 90,
-          'width' : 728,
-          'params' : {}
-        };
-      </script>
-      <script type="text/javascript" src="//www.highperformanceformat.com/b330ccd204185aee9ef640adccf896d2/invoke.js"></script>
-    </div>
-    
     <h2 class="section-title">Tendencias</h2>
-    <div class="movie-row">
+    <div class="movie-grid">
+      <!-- Película 1 -->
       <div class="movie-card">
         <img src="https://pics.filmaffinity.com/Rescate_lunar-428014123-large.jpg" alt="Rescate Lunar">
         <div class="movie-info">
@@ -378,6 +357,7 @@
         </div>
       </div>
       
+      <!-- Película 2 -->
       <div class="movie-card">
         <img src="https://pics.filmaffinity.com/Bajo_custodia-198204017-large.jpg" alt="Bajo Custodia">
         <div class="movie-info">
@@ -387,20 +367,23 @@
         </div>
       </div>
       
-      <!-- Side Ad - Only show on larger screens -->
-      <div class="ad-container side-ad" style="display: none;">
-        <script type="text/javascript">
-          atOptions = {
-            'key' : 'a55c7cdc78df0520f71c2b00e4046167',
-            'format' : 'iframe',
-            'height' : 300,
-            'width' : 160,
-            'params' : {}
-          };
-        </script>
-        <script type="text/javascript" src="//www.highperformanceformat.com/a55c7cdc78df0520f71c2b00e4046167/invoke.js"></script>
+      <!-- Anuncio 1: Banner entre películas -->
+      <div class="ad-card">
+        <div class="ad-container">
+          <script type="text/javascript">
+            atOptions = {
+              'key' : 'a55c7cdc78df0520f71c2b00e4046167',
+              'format' : 'iframe',
+              'height' : 300,
+              'width' : 160,
+              'params' : {}
+            };
+          </script>
+          <script type="text/javascript" src="//www.highperformanceformat.com/a55c7cdc78df0520f71c2b00e4046167/invoke.js"></script>
+        </div>
       </div>
       
+      <!-- Película 3 -->
       <div class="movie-card">
         <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRKIMfNVHYaQkcZU4E2vmWCuX_sVl85MpJu_UG-20k4f6LmQOlj" alt="Winnie the Pooh: Sangre y miel">
         <div class="movie-info">
@@ -410,6 +393,7 @@
         </div>
       </div>
       
+      <!-- Película 4 -->
       <div class="movie-card">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYTFCR_N0efF2tu9uUGIlwPRM5MUQ06acODCSdFtlmmQpYo099" alt="Equipaje de mano">
         <div class="movie-info">
@@ -419,6 +403,23 @@
         </div>
       </div>
 
+      <!-- Anuncio 2: Banner entre películas -->
+      <div class="ad-card">
+        <div class="ad-container">
+          <script type="text/javascript">
+            atOptions = {
+              'key' : 'b330ccd204185aee9ef640adccf896d2',
+              'format' : 'iframe',
+              'height' : 90,
+              'width' : 728,
+              'params' : {}
+            };
+          </script>
+          <script type="text/javascript" src="//www.highperformanceformat.com/b330ccd204185aee9ef640adccf896d2/invoke.js"></script>
+        </div>
+      </div>
+
+      <!-- Película 5 -->
       <div class="movie-card">
         <img src="https://cuevana.biz/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FceKbVajrMKUyeOCoaijxPKWRIEN.jpg&w=640&q=75" alt="Un Viaje de Diez Metros">
         <div class="movie-info">
@@ -428,6 +429,7 @@
         </div>
       </div>
 
+      <!-- Película 6 -->
       <div class="movie-card">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3qgJGo_kuxKI1WfyJm9MpD1_HF4Ngo9TaUBR-rdeAgVUEV83x" alt="Mufasa: El rey león">
         <div class="movie-info">
@@ -437,6 +439,15 @@
         </div>
       </div>
 
+      <!-- Anuncio 3: Container Ad entre películas -->
+      <div class="ad-card">
+        <div class="ad-container">
+          <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
+          <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
+        </div>
+      </div>
+
+      <!-- Película 7 -->
       <div class="movie-card">
         <img src="https://pics.filmaffinity.com/depravity-801066463-large.jpg" alt="Depravación">
         <div class="movie-info">
@@ -445,12 +456,6 @@
           <a href="https://pixeldrain.com/u/24dw1r41" class="btn" target="_blank">Ver</a>
         </div>
       </div>
-    </div>
-    
-    <!-- Container Ad - Responsive -->
-    <div class="ad-container" style="margin-top: 40px;">
-      <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
-      <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
     </div>
   </div>
 
@@ -469,23 +474,7 @@
     // Inicializar carga de películas al cargar la página
     window.onload = function() {
       cargarPeliculas();
-      handleResize();
     };
-    
-    // Media query for side ad
-    function handleResize() {
-      const sideAdContainer = document.querySelector('.side-ad');
-      if (sideAdContainer) {
-        if (window.innerWidth >= 1024) {
-          sideAdContainer.style.display = 'block';
-        } else {
-          sideAdContainer.style.display = 'none';
-        }
-      }
-    }
-    
-    // Event listener para el redimensionamiento
-    window.addEventListener('resize', handleResize);
   </script>
 </body>
 </html>
