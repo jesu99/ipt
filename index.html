@@ -5,176 +5,218 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo de Películas</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
             background-color: #141414;
-            color: white;
-        }
-        
-        .header {
-            background-color: #000;
+            color: #fff;
             padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
         
-        h1 {
-            margin: 0;
-            color: #e50914;
-            font-size: 2.5rem;
-        }
-        
-        .notice {
+        header {
             text-align: center;
-            padding: 12px;
-            background-color: rgba(0,0,0,0.7);
-            color: #e6e6e6;
-            font-size: 1rem;
-            margin-bottom: 20px;
+            padding: 20px 0;
+            margin-bottom: 30px;
             border-bottom: 1px solid #333;
         }
         
-        .movies-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 20px;
+        h1 {
+            font-size: 2.5rem;
+            color: #e50914;
+            margin-bottom: 10px;
         }
         
-        .movie-card {
-            background-color: #1f1f1f;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
         
-        .movie-card:hover {
-            transform: scale(1.05);
-        }
-        
-        .movie-image {
+        .ad-banner {
             width: 100%;
-            height: 280px;
-            object-fit: cover;
-        }
-        
-        .movie-info {
-            padding: 12px;
-        }
-        
-        .movie-title {
-            font-size: 1rem;
-            margin: 0 0 10px 0;
-            height: 40px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-        
-        .watch-button {
-            display: block;
+            margin: 20px 0;
             text-align: center;
-            background-color: #e50914;
-            color: white;
-            padding: 8px 0;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: bold;
-            transition: background-color 0.2s;
-        }
-        
-        .watch-button:hover {
-            background-color: #f40612;
-        }
-        
-        /* Estilos para los contenedores de anuncios */
-        .ad-container {
-            margin: 20px auto;
-            text-align: center;
-            overflow: hidden;
-        }
-        
-        .ad-container-top {
-            margin-bottom: 20px;
-        }
-        
-        .ad-container-bottom {
-            margin-top: 20px;
-            margin-bottom: 20px;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
         }
         
         .ad-sidebar {
             float: right;
-            margin: 20px;
+            margin: 10px;
         }
         
-        .ad-banner {
-            max-width: 100%;
-            margin: 0 auto;
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .movie-card {
+            background-color: #222;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .movie-poster {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+        }
+        
+        .movie-info {
+            padding: 15px;
+        }
+        
+        .movie-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #fff;
+            text-decoration: none;
+        }
+        
+        .movie-title:hover {
+            color: #e50914;
+        }
+        
+        .movie-genre {
+            background-color: #e50914;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .movie-synopsis {
+            color: #aaa;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            height: 80px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        .movie-link {
+            display: inline-block;
+            background-color: #e50914;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .movie-link:hover {
+            background-color: #f40612;
+        }
+        
+        .add-movie {
+            margin-top: 40px;
+            background-color: #333;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
             display: block;
+            margin-bottom: 5px;
+            color: #aaa;
         }
         
-        /* Ajuste para anuncios en dispositivos móviles */
-        @media (max-width: 728px) {
-            .ad-container {
-                width: 100%;
-                overflow: hidden;
-            }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #222;
+            color: #fff;
         }
         
-        @media (max-width: 600px) {
-            .movies-container {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-                padding: 10px;
+        button {
+            background-color: #e50914;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #f40612;
+        }
+        
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #333;
+            color: #aaa;
+        }
+        
+        .ad-container-rectangle {
+            margin: 30px auto;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
             }
             
-            .movie-image {
-                height: 220px;
+            .movie-poster {
+                height: 225px;
             }
             
-            .ad-sidebar {
-                float: none;
-                margin: 20px auto;
-                text-align: center;
+            .movie-synopsis {
+                height: 60px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Catálogo de Películas</h1>
-    </div>
+    <header>
+        <div class="container">
+            <h1>PELÍCULA PLUS</h1>
+            <p>Tu catálogo de películas favoritas</p>
+        </div>
+    </header>
     
-    <div class="notice">
-        <strong>Aviso:</strong> La reproducción de una película puede tardar hasta **20 segundos** en iniciar. Si el video no se reproduce o **intenta descargarse en lugar de reproducirse, cambia de navegador**, ya que el tuyo no es compatible.  
-
-La lista de películas se actualizará **cada 10 días**, ¡no te pierdas ninguna novedad! 🎬🔥  
-
-📢 **Los anuncios nos ayudan a mantener la página activa**, ¡agradecemos tu apoyo! 🙌.
-    </div>
-    
-    <!-- Banner de anuncio superior -->
-    <div class="ad-container ad-container-top">
-        <script type="text/javascript">
-            atOptions = {
-                'key' : 'b330ccd204185aee9ef640adccf896d2',
-                'format' : 'iframe',
-                'height' : 90,
-                'width' : 728,
-                'params' : {}
-            };
-        </script>
-        <script type="text/javascript" src="//www.highperformanceformat.com/b330ccd204185aee9ef640adccf896d2/invoke.js"></script>
-    </div>
-    
-    <!-- Contenedor principal con sidebar de anuncios -->
-    <div style="position: relative;">
+    <div class="container">
+        <!-- Banner de anuncio superior -->
+        <div class="ad-banner">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : 'b330ccd204185aee9ef640adccf896d2',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/b330ccd204185aee9ef640adccf896d2/invoke.js"></script>
+        </div>
+        
         <!-- Anuncio lateral -->
         <div class="ad-sidebar">
             <script type="text/javascript">
@@ -189,364 +231,214 @@ La lista de películas se actualizará **cada 10 días**, ¡no te pierdas ningun
             <script type="text/javascript" src="//www.highperformanceformat.com/a55c7cdc78df0520f71c2b00e4046167/invoke.js"></script>
         </div>
         
-        <!-- Grid de películas -->
-        <div class="movies-container" id="moviesGrid"></div>
+        <h2>Películas Destacadas</h2>
+        
+        <div class="movies-grid">
+            <!-- Ejemplo de película 1 -->
+            <div class="movie-card">
+                <img src="https:https://pixeldrain.com/u/BCnYyRG4" alt="Película 1" class="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3qgJGo_kuxKI1WfyJm9MpD1_HF4Ngo9TaUBR-rdeAgVUEV83x">
+                <div class="movie-info">
+                    <h3>
+                        <a href="#" class="movie-title">Mufasa: El rey león</a>
+                    </h3>
+                    <span class="movie-genre">Acción</span>
+                    <p class="movie-synopsis">Una inundación separa al cachorro Mufasa de sus padres, pero el rey de los leones lo acoge como a uno de los suyos tras demostrar su valentía. Al crecer, una manada de leones desterrados y los celos de su hermana adoptiva lo pondrán en peligro.</p>
+                    <a href="#" class="movie-link">Ver Película</a>
+                </div>
+            </div>
+            
+            <!-- Ejemplo de película 2 -->
+            <div class="movie-card">
+                <img src="/api/placeholder/400/320" alt="Película 2" class="movie-poster">
+                <div class="movie-info">
+                    <h3>
+                        <a href="#" class="movie-title">Título de la Película 2</a>
+                    </h3>
+                    <span class="movie-genre">Comedia</span>
+                    <p class="movie-synopsis">Esta es la sinopsis de la película. Aquí puedes escribir una descripción breve sobre la trama, los actores principales y el director.</p>
+                    <a href="#" class="movie-link">Ver Película</a>
+                </div>
+            </div>
+            
+            <!-- Ejemplo de película 3 -->
+            <div class="movie-card">
+                <img src="/api/placeholder/400/320" alt="Película 3" class="movie-poster">
+                <div class="movie-info">
+                    <h3>
+                        <a href="#" class="movie-title">Título de la Película 3</a>
+                    </h3>
+                    <span class="movie-genre">Drama</span>
+                    <p class="movie-synopsis">Esta es la sinopsis de la película. Aquí puedes escribir una descripción breve sobre la trama, los actores principales y el director.</p>
+                    <a href="#" class="movie-link">Ver Película</a>
+                </div>
+            </div>
+            
+            <!-- Ejemplo de película 4 -->
+            <div class="movie-card">
+                <img src="/api/placeholder/400/320" alt="Película 4" class="movie-poster">
+                <div class="movie-info">
+                    <h3>
+                        <a href="#" class="movie-title">Título de la Película 4</a>
+                    </h3>
+                    <span class="movie-genre">Ciencia Ficción</span>
+                    <p class="movie-synopsis">Esta es la sinopsis de la película. Aquí puedes escribir una descripción breve sobre la trama, los actores principales y el director.</p>
+                    <a href="#" class="movie-link">Ver Película</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Anuncio rectangular en medio -->
+        <div class="ad-container-rectangle">
+            <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
+            <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
+        </div>
+        
+        <h2>Películas Recientes</h2>
+        
+        <div class="movies-grid">
+            <!-- Ejemplo de película 5 -->
+            <div class="movie-card">
+                <img src="/api/placeholder/400/320" alt="Película 5" class="movie-poster">
+                <div class="movie-info">
+                    <h3>
+                        <a href="#" class="movie-title">Título de la Película 5</a>
+                    </h3>
+                    <span class="movie-genre">Terror</span>
+                    <p class="movie-synopsis">Esta es la sinopsis de la película. Aquí puedes escribir una descripción breve sobre la trama, los actores principales y el director.</p>
+                    <a href="#" class="movie-link">Ver Película</a>
+                </div>
+            </div>
+            
+            <!-- Ejemplo de película 6 -->
+            <div class="movie-card">
+                <img src="/api/placeholder/400/320" alt="Película 6" class="movie-poster">
+                <div class="movie-info">
+                    <h3>
+                        <a href="#" class="movie-title">Título de la Película 6</a>
+                    </h3>
+                    <span class="movie-genre">Aventura</span>
+                    <p class="movie-synopsis">Esta es la sinopsis de la película. Aquí puedes escribir una descripción breve sobre la trama, los actores principales y el director.</p>
+                    <a href="#" class="movie-link">Ver Película</a>
+                </div>
+            </div>
+            
+            <!-- Ejemplo de película 7 -->
+            <div class="movie-card">
+                <img src="/api/placeholder/400/320" alt="Película 7" class="movie-poster">
+                <div class="movie-info">
+                    <h3>
+                        <a href="#" class="movie-title">Título de la Película 7</a>
+                    </h3>
+                    <span class="movie-genre">Romántica</span>
+                    <p class="movie-synopsis">Esta es la sinopsis de la película. Aquí puedes escribir una descripción breve sobre la trama, los actores principales y el director.</p>
+                    <a href="#" class="movie-link">Ver Película</a>
+                </div>
+            </div>
+            
+            <!-- Ejemplo de película 8 -->
+            <div class="movie-card">
+                <img src="/api/placeholder/400/320" alt="Película 8" class="movie-poster">
+                <div class="movie-info">
+                    <h3>
+                        <a href="#" class="movie-title">Título de la Película 8</a>
+                    </h3>
+                    <span class="movie-genre">Documental</span>
+                    <p class="movie-synopsis">Esta es la sinopsis de la película. Aquí puedes escribir una descripción breve sobre la trama, los actores principales y el director.</p>
+                    <a href="#" class="movie-link">Ver Película</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Anuncio lateral final -->
+        <div class="ad-sidebar">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : 'a55c7cdc78df0520f71c2b00e4046167',
+                    'format' : 'iframe',
+                    'height' : 300,
+                    'width' : 160,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/a55c7cdc78df0520f71c2b00e4046167/invoke.js"></script>
+        </div>
+        
+        <!-- Formulario para agregar películas -->
+        <div class="add-movie">
+            <h2>Agregar Nueva Película</h2>
+            <form id="movie-form">
+                <div class="form-group">
+                    <label for="movie-title">Título de la Película:</label>
+                    <input type="text" id="movie-title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="movie-genre">Género:</label>
+                    <input type="text" id="movie-genre" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="movie-synopsis">Sinopsis:</label>
+                    <textarea id="movie-synopsis" rows="5" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="movie-image-url">URL de la Imagen:</label>
+                    <input type="url" id="movie-image-url" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="movie-url">URL de la Película:</label>
+                    <input type="url" id="movie-url" required>
+                </div>
+                
+                <button type="submit">Agregar Película</button>
+            </form>
+        </div>
     </div>
     
-    <!-- Anuncio inferior -->
-    <div class="ad-container ad-container-bottom">
-        <script async="async" data-cfasync="false" src="//pl26063295.effectiveratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
-        <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
-    </div>
-    
-    <!-- Script para pop-under -->
-    <script type='text/javascript' src='//pl26063313.effectiveratecpm.com/93/61/3d/93613d042ce505fe468e829efbb21520.js'></script>
-    
-    <!-- Script para pop-up -->
-    <script type='text/javascript' src='//pl26063307.effectiveratecpm.com/19/09/91/1909913ee893cee324321a2b56c090fa.js'></script>
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Catálogo de Películas. Todos los derechos reservados.</p>
+        </div>
+    </footer>
     
     <script>
-        // Pop-under personalizado (lo configuramos para que se active una sola vez por sesión)
-        let hasShownPopunder = sessionStorage.getItem('popunderShown');
-        if (!hasShownPopunder) {
-            window.addEventListener('load', function() {
-                setTimeout(function() {
-                    window.open('https://www.effectiveratecpm.com/wy4ysndt?key=12c98d265ef2e657283053a557f43edd', '_blank');
-                    sessionStorage.setItem('popunderShown', 'true');
-                }, 3000);
-            });
-        }
-        
-        // Función para procesar el archivo M3U
-        function parseM3U(m3uData) {
-            const movies = [];
-            const lines = m3uData.split('\n');
+        // JavaScript para manejar el formulario de agregar películas
+        document.getElementById('movie-form').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            for (let i = 0; i < lines.length; i++) {
-                if (lines[i].startsWith('#EXTINF')) {
-                    const infoLine = lines[i];
-                    const urlLine = lines[i + 1] || '';
-                    
-                    const nameMatch = infoLine.match(/tvg-name="(.*?)"/);
-                    const logoMatch = infoLine.match(/tvg-logo="(.*?)"/);
-                    
-                    if (nameMatch && urlLine) {
-                        movies.push({
-                            name: nameMatch[1],
-                            url: urlLine.trim(),
-                            logo: logoMatch ? logoMatch[1] : ''
-                        });
-                    }
-                    
-                    i++;
-                }
-            }
+            // Obtener valores del formulario
+            const title = document.getElementById('movie-title').value;
+            const genre = document.getElementById('movie-genre').value;
+            const synopsis = document.getElementById('movie-synopsis').value;
+            const imageUrl = document.getElementById('movie-image-url').value;
+            const movieUrl = document.getElementById('movie-url').value;
             
-            return movies;
-        }
-        
-        // Datos de M3U a procesar
-        const m3uData = `
-
-
-#EXTINF:-1 tvg-id="" tvg-name="Sangre Sudor y Gloria" tvg-logo="data:image/jpeg;base64,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" group-title="⭐️Estrenos 2024",El Cuervo (2024)
-https://hmqji2fcn4hq.milocdn.com/hls2/01/01978/9p1s80sz9ipt_,l,n,.urlset/index-f2-v1-a1.m3u8?t=0OMfy_AveNzLkUnUr1N-1UrXo0UyV_vDKiWvWN2VJn0&s=1743197054&e=129600&f=9891699&srv=XxFHLnDedaMsr&i=0.4&sp=500&p1=XxFHLnDedaMsr&p2=XxFHLnDedaMsr&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Día de patriotas" tvg-logo="https://cuevana.pro/resize/200/storage/26866/zM0Zd1OGtnclMYq1bzqUZhhbNo82p0GzH4kBUzO9.jpg" group-title="⭐️Estrenos 2024",Día de patriotas
-https://dd2stliwt0bc.acek-cdn.com/hls2/01/01957/d81xodl2jvdn_l/index-v1-a1.m3u8?t=dU4DTxxOOLVE7CHMBRt4vRDKWP9bA-Xzlt_SQxgzOwU&s=1743197130&e=129600&f=9787806&srv=e4RHfFUBYeX4H3m&i=0.4&sp=500&p1=e4RHfFUBYeX4H3m&p2=e4RHfFUBYeX4H3m&asn=273133 
-#EXTINF:-1 tvg-id="" tvg-name="Shooter: El tirador" tvg-logo="https://es.web.img3.acsta.net/c_310_420/medias/nmedia/18/67/82/20/20056085.jpg" group-title="⭐️Estrenos 2024",Shooter: El tirador
-https://dd2stliwt0bc.acek-cdn.com/hls2/01/01957/d81xodl2jvdn_l/index-v1-a1.m3u8?t=dU4DTxxOOLVE7CHMBRt4vRDKWP9bA-Xzlt_SQxgzOwU&s=1743197130&e=129600&f=9787806&srv=e4RHfFUBYeX4H3m&i=0.4&sp=500&p1=e4RHfFUBYeX4H3m&p2=e4RHfFUBYeX4H3m&asn=273133#EXTINF:-1 tvg-id="" tvg-name="Familia al instante" tvg-logo="https://www.cinecalidad.rs/wp-content/uploads/2019/02/familia-al-instante.jpg" group-title="⭐️Estrenos 2024",Familia al instante
-#EXTINF:-1 tvg-id="" tvg-name="Focus: Maestros de la estafa" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2F5Nfl7nbruxF1z01GxExUO0GYujm.jpg&w=640&q=75" group-title="⭐️Estrenos 2024",Focus: Maestros de la estafa
-https://x8oi6owwkjoewr.premilkyway.com/hls2/01/03115/hovozw32wstb_,n,h,x,.urlset/index-f2-v1-a1.m3u8?t=yfR0aU_tjjqn0rNXuWhLsO0_RkXav1pEnKaBiRQYYs4&s=1743197741&e=129600&f=15579442&srv=z13jtbat10fa85i&i=0.4&sp=500&p1=z13jtbat10fa85i&p2=z13jtbat10fa85i&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Ted" tvg-logo="https://image.tmdb.org/t/p/w300/1DY7eSoQLoTNhJTT455N74VuHHx.jpg" group-title="⭐️Ted
-https://2goita23a7njj.premilkyway.com/hls2/01/00556/3vfak3acfnwd_n/index-v1-a1.m3u8?t=Wu9tqcVtJ8p-f7G4hyX1HQPJ1h8uanL_-tAOFE5gWPY&s=1743198000&e=129600&f=2782533&srv=z13jtbat10fahdh456&i=0.4&sp=500&p1=z13jtbat10fahdh456&p2=z13jtbat10fahdh456&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="El apostador" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FhvdS2CnwgoOXTC94u4QddX7KwoV.jpg&w=640&q=75" group-title="⭐️El apostador
-https://5nrdhdrayadkaqp2.premilkyway.com/hls2/01/03188/ugio6kgm0w65_,n,h,.urlset/index-f1-v1-a1.m3u8?t=5QVc4UZa4wf0PZCkBbF0X72Ur4dITbxlJIU6WsP-M1E&s=1743198339&e=129600&f=15942376&srv=jgy4rdrj5btf&i=0.4&sp=500&p1=jgy4rdrj5btf&p2=jgy4rdrj5btf&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Jurassic World: Dominion" tvg-logo="https://image.tmdb.org/t/p/w185/vyTTjx1aHU9SOcEyF4kdcufjKqx.jpg" group-title="⭐️Jurassic World: Dominion
-https://5nrdhdrayadkaqp2.premilkyway.com/hls2/01/03188/ugio6kgm0w65_,n,h,.urlset/master.m3u8?t=5QVc4UZa4wf0PZCkBbF0X72Ur4dITbxlJIU6WsP-M1E&s=1743198339&e=129600&f=15942376&srv=jgy4rdrj5btf&i=0.4&sp=500&p1=jgy4rdrj5btf&p2=jgy4rdrj5btf&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Cuatro hermanos" tvg-logo="https://cuevana.pro/resize/200/storage/76231/2Y9HzoZUO81Nsi2wI5xmZQrpAdUJHIeiq9BT9M2r.jpg" group-title="⭐️Estrenos 2024",Cuatro hermanos
-https://5nrdhdrayadkaqp2.premilkyway.com/hls2/01/03188/ugio6kgm0w65_,n,h,.urlset/master.m3u8?t=5QVc4UZa4wf0PZCkBbF0X72Ur4dITbxlJIU6WsP-M1E&s=1743198339&e=129600&f=15942376&srv=jgy4rdrj5btf&i=0.4&sp=500&p1=jgy4rdrj5btf&p2=jgy4rdrj5btf&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Contrabando" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FbmIphBwlYwChptmUH8UYzBO6yBh.jpg&w=640&q=75" group-title="⭐️Contrabando
-https://do7go.com/e/dxd9dox6tido
-#EXTINF:-1 tvg-id="" tvg-name="Maze Runner: Correr o morir" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2Fib10aRM8cI1H53RlkAKbRlB2SO6.jpg&w=640&q=75" group-title="⭐️Maze Runner: Correr o morir
-https://do7go.com/e/a1kcu7ko6fhv
-#EXTINF:-1 tvg-id="" tvg-name="El Origen" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FtXQvtRWfkUUnWJAn2tN3jERIUG.jpg&w=640&q=75" group-title="⭐️El Origen
-https://do7go.com/e/nqxaem15p7v1
-#EXTINF:-1 tvg-id="" tvg-name="Atrápame si puedes" tvg-logo="https://tv8.cuevana3.vip/wp-content/uploads/atrapame-si-puedes-2002.jpg" group-title="⭐️Atrápame si puedes
-https://do7go.com/e/99hgpty3ceh8
-#EXTINF:-1 tvg-id="" tvg-name="Asalto al tren Pelham 123" tvg-logo="https://cuevana.pro/resize/200/storage/71811/tNXFbenChehLTd0mkAmQaW3Ye4Q2H9yBIiSvlbTI.jpg" group-title="⭐️Asalto al tren Pelham 123
-https://do7go.com/e/mc562jxn456o
-#EXTINF:-1 tvg-id="" tvg-name="Armados y peligrosos" tvg-logo="https://image.tmdb.org/t/p/w300/A0osDL7XE6v8pseLPoo1P6TaiDx.jpg" group-title="⭐️Armados y peligrosos
-https://do7go.com/e/shmq2lc6lz20
-#EXTINF:-1 tvg-id="" tvg-name="El Lobo de Wall Street" tvg-logo="https://www.cinecalidad.rs/wp-content/uploads/2014/04/el-lobo-de-wall-street.jpg" group-title="⭐️El Lobo de Wall Street
-https://do7go.com/e/nkyd52ko351z
-
-#EXTINF:-1 tvg-id="" tvg-name="Venom: El último baile" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2F8F74DwgFxTIBNtbqSLjR7zWmnHh.jpg&w=640&q=75" group-title="⭐️Venom: El último baile
-https://do7go.com/e/4pm2pytokejr
-#EXTINF:-1 tvg-id="" tvg-name="Apocalypto" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FcjyGCKyEZKhZF2YkqxyzrfoeKoL.jpg&w=640&q=75"⭐️Apocalypto
-https://do7go.com/e/mbzimpzlbpcy
-#EXTINF:-1 tvg-id="" tvg-name="Cyborg" tvg-logo="data:image/jpeg;base64,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"⭐️Cyborg
-https://vod3.cf.dmcdn.net/sec2(DzCRxuOA-Lxqko1_wTFzD4j3xPDYhQWXr2n_NfCEtAaNqHeyi3CiezRfioM_gC8emupNzGau_yhMDzNytwIANWOV3Rxur98yXXc3YXBMCUeEfQ8qwiFuzJmw29z09_Wr-CfTx8WmSzE4BfTlBTev_FcxIjfkHHO3lensnlHa2aDSnPDNO-7-E3Mfo_OMPOL4)/video/487/266/536662784_mp4_h264_aac_hd_5.m3u8#cell=cf3
-
-#EXTINF:-1 tvg-id="" tvg-name="Rápidos y Furiosos 1" tvg-logo="https://cuevana.pro/resize/200/storage/4398/YgUlyTwWgoPvgyQBV8xKqX4WQMqa8m0MuFezodqf.jpg" group-title="⭐️Rápidos y Furiosos 1
-https://as9p3ktgpeiv.milocdn.com/hls2/01/00972/gwnts9zhn8io_l/index-v1-a1.m3u8?t=bowLadwTBL5kD44fsjA_0FXVR8vzeIwtr2_ZgPKRgZI&s=1743024170&e=129600&f=10169443&srv=MQWnAzamlVSnS&i=0.4&sp=500&p1=MQWnAzamlVSnS&p2=MQWnAzamlVSnS&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Más rápido, más furioso" tvg-logo="https://image.tmdb.org/t/p/w300/fZtSG5a6i5Ca39WQylLVmvWI5b.jpg" group-title="⭐️Más rápido, más furioso
-https://cukooifnwbux.premilkyway.com/hls2/01/04819/ns5ijsm5twny_,l,n,.urlset/index-f2-v1-a1.m3u8?t=btj1x-j7PMDjiaE_tSNL71entbmxy5KF_BrVOptdMYI&s=1743024467&e=129600&f=24099778&srv=3FjgDmcnea8S35m&i=0.4&sp=500&p1=3FjgDmcnea8S35m&p2=3FjgDmcnea8S35m&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Rápidos y furiosos 3: Desafío Tokyo" tvg-logo="https://cuevana.pro/resize/200/storage/4402/xOrbjnvdV5sAruXfW50pDQQAjiendAhmvcuCZCet.jpg" group-title="⭐️Rápidos y furiosos 3: Desafío Tokyo
-https://vwhuvrleqt9z.milocdn.com/hls2/01/00975/az58aupqwq1y_l/index-v1-a1.m3u8?t=0KGHA7bkRHgV3BJKNV9KlzAh0fL8PnYx5FEPus16iwg&s=1743024681&e=129600&f=10167569&srv=o5h0LGNZUCVjU&i=0.4&sp=500&p1=o5h0LGNZUCVjU&p2=o5h0LGNZUCVjU&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Rápidos y furiosos 4: Aún más rápido" tvg-logo="https://cuevana.pro/resize/200/storage/17310/Wp9fjk48NR7vBgbQ3p6u5so1WzVyScmkZ6LlaVu4.jpg" group-title="⭐️Rápidos y furiosos 4: Aún más rápido
-https://cdnst70.tokyvideo.com/videos/631/631736/mp4/f077d5b676a05c2c8c2328a4287040e972cfde8b8e23bc291e1736e24fde4579.mp4?secure=TB-agRCBbsuFTWE3fx0f_g%3D%3D%2C1743111509
-#EXTINF:-1 tvg-id="" tvg-name="Rápidos y Furiosos: 5in Control" tvg-logo="https://image.tmdb.org/t/p/w300/mtRhCiT4hZzaP6c3DJqec1Jjm0i.jpg" group-title="⭐️Rápidos y Furiosos: 5in Control
-https://or6vwhgdzsnp.premilkyway.com/hls2/01/04820/bqh7phpklqn0_,l,n,.urlset/index-f2-v1-a1.m3u8?t=suqFKUB51go2N_xXqpl4dan0eC6UaZbasqY3-UbKkU4&s=1743025643&e=129600&f=24100192&srv=3FjgDmcnea8S35m&i=0.4&sp=500&p1=3FjgDmcnea8S35m&p2=3FjgDmcnea8S35m&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name=" Fast & Furious 6" tvg-logo="https://cuevana.pro/resize/200/storage/4408/jnz7h3DvzdXf6nFChZapxzMnolf45tVtdsXAdWvH.jpg" group-title="⭐️ Fast & Furious 6
-https://ktswlce1u78u1jf.milocdn.com/hls2/01/01768/jt7uecrtjtdp_l/index-v1-a1.m3u8?t=iYXxKVQFaR0XqwBhc2yfPAK15TEgfQ3Xn1j3dSTEnhk&s=1743025852&e=129600&f=10024186&srv=iWHz5zpkSLGQy&i=0.4&sp=500&p1=iWHz5zpkSLGQy&p2=iWHz5zpkSLGQy&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Fast & Furious 7" tvg-logo="https://cuevana.pro/resize/200/storage/27364/QpvXj05P6UDiwCEkGHPWenzvZLoUkHZZiXZF39uk.jpg" group-title="⭐️Fast & Furious 7
-https://ggpjq6gmqddb.acek-cdn.com/hls2/01/00220/hiaqi8mgvbg8_o/index-v1-a1.m3u8?t=n5e4P0iDSoPEBba5Fd-n7Gxj42YDi9FEL32VrlTlzVE&s=1743025974&e=129600&f=10010011&srv=N9AMlcuPtQ8N&i=0.4&sp=500&p1=N9AMlcuPtQ8N&p2=N9AMlcuPtQ8N&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Fast & Furious 8" tvg-logo="https://cuevana.pro/resize/200/storage/3426/s2VFHRqq9SEAD41hLMDXrUuE3i5UTlax7iwKJexP.jpg" group-title="⭐️Fast & Furious 8
-https://no6ojcmmspit.acek-cdn.com/hls2/01/01260/xqr9eo9molvb_n/index-v1-a1.m3u8?t=gJWjTtrCwYVPAdkCAjfL24j5uyMIgfEfEMe2hkBv1q4&s=1743026080&e=129600&f=9094374&srv=Z8VeXJnplmoxw&i=0.4&sp=500&p1=Z8VeXJnplmoxw&p2=Z8VeXJnplmoxw&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Rápidos y furiosos 9" tvg-logo="https://image.tmdb.org/t/p/w300/mlH5Fm86tr7Q0NdKskVY6rZb5W3.jpg" group-title="⭐️Rápidos y furiosos 9
-src="https://cdnst14.tokyvideo.com/videos/247/247423/mp4/ace7337133b22c2452ea52a70bb69f3f93d1cd3c69f714c90ccb24dd05978e53.mp4?secure=idzbUDeIX689lA8X-RiCTQ%3D%3D%2C1743111798"
-#EXTINF:-1 tvg-id="" tvg-name="Rápidos y furiosos X" tvg-logo="https://image.tmdb.org/t/p/w300/x3zlm6VxPvVrYWE3bHkYUQMR798.jpg" group-title="⭐️Rápidos y furiosos X
-https://g9hb6ahmf6ejy.premilkyway.com/hls2/01/00313/zfucjgilwj0u_n/master.m3u8?t=RyJr4Y2PR0_p-SXCZBimPIc7a4o_7NUykUERwREbisc&s=1743026486&e=129600&f=1565148&srv=jubDiYuWLQCqfHI&i=0.4&sp=500&p1=jubDiYuWLQCqfHI&p2=jubDiYuWLQCqfHI&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Tesoro del Amazonas" tvg-logo="https://es.web.img2.acsta.net/c_310_420/pictures/14/04/23/12/18/181531.jpg" group-title="⭐️Tesoro del Amazonas
-https://www.dailymotion.com/cdn/manifest/video/x9f798o.m3u8?sec=cxW8Eo_y7aI4mfbUqdfEsBrPg2Qw_3rIOigkDpBucegBgxdc1mb57MvrkzKKvVdrnwzUdheiLIjCiA9gIYRlrw&dmTs=551937&dmV1st=a614e218-e962-419b-827d-8e301fa902ae
-#EXTINF:-1 tvg-id="" tvg-name="Mujer bonita" tvg-logo="https://m.media-amazon.com/images/M/MV5BYzZiZjAxODItYzJhNi00ZjgyLThlMWEtMWI4NjM3YjNlN2M4XkEyXkFqcGc@._V1_.jpg" group-title="⭐️Mujer bonita
-https://www.genteclic.com/peliculas/mujer-bonita.mp4
-#EXTINF:-1 tvg-id="" tvg-name="Shrek 2" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FknRt4E8KyfwEv0SVu9LsLvD28IQ.jpg&w=640&q=75" group-title="⭐️Shrek 2
-https://jturq6cd3wcv.premilkyway.com/hls2/01/02908/i2mzhi0y0r4c_,n,h,.urlset/index-f2-v1-a1.m3u8?t=C29ftHKj3Fv_rUbL08_9RgMSfgLE96eHWs78yjS9yJY&s=1743042076&e=129600&f=14540764&srv=z13jtbat10fa85i&i=0.4&sp=500&p1=z13jtbat10fa85i&p2=z13jtbat10fa85i&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Ben-Hur" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FmcNBBxFrikb8ad8s5mDQp1TGcaU.jpg&w=640&q=75" group-title="⭐️Ben-Hur
-https://vwyn3lxe5fv5.premilkyway.com/hls2/01/03456/apzp3kzn8ai2_,n,h,.urlset/index-f2-v1-a1.m3u8?t=RnMpOQMCyjWam5zLLf8FLeCwoewK_uwaiAaENyKpckI&s=1743086807&e=129600&f=17284981&srv=jubDiYuWLQCqfHI&i=0.4&sp=500&p1=jubDiYuWLQCqfHI&p2=jubDiYuWLQCqfHI&asn=273133
-
-#EXTINF:-1 tvg-id="" tvg-name="Camino Hacia El Terror 5" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2F8rCVdIzSIDIALXArSjLyw44teD0.jpg&w=640&q=75" group-title="⭐️Camino Hacia El Terror 5
-https://62lcxnbxr456.premilkyway.com/hls2/01/03197/y19vibkm4atm_,n,h,.urlset/index-f2-v1-a1.m3u8?t=SYXZyWgmkduLfhf62JK2YR8H4bAXfHdaz6x9f6LpqNA&s=1743133444&e=129600&f=15989164&srv=jubDiYuWLQCqfHI&i=0.4&sp=500&p1=jubDiYuWLQCqfHI&p2=jubDiYuWLQCqfHI&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Camino Hacia el Terror 4" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2Fu3mobjgAhf2q7MzsT0CTb73X7P2.jpg&w=640&q=75" group-title="⭐️Camino Hacia el Terror 4
-https://in1rhjc5cqhz.premilkyway.com/hls2/01/02571/dp8at7m4t2ns_,n,h,.urlset/index-f2-v1-a1.m3u8?t=4cxJneb5j5MeNSRSvdqUnWrL2K5WWrKDx49FS6pEvwU&s=1743133247&e=129600&f=15989121&srv=jubDiYuWLQCqfHI&i=0.4&sp=500&p1=jubDiYuWLQCqfHI&p2=jubDiYuWLQCqfHI&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Camino hacia el terror" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8r-mh0jeHqBqQJRv4eBp9Ut-5iMg78ipAIET2s76Go0tt12hM" group-title="⭐️Camino hacia el terror
-https://kfo8mkce0fzdhlq.premilkyway.com/hls2/01/04707/5rcid1zy5woq_,n,h,x,.urlset/index-f2-v1-a1.m3u8?t=ic5idJfnjeUYXotok8ieeHNdDICUVIeDInsEPb2-o9E&s=1743114740&e=129600&f=23537853&srv=3FjgDmcnea8S35m&i=0.4&sp=500&p1=3FjgDmcnea8S35m&p2=3FjgDmcnea8S35m&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="La noche del demonio" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FgIrBcrmtL2KEiydYKk8r94o1UGI.jpg&w=640&q=75" group-title="⭐️La noche del demonio
-https://2goita23a7njj.premilkyway.com/hls2/01/00254/ajrgsdr5h7am_x/index-v1-a1.m3u8?t=WscqNQB9lERHa6nhN1-hHDzQwAD5uE0Sj9mlaO5b-0o&s=1743114641&e=129600&f=1271088&srv=3FjgDmcnea8S35m&i=0.4&sp=500&p1=3FjgDmcnea8S35m&p2=3FjgDmcnea8S35m&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="El Descenso: Parte 2" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FoXUT1dDTn5NOrg0jxdEadnixGdt.jpg&w=640&q=75" group-title="⭐️El Descenso: Parte 2
-https://ye0r0rrinu.premilkyway.com/hls2/01/03039/ilb1dvpzzm2o_n/index-v1-a1.m3u8?t=-eU73ouK62iV9s_Uk4ml8mFoBp5ARnQ5QzV5JkEx7lI&s=1743114409&e=129600&f=15198588&srv=3FjgDmcnea8S35m&i=0.4&sp=500&p1=3FjgDmcnea8S35m&p2=3FjgDmcnea8S35m&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="El demonio" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2Fx2fWYlY2Ad2FL2Ad9p1HTgJEi8x.jpg&w=640&q=75" group-title="⭐️El demonio
-https://r63hfpdmodtc.premilkyway.com/hls2/01/00527/9l3hg0cloj32_n/index-v1-a1.m3u8?t=p6ELsGIw_rUcfZuCA2PQMiJN9Mru-bem6--GStLTBPU&s=1743114261&e=129600&f=2639078&srv=3FjgDmcnea8S35m&i=0.4&sp=500&p1=3FjgDmcnea8S35m&p2=3FjgDmcnea8S35m&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="La masacre de Texas" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2F6GVnIHoUDsqf1ICQR9ovRReuNke.jpg&w=640&q=75" group-title="⭐️La masacre de Texas
-https://cv9fqnu812v.premilkyway.com/hls2/01/02197/nnxpz0lvmcnb_,n,h,x,.urlset/index-f2-v1-a1.m3u8?t=MuqbWkZJ-vQw_RudKhQzvjP2JbXMS7YwVlLESaCciYU&s=1743114019&e=129600&f=10985338&srv=jubDiYuWLQCqfHI&i=0.4&sp=500&p1=jubDiYuWLQCqfHI&p2=jubDiYuWLQCqfHI&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Camino Hacia el Terror 2: Final mortal" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FchskPoHeqWIiWzeZLpuQSeXLBtM.jpg&w=640&q=75"⭐️Camino Hacia el Terror 2: Final mortal
-https://r63hfpdmodtc.premilkyway.com/hls2/01/03197/dhw2qb3petj6_,n,h,.urlset/index-f2-v1-a1.m3u8?t=Y4z6Rg-so8hTQe8mXLjhHx8kiOcMmb654eEmgu6HcJ4&s=1743132862&e=129600&f=15988960&srv=z13jtbat10fahdh456&i=0.4&sp=500&p1=z13jtbat10fahdh456&p2=z13jtbat10fahdh456&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Camino hacia el terror 3" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2F8CGNZk2HJHHFpnLdCJEe6JI6Fsi.jpg&w=640&q=75" group-title="⭐️Camino hacia el terror 3
-https://yhqd4yg264.premilkyway.com/hls2/01/03197/uoasre0r3f4n_,n,h,.urlset/index-f2-v1-a1.m3u8?t=xEEsRcT1IsH_iNk62NwtkGb3L7UJIJh5res1jzmR16Q&s=1743133070&e=129600&f=15989036&srv=3FjgDmcnea8S35m&i=0.4&sp=500&p1=3FjgDmcnea8S35m&p2=3FjgDmcnea8S35m&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Camino Hacia el Terror: La Herencia" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvgoMcmtcHFvtiWy3k6hnLI_EjqrI_DQ3gJQ&s" group-title="⭐️Camino Hacia el Terror: La Herencia
-https://cdnst14.tokyvideo.com/videos/268/268356/mp4/0ee321b94dc6ad717186e9cd42de4ea872e3847cdcc84ade5e79e222242d4ad1.mp4?secure=wvqlmMeSjUd7zw0EqHwmQA%3D%3D%2C1743220249
-#EXTINF:-1 tvg-id="" tvg-name="Camino Hacia el Terror" 7" tvg-logo="https://image.tmdb.org/t/p/original/91hV6argiWLRJeHXIo4BankllR9.jpg" group-title="⭐️Camino Hacia el Terror" 7
-https://cdnst14.tokyvideo.com/videos/268/268372/mp4/92abd8f88b2ffa5f2045f003e0424f93812306d7909aa16573e0fa2c5c322443.mp4?secure=Y7ZQ-WM70KmpxKHDKbh4pQ%3D%3D%2C1743220588
-#EXTINF:-1 tvg-id="" tvg-name="Terrifier 2: El Payaso Siniestro" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2F6ZfvF7ZS8MJXe0YwRkPAtXNpXrG.jpg&w=640&q=75" group-title="⭐️Terrifier 2: El Payaso Siniestro
-https://sedrfmwrpjxatem5.premilkyway.com/hls2/01/02938/38cbjbtw77kw_,n,h,.urlset/index-f2-v1-a1.m3u8?t=dezWd4Z_CHjeghBfkyir3KIcaako4lzIc3rnKzzvQw8&s=1743134659&e=129600&f=14690661&srv=z13jtbat10fahdh456&i=0.4&sp=500&p1=z13jtbat10fahdh456&p2=z13jtbat10fahdh456&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="Terrifier" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzDdQyVteCXcgXJWH8vzVEOgPtJyI8TA62OA&s" group-title="⭐️Terrifier
-https://cdnst68.tokyvideo.com/videos/600/600663/mp4/e05173bd4b246ecf009817fc7a662aaa05d2e6052715ce939689201073e7d34e.mp4?secure=ZI91IQQzpUThurTCSYh0Rw%3D%3D%2C1743221381
-
-#EXTINF:-1 tvg-id="" tvg-name="El Conjuro" tvg-logo="https://play-lh.googleusercontent.com/LHTWIbfulqaKpErJj95mEUJflRDdFN9Pblsah_LdN2RHqA_iF1YAOiy81aIrln1onjbD" group-title="⭐️El Conjuro
-https://cdnst68.tokyvideo.com/videos/568/568988/mp4/66cb9bb6b7558a8727322f82ce8681aca7df4ae6a4d329d566639b88e38e29c5.mp4?secure=vpOE9PUM-wAXB45BszEYbA%3D%3D%2C1743222854
-#EXTINF:-1 tvg-id="" tvg-name="El Conjuro 2" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FpdNW0HWw11Wn2N94VGea8O44wOA.jpg&w=640&q=75" group-title="⭐️El Conjuro 2
-https://wnsa7jyhmnmt12.premilkyway.com/hls2/01/02938/spxrmt5z5fvg_,n,h,.urlset/index-f1-v1-a1.m3u8?t=boKaOuJVg2MJoaUKCEBB_IbDTmTPAHbpAtmH14G_7DE&s=1743136884&e=129600&f=14690728&srv=js4BwLKgfmTMJmVh&i=0.4&sp=500&p1=js4BwLKgfmTMJmVh&p2=js4BwLKgfmTMJmVh&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="El Conjuro 3: El diablo me obligó a hacerlo" tvg-logo="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FghMQALCyytc6W0wlOlMIKiMSRKV.jpg&w=640&q=75" group-title="⭐️El Conjuro 3: El diablo me obligó a hacerlo
-https://mx9skjnui4es.premilkyway.com/hls2/01/04784/mk5lxzf0uze2_,l,n,.urlset/index-f1-v1-a1.m3u8?t=-D_0TzAVG4h4IqApWYGK4crf115h6UQxrPrTV750kOA&s=1743136993&e=129600&f=23920441&srv=jubDiYuWLQCqfHI&i=0.4&sp=500&p1=jubDiYuWLQCqfHI&p2=jubDiYuWLQCqfHI&asn=273133
-#EXTINF:-1 tvg-id="" tvg-name="El títere" tvg-logo="https://tv8.cuevana3.vip/wp-content/uploads/el-titere-2007.jpg" group-title="⭐️El títere
-https://m68btj72qc.premilkyway.com/hls2/01/04108/tyedzkhcsxs7_,n,h,.urlset/index-f1-v1-a1.m3u8?t=bFkr3XbrsCYk765sT4EwgBFOY0uaI8ql1TcSSCGYPeg&s=1743137793&e=129600&f=20541941&srv=3FjgDmcnea8S35m&i=0.4&sp=500&p1=3FjgDmcnea8S35m&p2=3FjgDmcnea8S35m&asn=273133
-
-
-`;
-
-        // Enlaces de imágenes personalizadas
-        const imageLinks = `
-https://i.postimg.cc/gJbXzrzT/Aguanta-la-respiraci-n.jpg
-https://i.postimg.cc/DZQW8Fmy/Al-borde-del-abismo.jpg
-https://i.postimg.cc/zvJyhMRw/Al-diablo-con-el-amor.jpg
-https://i.postimg.cc/wxVyz6Sw/Al-rescate-de-Fondo-de-Bikini.jpg
-https://i.postimg.cc/65b87M6R/Alien.jpg
-https://i.postimg.cc/02y62TvP/Almamula.jpg
-https://i.postimg.cc/vZ1c55DK/Amigos-Sem-Compromisso.jpg
-https://i.postimg.cc/g2frsrZ2/Anticristo-El-Exorcismo-de-Lara.jpg
-https://i.postimg.cc/j5h5RXkD/As-Neves.jpg
-https://i.postimg.cc/KYBjHFPr/Bad-Boys.jpg
-https://i.postimg.cc/Ss4R05V0/Bandida.jpg
-https://i.postimg.cc/MHKGHQhd/Beetlejuice-Beetlejuice.jpg
-https://i.postimg.cc/MHPpQGwx/Bienvenidos-al-para-so.jpg
-https://i.postimg.cc/nV0z53D5/Blanquita.jpg
-https://i.postimg.cc/9F0MjyPf/Borderlands.jpg
-https://i.postimg.cc/2SBS1mKR/Boxeador.jpg
-https://i.postimg.cc/wTrBx3FQ/Cacer-a-Humana.jpg
-https://i.postimg.cc/mrf2Mqvc/Campo-de-batalla.jpg
-https://i.postimg.cc/76XxFLf7/Canceled.jpg
-https://i.postimg.cc/bvxYRgPm/Capit-n-Avispa.jpg
-https://i.postimg.cc/fLMzqdTD/Carnada.jpg
-https://i.postimg.cc/4ydJsT90/Contaminados-por-el-miedo.jpg
-https://i.postimg.cc/y6Q1nkqC/Correr-Para-Vivir.jpg
-https://i.postimg.cc/RVWMY496/Corrupci-n-en-Bangkok.jpg
-https://i.postimg.cc/rsPqpYGw/Culpa-cero.jpg
-https://i.postimg.cc/28gzRM8H/De-Noche-Con-El-Diablo.jpg
-https://i.postimg.cc/636KfNYQ/Deadpool-Wolverine.jpg
-https://i.postimg.cc/zfr83hhK/Debieron-irse.jpg
-https://i.postimg.cc/vZ9GQh4G/Departamento-7-A.jpg
-https://i.postimg.cc/RFPBPbDL/Desaf-o-al-Tiempo.jpg
-https://i.postimg.cc/PqQhDqbc/Desaparecidos-en-la-noche.jpg
-https://i.postimg.cc/PJPk0QGs/Descendientes.jpg
-https://i.postimg.cc/kgrdhSfz/Descubriendo-A-Mi-Hijo.jpg
-https://i.postimg.cc/Fz8Qvkmf/D-di.jpg
-https://i.postimg.cc/Dy4Tg6d1/Disco.jpg
-https://i.postimg.cc/nVPxBg7H/Divorciados.jpg
-https://i.postimg.cc/kgxdr5H4/Divorcio-en-negro.jpg
-https://i.postimg.cc/CK7T1QSp/El-Abuelo-y-Kid.jpg
-https://i.postimg.cc/KzYXgD8k/El-ataque-del-cocadrilo.jpg
-https://i.postimg.cc/g0mbGW9K/El-Cuervo.jpg
-https://i.postimg.cc/PxVgbvC6/El-demonio-entre-nosotros.jpg
-https://i.postimg.cc/zvL9xDWq/El-diario.jpg
-https://i.postimg.cc/Y2ZchgK0/El-espiritu-de-las-tinieblas.jpg
-https://i.postimg.cc/Rhj2yrQK/El-exorcismo-de-Georgetown.jpg
-https://i.postimg.cc/yYZM9dsP/El-hombre-celoso.jpg
-https://i.postimg.cc/8zgqbSCV/El-hoyo-2.jpg
-https://i.postimg.cc/g0YQfHRS/El-imaginario.jpg
-https://i.postimg.cc/rwG7nPdR/El-misterio-de-Salem-s-Lot.jpg
-https://i.postimg.cc/QtCPMNfc/El-Monstruo-Guerrero.jpg
-https://i.postimg.cc/DZNN4VNH/El-planeta-de-los-simios.jpg
-https://i.postimg.cc/Pq29hvQt/El-Secuestro-del-Papa.jpg
-https://i.postimg.cc/c1gx9ddK/El-universo-de-live.jpg
-https://i.postimg.cc/mkF5QXfD/En-la-mente-de-un-perro.jpg
-https://i.postimg.cc/yW4rnmsT/Fancy-Dance.jpg
-https://i.postimg.cc/wxC6nnBw/Faro.jpg
-https://i.postimg.cc/QxcXDS9h/Flow.jpg
-https://i.postimg.cc/g2dG2R8R/Friend-Reques.jpg
-https://i.postimg.cc/GmQd82xf/Garfield.jpg
-https://i.postimg.cc/VNk1j87k/Goyo.jpg
-https://i.postimg.cc/JhY8x2gc/Grandes-Esp-as.jpg
-https://i.postimg.cc/NMWcqrQK/Guas-n.jpg
-https://i.postimg.cc/4dKgS1RC/Guas-n-2.jpg
-https://i.postimg.cc/fymhwTbB/Guerra-sin-reglas.jpg
-https://i.postimg.cc/HWym03tX/Half-Baked.jpg
-https://i.postimg.cc/qMHT1nmY/Harold-y-su-cray-n-m-gico.jpg
-https://i.postimg.cc/65VNg3gQ/Hasta-El-Fin-Del-Mundo.jpg
-https://i.postimg.cc/0y8qsv10/Hellboy.jpg
-https://i.postimg.cc/mrkfPSDc/Hermanos-por-accidente.jpg
-https://i.postimg.cc/JzPC7F1V/Horizon.jpg
-https://i.postimg.cc/4dHD5Nps/Incitadores.jpg
-https://i.postimg.cc/7LRv0TGK/Inexpertos.jpg
-https://i.postimg.cc/cCqV5ycY/Instintos-asesinos.jpg
-https://i.postimg.cc/qq8WPbmF/Juanpis-Gonz-lez.jpg
-https://i.postimg.cc/bYkXSrzR/Kono-Subajpg.jpg
-https://i.postimg.cc/L63rvWgY/La-barber-a-3.jpg
-https://i.postimg.cc/CLg3G05p/La-belleza-y-el-enigma-vuelven.jpg
-https://i.postimg.cc/2SjgtxnH/La-decisi-n-m-s-dif-cil.jpg
-https://i.postimg.cc/fRH1Q0KM/La-Dinast-a-Ga-a.jpg
-https://i.postimg.cc/YShZrqnY/La-Familia-del-Barrio.jpg
-https://i.postimg.cc/TwbsbNXP/La-Guerra-de-los-Mundos.jpg
-https://i.postimg.cc/3wV6d5V6/La-Joven-y-El-Mar.jpg
-https://i.postimg.cc/VvcVW9YW/La-liberaci-n.jpg
-https://i.postimg.cc/MZy4KLDP/La-monja-mala-3.jpg
-https://i.postimg.cc/Hn4PZJnD/La-Ni-a-Del-Mar.jpg
-https://i.postimg.cc/vHbK1v2Q/La-otra-cara-de-la-Luna.jpg
-https://i.postimg.cc/YqRsQmTQ/La-Peque-a-Serena.jpg
-https://i.postimg.cc/T3PH03XF/La-Sustancia.jpg
-https://i.postimg.cc/bwFVBfyJ/La-trampapg.jpg
-https://i.postimg.cc/4372C2y1/La-Tumba-Del-Diablo.jpg
-https://i.postimg.cc/Xq3sCV82/Las-chicas-de-Niza.jpg
-https://i.postimg.cc/43DLXvhR/Las-hermanas-fant-sticas.jpg
-https://i.postimg.cc/1tDWXgpn/Las-tres-hijas.jpg
-https://i.postimg.cc/90pJPvgc/Las-Voces.jpg
-https://i.postimg.cc/yY1f68Wx/Liga-de-la-Justicia.jpg
-https://i.postimg.cc/tRtSHxq8/L-nea-mortal.jpg
-https://i.postimg.cc/L6xxJFZT/Lo-que-hay-dentro.jpg
-https://i.postimg.cc/Gm9qYgF1/Lobola-Man.jpg
-https://i.postimg.cc/BnyNC5pP/Lobos.jpg
-https://i.postimg.cc/9f7bg4g8/Longlegs.jpg
-https://i.postimg.cc/d1cBbqzq/Los-feos.jpg
-https://i.postimg.cc/qRcL0PT2/Los-iniciados.jpg
-https://i.postimg.cc/6q9hQMWg/Los-tipos-malos.jpg
-https://i.postimg.cc/y6PPGCnH/Loter-a-Mortal.jpg
-https://i.postimg.cc/br39S1dJ/Luckjpg.jpg
-https://i.postimg.cc/zXGjZ2PR/Mascotas-En-Apuros.jpg
-https://i.postimg.cc/hPZ0S8HZ/Mejor-viuda-que-mal-acompa-ada.jpg
-https://i.postimg.cc/zGLF3bNz/Misi-n-suicida.jpg
-https://i.postimg.cc/jSGQfxqz/Misiones-Cruzadas.jpg
-https://i.postimg.cc/YSYNf5jT/Mon-Laferte-te-amo.jpg
-https://i.postimg.cc/ydKmfLZx/Monstruo-de-las-Profundidades.jpg
-https://i.postimg.cc/RFTc2w7R/Niebla-sin-fronteras.jpg
-https://i.postimg.cc/cC4QW6TN/No-hables-con-extra-os.jpg
-https://i.postimg.cc/QC4cdsnK/No-negociablejpg.jpg
-https://i.postimg.cc/mgF7Bv3h/One-Piece.jpg
-https://i.postimg.cc/TY1rHLpV/Padre-no-hay-m-s-que-uno-4.jpg
-https://i.postimg.cc/RCX7RQVC/Parano.jpg
-https://i.postimg.cc/Ghfk0LyZ/Parpadea-dos-veces.jpg
-https://i.postimg.cc/LstfZjbp/Perros-de-Guerra.jpg
-https://i.postimg.cc/3R9vtYhf/Presa.jpg
-https://i.postimg.cc/ZqtpRwjH/Pr-ncipes-salvajes.jpg
-https://i.postimg.cc/KzmT746g/Problemas.jpg
-https://i.postimg.cc/vTN6dhcW/Problemista.jpg
-https://i.postimg.cc/1XtNT25m/Quiz-s-es-cierto-lo-que-dicen-de-nosotras.jpg
-https://i.postimg.cc/X7rCkRzx/Rafa-M-rquez.jpg
-https://i.postimg.cc/L4CPf9Nn/Rebel-Ridge.jpg
-https://i.postimg.cc/J4SB6Tw8/Rez-Ball.jpg
-https://i.postimg.cc/W4wF4Tdp/Robot-salvaje.jpg
-https://i.postimg.cc/fRXS6xZ9/Romper-el-c-rculo.jpg
-https://i.postimg.cc/pdH5xpX1/Sat-n.jpg
-https://i.postimg.cc/0Q56MFSY/Sector-36.jpg
-https://i.postimg.cc/vBP4Wh7p/Sed-de-Venganza-2.jpg
-https://i.postimg.cc/05B6jtyS/Skinford-2.jpg
-https://i.postimg.cc/J0GGKXPt/Skywalkersjpg.jpg
-https://i.postimg.cc/Zn20QqMH/Solo-una-noche-de-juegos.jpg
-https://i.postimg.cc/15V8qp8j/Technoboys.jpg
-https://i.postimg.cc/Bv4bkkMr/Tempestad-de-hielo.jpg
-https://i.postimg.cc/mgxtNtM2/The-Killer.jpg
-https://i.postimg.cc/TP0160sp/Tipos-de-gentileza.jpg
-https://i.postimg.cc/mgQhdBN3/T-kunb.jpg
-https://i.postimg.cc/W343brRS/Tornados.jpg
-https://i.postimg.cc/pT1d9TRv/Trampa-en-alta-mar.jpg
-https://i.postimg.cc/cCp4mbv5/Transformers-Uno.jpg
-https://i.postimg.cc/2ybSnDSZ/Un-asunto-familiar.jpg
-https://i.postimg.cc/RCyF4NgQ/Un-aut-ntico-caballero.jpg
-https://i.postimg.cc/PrDqxTcG/Un-detective-suelto-en-Hollywood.jpg
-https://i.postimg.cc/6pL5rztY/Un-Extra-o-en-el-Bosque.jpg
-https://i.postimg.cc/8zVzfxQ7/Un-Gato-con-Suerte.jpg
-https://i.postimg.cc/25kj2v5m/Un-lugar-en-silencio.jpg
-https://i.postimg.cc/6QMWS37Z/Una-Boda-y-Otros-Desastres.jpg
-https://i.postimg.cc/bJdyjhbB/Una-maniobra-arriesgada.jpg
-https://i.postimg.cc/Jng1r254/Una-Propuesta-indecorosa.jpg
-https://i.postimg.cc/T1DTpJtj/V-de-V-ctor.jpg
-https://i.postimg.cc/bdfpbS57/Vi-el-brillo-del-televisor.jpg
-https://i.postimg.cc/tRZ630fk/Vico-C.jpg
-https://i.postimg.cc/8k26wKgS/Vida-Bandida.jpg
-https://i.postimg.cc/nhZQfXLS/Watchmen.jpg
-https://i.postimg.cc/15DNdGyN/Wild-Wild-Punjab.jpg
-https://i.postimg.cc/8zHfpTJp/Within-Desde-adentro.jpg
-https://i.postimg.cc/mrgzhKCQ/Wonderland.jpg
-https://i.postimg.cc/76C5n7Bh/Yolojpg.jpg
-https://i.postimg.cc/Bv78FNBR/You-Gotta-Believe.jpg
-        `;
-        
-        // Crear mapa de imágenes
-        const imageMap = {};
-        imageLinks.trim().split("\n").forEach(url => {
-            if (url.trim() !== '') {
-                const fileName = url.split("/").pop().replace(".jpg", "").replace(/-/g, " ");
-                imageMap[fileName.trim()] = url.trim();
-            }
-        });
-        
-        // Procesar los datos y mostrar las películas
-        const movies = parseM3U(m3uData);
-        const moviesGrid = document.getElementById("moviesGrid");
-        
-        movies.forEach((movie, index) => {
-            const simpleName = movie.name.replace(/\(.*?\)/g, "").trim(); // Quitar el año
-            const imageUrl = imageMap[simpleName] || movie.logo || "https://via.placeholder.com/200x300";
+            // Crear nueva tarjeta de película
+            const movieCard = document.createElement('div');
+            movieCard.className = 'movie-card';
             
-            const movieCard = `
-            <div class="movie-card">
-                <img class="movie-image" src="${imageUrl}" alt="${simpleName}">
+            movieCard.innerHTML = `
+                <img src="${imageUrl}" alt="${title}" class="movie-poster">
                 <div class="movie-info">
-                    <h3 class="movie-title">${movie.name}</h3>
-                    <a href="${movie.url}" class="watch-button" target="_blank">VER PELÍCULA</a>
+                    <h3>
+                        <a href="${movieUrl}" class="movie-title">${title}</a>
+                    </h3>
+                    <span class="movie-genre">${genre}</span>
+                    <p class="movie-synopsis">${synopsis}</p>
+                    <a href="${movieUrl}" class="movie-link">Ver Película</a>
                 </div>
-            </div>`;
+            `;
             
-            moviesGrid.innerHTML += movieCard;
+            // Agregar la nueva película al principio del grid
+            const moviesGrid = document.querySelector('.movies-grid');
+            moviesGrid.insertBefore(movieCard, moviesGrid.firstChild);
+            
+            // Limpiar el formulario
+            document.getElementById('movie-form').reset();
+            
+            alert('¡Película agregada con éxito!');
         });
     </script>
 </body>
