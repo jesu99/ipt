@@ -3,351 +3,468 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plataforma de Películas</title>
+  <title>Catálogo de Películas</title>
   <style>
-    body {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      background-color: #141414;
-      color: #fff;
-      padding: 0;
-      margin: 0;
+    :root {
+      --primary-color: #e50914;
+      --primary-hover: #b00610;
+      --secondary-color: #555;
+      --secondary-hover: #333;
+      --background-dark: #111;
+      --card-background: #222;
+      --text-light: #fff;
+      --text-muted: #ccc;
     }
-    
-    .header {
-      background-color: #000;
-      padding: 15px 5%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: fixed;
-      width: 90%;
-      top: 0;
-      z-index: 1000;
+
+    * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    
-    .logo {
-      color: #e50914;
-      font-size: 24px;
-      font-weight: bold;
-      text-transform: uppercase;
+
+    body {
+      margin: 0;
+      background-color: var(--background-dark);
+      font-family: Arial, sans-serif;
+      color: var(--text-light);
+      line-height: 1.6;
+      overflow-x: hidden; /* Prevenir scroll horizontal */
     }
-    
-    .main-content {
-      margin-top: 70px;
-      padding: 20px 5%;
-    }
-    
-    .section-title {
-      font-size: 22px;
-      margin-bottom: 15px;
-    }
-    
-    .movie-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 15px;
-      margin-bottom: 30px;
-    }
-    
-    .movie-card {
-      background-color: #2c2c2c;
-      border-radius: 4px;
-      overflow: hidden;
-      transition: transform 0.3s, box-shadow 0.3s;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-    }
-    
-    .movie-card:hover {
-      transform: scale(1.05);
-      cursor: pointer;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    }
-    
-    .movie-card img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      display: block;
-    }
-    
-    .movie-info {
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      height: 160px;
-      justify-content: space-between;
-    }
-    
-    .movie-title {
-      font-weight: bold;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-    
-    .movie-description {
-      font-size: 12px;
-      color: #ccc;
-      margin-bottom: 10px;
-      height: 60px;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-    }
-    
-    .btn {
-      display: inline-block;
-      background-color: #e50914;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
-      font-weight: bold;
-      cursor: pointer;
-      text-decoration: none;
-      font-size: 14px;
-      transition: background-color 0.2s;
+
+    .top-message {
+      background-color: var(--primary-color);
+      color: var(--text-light);
       text-align: center;
-      margin-top: auto;
+      padding: 10px;
+      font-size: clamp(14px, 2vw, 16px); /* Texto responsive */
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    
-    .btn:hover {
-      background-color: #f40612;
+
+    .top-message a {
+      color: var(--text-light);
+      text-decoration: underline;
+      font-weight: bold;
     }
-    
-    .dashboard-btn {
-      background-color: #333;
-      margin-left: 10px;
-      padding: 8px 12px;
-      font-size: 13px;
+
+    .banner-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 0;
+      overflow: hidden;
     }
-    
-    .dashboard-btn:hover {
-      background-color: #555;
-    }
-    
-    .hero {
-      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('/api/placeholder/800/400');
-      background-size: cover;
-      background-position: center;
-      height: 300px;
+
+    .banner-top, .banner-bottom {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 0 20px;
-      margin-bottom: 30px;
-      border-radius: 8px;
-    }
-    
-    .hero-title {
-      font-size: 32px;
-      margin-bottom: 15px;
-    }
-    
-    .hero-subtitle {
-      font-size: 18px;
-      margin-bottom: 20px;
-      opacity: 0.8;
-    }
-    
-    .ad-container {
-      margin: 0;
-      text-align: center;
+      align-items: center;
       width: 100%;
+      max-width: 100%;
       overflow: hidden;
-      border-radius: 4px;
-      height: 100%;
+      background-color: rgba(34, 34, 34, 0.8);
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    /* Aseguramos que los anuncios se ajusten al contenedor */
+    .banner-top iframe, .banner-bottom iframe, 
+    .ad-container iframe, .ad-between-movies iframe {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .layout {
       display: flex;
       flex-direction: column;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 10px;
+    }
+
+    @media (min-width: 768px) {
+      .layout {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+    }
+
+    /* Sidebar responsive */
+    .sidebar {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 20px;
+      display: flex;
       justify-content: center;
     }
 
-    .ad-card {
-      background-color: #2c2c2c;
-      border-radius: 4px;
+    @media (min-width: 768px) {
+      .sidebar {
+        width: 160px;
+        position: sticky;
+        top: 50px;
+        height: max-content;
+        z-index: 10;
+      }
+    }
+
+    /* Para TV y pantallas muy grandes */
+    @media (min-width: 1800px) {
+      .layout {
+        max-width: 1800px;
+      }
+      
+      .sidebar {
+        width: 200px;
+      }
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 10px;
+      min-width: 0; /* Evita que los elementos internos fuercen el ancho */
+    }
+
+    @media (min-width: 576px) {
+      .main-content {
+        padding: 20px;
+      }
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+      font-size: clamp(20px, 4vw, 32px); /* Título responsive */
+    }
+
+    .catalog {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      width: 100%;
+    }
+
+    /* Media queries modificados para asegurar 5 películas por fila */
+    @media (min-width: 480px) {
+      .catalog {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 768px) {
+      .catalog {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+    }
+
+    @media (min-width: 992px) {
+      .catalog {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    /* Aseguramos exactamente 5 películas por fila en pantallas medianas y grandes */
+    @media (min-width: 1200px) {
+      .catalog {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+
+    .movie-card {
+      background-color: var(--card-background);
+      border-radius: 10px;
       overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      transition: transform 0.3s ease;
       height: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
+    }
+
+    .movie-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .movie-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      aspect-ratio: 2/3;
+      object-fit: cover;
     }
     
-    .mode-switch {
-      background-color: rgba(0, 0, 0, 0.8);
+    /* Ajuste para pantallas móviles */
+    @media (max-width: 480px) {
+      .movie-card img {
+        max-height: 200px;
+        aspect-ratio: auto;
+      }
+    }
+
+    /* TV: imágenes más grandes */
+    @media (min-width: 1800px) {
+      .movie-card img {
+        max-height: 400px;
+      }
+    }
+
+    .movie-info {
       padding: 15px;
-      border-radius: 8px;
-      margin: 20px auto;
-      max-width: 100%;
-      border-left: 4px solid #e50914;
       display: flex;
       flex-direction: column;
+      flex-grow: 1;
     }
-    
-    .mode-text {
-      margin-bottom: 15px;
-    }
-    
-    .mode-text h3 {
-      margin-top: 0;
+
+    .movie-title {
+      font-size: clamp(16px, 2vw, 18px); /* Texto responsive */
+      font-weight: bold;
       margin-bottom: 10px;
     }
-    
-    .premium-btn {
-      background-color: gold;
-      color: #000;
-      align-self: flex-start;
+
+    .movie-description {
+      font-size: clamp(12px, 1.5vw, 14px); /* Texto responsive */
+      margin-bottom: 15px;
+      color: var(--text-muted);
+      flex-grow: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
-    
-    .premium-btn:hover {
-      background-color: #ffd700;
-    }
-    
-    /* Responsive styles */
-    @media (min-width: 768px) {
-      .header {
-        padding: 15px 40px;
-        width: calc(100% - 80px);
-      }
-      
-      .logo {
-        font-size: 28px;
-      }
-      
-      .main-content {
-        margin-top: 100px;
-        padding: 20px 40px;
-      }
-      
-      .movie-grid {
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 20px;
-      }
-      
-      .movie-card img {
-        height: 260px;
-      }
-      
-      .movie-info {
-        height: 180px;
-      }
-      
-      .movie-title {
-        font-size: 16px;
-      }
-      
-      .hero {
-        height: 400px;
-        padding: 0 40px;
-      }
-      
-      .hero-title {
-        font-size: 48px;
-      }
-      
-      .hero-subtitle {
-        font-size: 24px;
-      }
-      
-      .mode-switch {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px;
-      }
-      
-      .mode-text {
-        flex: 1;
-        margin-bottom: 0;
-      }
-      
-      .dashboard-btn {
-        padding: 8px 16px;
-        font-size: 14px;
-      }
-    }
-    
-    @media (min-width: 1024px) {
-      .movie-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 25px;
-      }
-      
-      .movie-card img {
-        height: 280px;
-      }
-      
-      .movie-info {
-        height: 190px;
-      }
-    }
-    
+
+    /* Para móviles, hacemos descripciones más cortas pero mantenemos el botón visible */
     @media (max-width: 480px) {
-      .hero-title {
-        font-size: 28px;
+      .movie-description {
+        -webkit-line-clamp: 2;
+        margin-bottom: 10px;
       }
-      
-      .hero-subtitle {
+    }
+
+    /* Para TV, mostramos más texto */
+    @media (min-width: 1800px) {
+      .movie-description {
+        -webkit-line-clamp: 4;
         font-size: 16px;
       }
-      
-      .section-title {
-        font-size: 20px;
-      }
-      
-      .movie-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: clamp(8px, 1.5vw, 10px) clamp(10px, 2vw, 15px); /* Botón responsive */
+      background-color: var(--primary-color);
+      color: var(--text-light);
+      text-decoration: none;
+      border-radius: 5px;
+      text-align: center;
+      transition: background-color 0.3s;
+      flex: 1;
+      min-width: 80px;
+      font-size: clamp(14px, 1.5vw, 16px); /* Texto responsive */
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--secondary-hover);
+    }
+
+    /* Contenedores de anuncios responsivos */
+    .ad-container, .mid-content-ad, .ad-between-movies {
+      text-align: center;
+      margin: 20px auto;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      z-index: 5;
+      background-color: rgba(34, 34, 34, 0.8);
+      padding: 10px;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Aseguramos que los contenedores de anuncios puedan redimensionarse */
+    .ad-container div, .mid-content-ad div, .ad-between-movies div {
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    /* Anuncios entre películas visibles en todos los dispositivos */
+    .ad-between-movies {
+      grid-column: 1 / -1;
+      margin: 15px 0;
+    }
+
+    /* Banner flotante responsive */
+    .floating-banner {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 320px;
+      background-color: rgba(34, 34, 34, 0.9);
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      z-index: 99;
+      text-align: center;
+    }
+
+    .close-banner {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Etiqueta para anuncios visible en todos los dispositivos */
+    .ad-label {
+      display: block;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: clamp(10px, 1.5vw, 12px);
+      margin-bottom: 5px;
+    }
+
+    /* En dispositivos muy pequeños, hacer todo más compacto pero mantener botón visible */
+    @media (max-width: 360px) {
+      .catalog {
         gap: 10px;
       }
       
-      .movie-card img {
-        height: 180px;
+      .movie-card {
+        max-height: 320px; /* Un poco más alto para caber el botón */
       }
       
       .movie-info {
-        height: 150px;
-        padding: 8px;
-      }
-      
-      .movie-description {
-        height: 50px;
-        -webkit-line-clamp: 2;
+        padding: 10px;
       }
       
       .btn {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 6px 12px;
-        font-size: 13px;
+        padding: 6px 8px;
+        font-size: 12px;
+        display: block; /* Asegura visibilidad */
       }
+    }
+    
+    /* Para TVs y pantallas muy grandes */
+    @media (min-width: 1800px) {
+      h1 {
+        font-size: 40px;
+        margin: 30px 0;
+      }
+      
+      .btn {
+        padding: 15px 20px;
+        font-size: 18px;
+      }
+      
+      .movie-title {
+        font-size: 22px;
+      }
+      
+      .floating-banner {
+        max-width: 400px;
+      }
+    }
+
+    /* Nueva clase para agrupar películas en filas de 5 */
+    .movie-row {
+      display: contents;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="logo">PeliculasMax</div>
-    <div>
-      <a href="dashboard.html" class="btn dashboard-btn">Dashboard</a>
+
+  <!-- Mensaje de apoyo -->
+  <div class="top-message">
+    ¡APOYA LA PÁGINA CON UN CLICK! <a href="#" target="_blank">👉 HAZ CLICK AQUÍ 👈</a>
+  </div>
+
+  <!-- Banner superior con script real -->
+  <div class="banner-container">
+    <div class="banner-top">
+      <div class="ad-label">Banner Superior</div>
+      <script type="text/javascript">
+        atOptions = {
+          'key' : 'b330ccd204185aee9ef640adccf896d2',
+          'format' : 'iframe',
+          'height' : 90,
+          'width' : 728,
+          'params' : {}
+        };
+      </script>
+      <script type="text/javascript" src="//www.highperformanceformat.com/b330ccd204185aee9ef640adccf896d2/invoke.js"></script>
     </div>
   </div>
-  
-  <div class="main-content">
-    <div class="hero">
-      <h1 class="hero-title">Bienvenido</h1>
-      <p class="hero-subtitle">Las mejores películas y series en un solo lugar</p>
-    </div>
-    
-    <div class="mode-switch">
-      <div class="mode-text">
-        <h3>Modo Libre</h3>
-        <p>Estás navegando en modo Libre. Monetiza tu experiencia o mejora a premium.</p>
+
+  <div class="layout">
+    <!-- Publicidad del lado izquierdo con script real -->
+    <div class="sidebar">
+      <div>
+        <div class="ad-label">Anuncio Lateral</div>
+        <script type="text/javascript">
+          atOptions = {
+            'key' : 'a55c7cdc78df0520f71c2b00e4046167',
+            'format' : 'iframe',
+            'height' : 300,
+            'width' : 160,
+            'params' : {}
+          };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/a55c7cdc78df0520f71c2b00e4046167/invoke.js"></script>
       </div>
     </div>
-    
-    <h2 class="section-title">Tendencias</h2>
-    <div class="movie-grid">
-      <!-- Película 1 -->
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+      <h1>Catálogo de Películas</h1>
+      
+      <!-- Anuncio después del título usando el script container -->
+      <div class="ad-container">
+        <div class="ad-label">¡Apóyanos con un click!</div>
+        <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
+        <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
+      </div>
+      
+      <div class="catalog">
+        <!-- PRIMERA FILA DE PELÍCULAS -->
+        <div class="movie-row">
+           <!-- Película 1 -->
       <div class="movie-card">
         <img src="https://pics.filmaffinity.com/Rescate_lunar-428014123-large.jpg" alt="Rescate Lunar">
         <div class="movie-info">
@@ -357,22 +474,7 @@
         </div>
       </div>
 
-        <!-- Anuncio 1: Banner entre películas -->
-      <div class="ad-card">
-        <div class="ad-container">
-          <script type="text/javascript">
-            atOptions = {
-              'key' : 'a55c7cdc78df0520f71c2b00e4046167',
-              'format' : 'iframe',
-              'height' : 300,
-              'width' : 160,
-              'params' : {}
-            };
-          </script>
-          <script type="text/javascript" src="//www.highperformanceformat.com/a55c7cdc78df0520f71c2b00e4046167/invoke.js"></script>
-        </div>
-      </div>
-      
+           
       
       <!-- Película 2 -->
       <div class="movie-card">
@@ -384,23 +486,7 @@
         </div>
       </div>
       
-      <!-- Anuncio 1: Banner entre películas -->
-      <div class="ad-card">
-        <div class="ad-container">
-          <script type="text/javascript">
-            atOptions = {
-              'key' : 'a55c7cdc78df0520f71c2b00e4046167',
-              'format' : 'iframe',
-              'height' : 300,
-              'width' : 160,
-              'params' : {}
-            };
-          </script>
-          <script type="text/javascript" src="//www.highperformanceformat.com/a55c7cdc78df0520f71c2b00e4046167/invoke.js"></script>
-        </div>
-      </div>
-      
-      <!-- Película 3 -->
+           <!-- Película 3 -->
       <div class="movie-card">
         <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRKIMfNVHYaQkcZU4E2vmWCuX_sVl85MpJu_UG-20k4f6LmQOlj" alt="Winnie the Pooh: Sangre y miel">
         <div class="movie-info">
@@ -409,25 +495,9 @@
           <a href="https://pixeldrain.com/u/mKf1mBay" class="btn" target="_blank">Ver</a>
         </div>
       </div>
-
-  <!-- Anuncio 1: Banner entre películas -->
-      <div class="ad-card">
-        <div class="ad-container">
-          <script type="text/javascript">
-            atOptions = {
-              'key' : 'a55c7cdc78df0520f71c2b00e4046167',
-              'format' : 'iframe',
-              'height' : 300,
-              'width' : 160,
-              'params' : {}
-            };
-          </script>
-          <script type="text/javascript" src="//www.highperformanceformat.com/a55c7cdc78df0520f71c2b00e4046167/invoke.js"></script>
-        </div>
-      </div>
       
       
-        <!-- Película 3 -->
+        <!-- Película 4 -->
       <div class="movie-card">
         <img src="https://cuevana.biz/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2Frpo3DJFMOSAz27gDwxJ5LIwIFni.jpg&w=640&q=75">
         <div class="movie-info">
@@ -437,25 +507,9 @@
         </div>
       </div>
 
-  <!-- Anuncio 2: Banner entre películas -->
-      <div class="ad-card">
-        <div class="ad-container">
-          <script type="text/javascript">
-            atOptions = {
-              'key' : 'b330ccd204185aee9ef640adccf896d2',
-              'format' : 'iframe',
-              'height' : 90,
-              'width' : 728,
-              'params' : {}
-            };
-          </script>
-          <script type="text/javascript" src="//www.highperformanceformat.com/b330ccd204185aee9ef640adccf896d2/invoke.js"></script>
-        </div>
-      </div>
-
 
       
-      <!-- Película 4 -->
+      <!-- Película 5 -->
       <div class="movie-card">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYTFCR_N0efF2tu9uUGIlwPRM5MUQ06acODCSdFtlmmQpYo099" alt="Equipaje de mano">
         <div class="movie-info">
@@ -464,10 +518,10 @@
           <a href="https://pixeldrain.com/u/e8swVqrH" class="btn" target="_blank">Ver</a>
         </div>
       </div>
-
-      <!-- Anuncio 2: Banner entre películas -->
-      <div class="ad-card">
-        <div class="ad-container">
+        
+        <!-- Banner después de la primera fila -->
+        <div class="ad-between-movies">
+          <div class="ad-label">Sigue navegando con nosotros</div>
           <script type="text/javascript">
             atOptions = {
               'key' : 'b330ccd204185aee9ef640adccf896d2',
@@ -479,9 +533,10 @@
           </script>
           <script type="text/javascript" src="//www.highperformanceformat.com/b330ccd204185aee9ef640adccf896d2/invoke.js"></script>
         </div>
-      </div>
-
-      <!-- Película 5 -->
+        
+        <!-- SEGUNDA FILA DE PELÍCULAS -->
+        <div class="movie-row">
+          <!-- Película 6 -->
       <div class="movie-card">
         <img src="https://cuevana.biz/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FceKbVajrMKUyeOCoaijxPKWRIEN.jpg&w=640&q=75" alt="Un Viaje de Diez Metros">
         <div class="movie-info">
@@ -491,16 +546,9 @@
         </div>
       </div>
 
- <!-- Anuncio 3: Container Ad entre películas -->
-      <div class="ad-card">
-        <div class="ad-container">
-          <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
-          <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
-        </div>
-      </div>
+ 
 
-
-       <!-- Película 5 -->
+       <!-- Película 7 -->
       <div class="movie-card">
         <img src="https://cuevana.biz/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2Fx2fWYlY2Ad2FL2Ad9p1HTgJEi8x.jpg&w=640&q=75" alt="Un Viaje de Diez Metros">
         <div class="movie-info">
@@ -510,16 +558,9 @@
         </div>
       </div>
 
-<!-- Anuncio 3: Container Ad entre películas -->
-      <div class="ad-card">
-        <div class="ad-container">
-          <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
-          <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
-        </div>
-      </div>
 
       
-     <!-- Película 5 -->
+     <!-- Película 8 -->
       <div class="movie-card">
         <img src="https://cuevana.biz/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FhCffcXqpH002rvSFt8AUnIC376s.jpg&w=640&q=75">
         <div class="movie-info">
@@ -529,16 +570,8 @@
         </div>
       </div>
 
-<!-- Anuncio 3: Container Ad entre películas -->
-      <div class="ad-card">
-        <div class="ad-container">
-          <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
-          <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
-        </div>
-      </div>
-
       
-       <!-- Película 5 -->
+       <!-- Película 9 -->
       <div class="movie-card">
         <img src="https://www.cuevana.is/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FjHX5mFpbhLCghQAjOFUZBSOJoMs.jpg&w=640&q=75">
         <div class="movie-info">
@@ -548,7 +581,7 @@
         </div>
       </div>
 
-       <!-- Película 5 -->
+       <!-- Película 10 -->
       <div class="movie-card">
         <img src="https://cuevana.biz/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FvHliQz7LAI7FRYmnqbcWygkugIK.jpg&w=640&q=75">
         <div class="movie-info">
@@ -558,16 +591,25 @@
         </div>
       </div>
 
-<!-- Anuncio 3: Container Ad entre películas -->
-      <div class="ad-card">
-        <div class="ad-container">
-          <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
-          <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
-        </div>
-      </div>
 
-      
-        <!-- Película 5 -->
+        <!-- Banner después de la segunda fila -->
+        <div class="ad-between-movies">
+          <div class="ad-label">Contenido que te podría interesar</div>
+          <script type="text/javascript">
+            atOptions = {
+              'key' : 'b330ccd204185aee9ef640adccf896d2',
+              'format' : 'iframe',
+              'height' : 90,
+              'width' : 728,
+              'params' : {}
+            };
+          </script>
+          <script type="text/javascript" src="//www.highperformanceformat.com/b330ccd204185aee9ef640adccf896d2/invoke.js"></script>
+        </div>
+
+        <!-- TERCERA FILA DE PELÍCULAS (espacio para agregar 5 más) -->
+        <div class="movie-row">
+           <!-- Película 11 -->
       <div class="movie-card">
         <img src="https://cuevana.biz/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2F32obpfCjRsIenzkZ5oM5F3w0d65.jpg&w=640&q=75">
         <div class="movie-info">
@@ -577,16 +619,9 @@
         </div>
       </div>
 
-<!-- Anuncio 3: Container Ad entre películas -->
-      <div class="ad-card">
-        <div class="ad-container">
-          <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
-          <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
-        </div>
-      </div>
 
       
-         <!-- Película 5 -->
+         <!-- Película 12 -->
       <div class="movie-card">
         <img src="https://cuevana.biz/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FePCSbmpMsN2TcbSCqNC4GP92ixr.jpg&w=640&q=75">
         <div class="movie-info">
@@ -596,17 +631,10 @@
         </div>
       </div>
     
-<!-- Anuncio 3: Container Ad entre películas -->
-      <div class="ad-card">
-        <div class="ad-container">
-          <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
-          <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
-        </div>
-      </div>
 
 
       
-      <!-- Película 6 -->
+      <!-- Película 13 -->
       <div class="movie-card">
         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3qgJGo_kuxKI1WfyJm9MpD1_HF4Ngo9TaUBR-rdeAgVUEV83x" alt="Mufasa: El rey león">
         <div class="movie-info">
@@ -617,7 +645,7 @@
       </div>
 
          
-      <!-- Película 6 -->
+      <!-- Película 14-->
       <div class="movie-card">
         <img src="https://cuevana.biz/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2FsSrj4lnhrb113DOPEPTaO2jaDk3.jpg&w=640&q=75" alt="Mufasa: El rey león">
         <div class="movie-info">
@@ -627,7 +655,7 @@
         </div>
       </div>
 
- <!-- Película 6 -->
+ <!-- Película 15 -->
       <div class="movie-card">
         <img src="https://images.justwatch.com/poster/302449387/s718/the-descent-part-2.jpg">
         <div class="movie-info">
@@ -636,9 +664,28 @@
           <a href="https://pixeldrain.com/u/fNZcTnTh" class="btn" target="_blank">Ver</a>
         </div>
       </div>
+          <!-- Espacio para 5 películas más -->
+          
+        </div>
 
+        <!-- Banner después de la tercera fila -->
+        <div class="ad-between-movies">
+          <div class="ad-label">¡Descubre más contenido!</div>
+          <script type="text/javascript">
+            atOptions = {
+              'key' : 'b330ccd204185aee9ef640adccf896d2',
+              'format' : 'iframe',
+              'height' : 90,
+              'width' : 728,
+              'params' : {}
+            };
+          </script>
+          <script type="text/javascript" src="//www.highperformanceformat.com/b330ccd204185aee9ef640adccf896d2/invoke.js"></script>
+        </div>
 
-       <!-- Película 6 -->
+        <!-- CUARTA FILA DE PELÍCULAS (espacio para agregar 5 más) -->
+        <div class="movie-row">
+           <!-- Película 16 -->
       <div class="movie-card">
         <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcR5hz7qsWzG2Ywn5FpixVUaR9nX3ZvUi-Sy59KPBzSVkbuOm0iT">
         <div class="movie-info">
@@ -649,7 +696,7 @@
       </div>
 
       
-       <!-- Película 6 -->
+       <!-- Película 17 -->
       <div class="movie-card">
         <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcT3EbQ4SFBnaa5zZ5u44lkNvsenMROAXlIw9cxD2QbQ5z3Y41hp">
         <div class="movie-info">
@@ -665,7 +712,7 @@
 
 
       
-        <!-- Película 6 -->
+        <!-- Película 18 -->
       <div class="movie-card">
         <img src="https://es.web.img3.acsta.net/c_310_420/medias/nmedia/18/92/62/06/20209152.jpg">
         <div class="movie-info">
@@ -675,15 +722,8 @@
         </div>
       </div>
 
-      <!-- Anuncio 3: Container Ad entre películas -->
-      <div class="ad-card">
-        <div class="ad-container">
-          <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
-          <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
-        </div>
-      </div>
-
-      <!-- Película 7 -->
+      
+      <!-- Película 19 -->
       <div class="movie-card">
         <img src="https://pics.filmaffinity.com/depravity-801066463-large.jpg" alt="Depravación">
         <div class="movie-info">
@@ -695,22 +735,145 @@
     </div>
   </div>
 
+  
+ 
+      <!-- Película 20-->
+      <div class="movie-card">
+        <img src="https://cuevana.biz/_next/image?url=https%3A%2F%2Fimage.tmdb.org%2Ft%2Fp%2Foriginal%2F8T6nkYb4W8BIeafmFffyfsRciTL.jpg&w=640&q=75" alt="Depravación">
+        <div class="movie-info">
+          <div class="movie-title">Amenaza en el aire</div>
+          <div class="movie-description">Un piloto transporta a un alguacil del aire que acompaña a un fugitivo a juicio. A medida que atraviesan el desierto de Alaska, la tensión aumenta y la confianza se pone a prueba, ya que no todos a bordo son quienes parecen.</div>
+          <a href="https://pixeldrain.com/u/x6vJrpH6" class="btn" target="_blank">Ver</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+          <!-- Espacio para 5 películas más -->
+        </div>
+
+        <!-- Banner después de la cuarta fila -->
+        <div class="ad-between-movies">
+          <div class="ad-label">¡No te pierdas estas recomendaciones!</div>
+          <script type="text/javascript">
+            atOptions = {
+              'key' : 'b330ccd204185aee9ef640adccf896d2',
+              'format' : 'iframe',
+              'height' : 90,
+              'width' : 728,
+              'params' : {}
+            };
+          </script>
+          <script type="text/javascript" src="//www.highperformanceformat.com/b330ccd204185aee9ef640adccf896d2/invoke.js"></script>
+        </div>
+
+        <!-- QUINTA FILA DE PELÍCULAS (espacio para agregar 5 más) -->
+        <div class="movie-row">
+          <!-- Espacio para 5 películas más -->
+        </div>
+
+        <!-- Banner después de la quinta fila -->
+        <div class="ad-between-movies">
+          <div class="ad-label">¡Más películas recién añadidas!</div>
+          <script type="text/javascript">
+            atOptions = {
+              'key' : 'b330ccd204185aee9ef640adccf896d2',
+              'format' : 'iframe',
+              'height' : 90,
+              'width' : 728,
+              'params' : {}
+            };
+          </script>
+          <script type="text/javascript" src="//www.highperformanceformat.com/b330ccd204185aee9ef640adccf896d2/invoke.js"></script>
+        </div>
+      </div>
+      
+      <!-- Anuncio central en medio del contenido -->
+      <div class="mid-content-ad">
+        <div class="ad-label">Contenido recomendado</div>
+        <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
+        <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
+      </div>
+      
+      <!-- Anuncio contenido principal inferior -->
+      <div class="ad-container">
+        <div class="ad-label">¡Tu apoyo nos ayuda a seguir creciendo!</div>
+        <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
+        <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
+      </div>
+    </div>
+
+    <!-- Publicidad del lado derecho -->
+    <div class="sidebar">
+      <div>
+        <div class="ad-label">Anuncio Lateral</div>
+        <script type="text/javascript">
+          atOptions = {
+            'key' : 'a55c7cdc78df0520f71c2b00e4046167',
+            'format' : 'iframe',
+            'height' : 300,
+            'width' : 160,
+            'params' : {}
+          };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/a55c7cdc78df0520f71c2b00e4046167/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Banner inferior -->
+  <div class="banner-container">
+    <div class="banner-bottom">
+      <div class="ad-label">Banner Inferior</div>
+      <script type="text/javascript">
+        atOptions = {
+          'key' : 'b330ccd204185aee9ef640adccf896d2',
+          'format' : 'iframe',
+          'height' : 90,
+          'width' : 728,
+          'params' : {}
+        };
+      </script>
+      <script type="text/javascript" src="//www.highperformanceformat.com/b330ccd204185aee9ef640adccf896d2/invoke.js"></script>
+    </div>
+  </div>
+  
+  <!-- Banner flotante que sigue al desplazamiento -->
+  <div class="floating-banner" id="floatingBanner" style="display: none;">
+    <button class="close-banner" onclick="document.getElementById('floatingBanner').style.display='none'">×</button>
+    <div class="ad-label">Anuncio Flotante</div>
+    <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
+    <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
+  </div>
+
   <script>
-    // Script para cargar películas desde un formato JSON
-    const peliculas = [
-      // Aquí puedes agregar películas en formato JSON para cargarlas dinámicamente
-    ];
+    // Función para mostrar publicidad flotante después de un tiempo de navegación
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        document.getElementById('floatingBanner').style.display = 'block';
+      }, 3000); // Mostrar después de 3 segundos
+    });
     
-    // Esta función se puede utilizar para cargar películas dinámicamente
-    function cargarPeliculas() {
-      // Aquí puedes implementar la carga dinámica de películas
-      console.log("Películas disponibles:", peliculas);
+    // Función para detectar el tipo de dispositivo y ajustar layout si es necesario
+    function detectDevice() {
+      const width = window.innerWidth;
+      
+      // Si es móvil muy pequeño, ajustar tamaños pero mantener botón visible
+      if (width < 360) {
+        document.documentElement.style.setProperty('--movie-card-height', '300px');
+      } else if (width >= 1800) {
+        // Si es TV o pantalla grande
+        document.documentElement.style.setProperty('--movie-card-height', '450px');
+      } else {
+        // Tamaño normal
+        document.documentElement.style.setProperty('--movie-card-height', '350px');
+      }
     }
     
-    // Inicializar carga de películas al cargar la página
-    window.onload = function() {
-      cargarPeliculas();
-    };
+    // Ejecutar al cargar y al cambiar tamaño
+    window.addEventListener('DOMContentLoaded', detectDevice);
+    window.addEventListener('resize', detectDevice);
   </script>
+
 </body>
 </html>
