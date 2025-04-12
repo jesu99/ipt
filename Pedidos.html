@@ -463,17 +463,34 @@
       </div>
       
       <div class="catalog">
-        <!-- PELÍCULA ÚNICA -->
+        <!-- Primera fila de películas -->
         <div class="movie-row">
-           <!-- Película 1 -->
+          <!-- Película 1 -->
           <div class="movie-card">
             <img src="https://cuevana.pro/resize/200/storage/76625/D12JvWaChGVcRQtvFV1F2nvDY3Zd29O6OMdzCqQX.jpg">
             <div class="movie-info">
-              <div class="movie-title">Película En la boca del miedo</div>
+              <div class="movie-title">En la boca del miedo</div>
               <div class="movie-description">John Trent es un cínico investigador que sigue la pista de Sutter Cane, un escritor que desaparece misteriosamente y que, a través de sus novelas de terror, ejerce un extraño poder sobre sus lectores.</div>
-              <a href="javascript:void(0)" class="btn" id="verPelicula" onclick="mostrarAnuncio()">Ver</a>
+              <a href="javascript:void(0)" class="btn" onclick="mostrarAnuncio('verPelicula1', 'https://pixeldrain.com/u/fP1Z1yDM')" id="verPelicula1">Ver</a>
             </div>
           </div>
+          
+          <!-- Película 2 -->
+          <div class="movie-card">
+            <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQe-LmgJhUU0NBmaA1hl34dX-r8MLme2pGnvtTB9LY2CoHgUp0P">
+            <div class="movie-info">
+              <div class="movie-title">San Andrés</div>
+              <div class="movie-description">La falla de San Andrés acaba cediendo ante las temibles fuerzas telúricas y desencadena un terremoto de magnitud 9 en California. Ante tal catástrofe, el piloto de helicóptero de búsqueda y rescate Ray y su ex esposa Emma viajan juntos desde Los Ángeles hasta San Francisco para salvar a su única hija, Blake. Pero su tortuoso viaje hacia el norte solamente es el comienzo del desomoronamiento de todo lo que creían firme en su vida.</div>
+              <a href="javascript:void(0)" class="btn" onclick="mostrarAnuncio('verPelicula2', 'https://pixeldrain.com/u/SunscESo')" id="verPelicula2">Ver</a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Anuncio entre las películas -->
+        <div class="ad-between-movies">
+          <div class="ad-label">Contenido patrocinado</div>
+          <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
+          <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
         </div>
       </div>
       
@@ -536,15 +553,19 @@
   </div>
 
   <script>
-    // URL de la película
-    const urlPelicula = "https://pixeldrain.com/u/fP1Z1yDM";
-    let primerClic = true;
+    // Objeto para rastrear el estado de cada película
+    const estadoPeliculas = {};
     
     // Función para mostrar anuncio y luego redirigir a la película
-    function mostrarAnuncio() {
-      if (primerClic) {
+    function mostrarAnuncio(idBoton, urlPelicula) {
+      // Si es la primera vez que se hace clic en esta película, inicializar su estado
+      if (!estadoPeliculas[idBoton]) {
+        estadoPeliculas[idBoton] = { primerClic: true };
+      }
+      
+      if (estadoPeliculas[idBoton].primerClic) {
         // Primer clic: Mostrar anuncio
-        primerClic = false;
+        estadoPeliculas[idBoton].primerClic = false;
         
         // Ejecutar script del anuncio
         var script = document.createElement('script');
@@ -553,7 +574,7 @@
         document.head.appendChild(script);
         
         // Cambiar texto del botón
-        document.getElementById('verPelicula').textContent = "Haz clic para ver la película";
+        document.getElementById(idBoton).textContent = "Haz clic para ver la película";
         
         // También podrías mostrar un mensaje
         alert("Espera un momento mientras carga el contenido. Haz clic nuevamente para ver la película, si te sale un anucio cierralo y vuelve a intentarlo");
@@ -561,8 +582,8 @@
         // Segundo clic: Redirigir a la película
         window.open(urlPelicula, '_blank');
         // Restablecer para la próxima vez
-        primerClic = true;
-        document.getElementById('verPelicula').textContent = "Ver";
+        estadoPeliculas[idBoton].primerClic = true;
+        document.getElementById(idBoton).textContent = "Ver";
       }
     }
     
