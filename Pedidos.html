@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta name="google-adsense-account" content="ca-pub-8967643454632057">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo de Películas</title>
+  <style>
+    :root {
+      --primary-color: #e50914;
+      --primary-hover: #b00610;
+      --secondary-color: #555;
+      --secondary-hover: #333;
+      --background-dark: #111;
+      --card-background: #222;
+      --text-light: #fff;
+      --text-muted: #ccc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--background-dark);
+      font-family: Arial, sans-serif;
+      color: var(--text-light);
+      line-height: 1.6;
+      overflow-x: hidden; /* Prevenir scroll horizontal */
+    }
+
+    .top-message {
+      background-color: var(--primary-color);
+      color: var(--text-light);
+      text-align: center;
+      padding: 10px;
+      font-size: clamp(14px, 2vw, 16px); /* Texto responsive */
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .top-message a {
+      color: var(--text-light);
+      text-decoration: underline;
+      font-weight: bold;
+    }
+
+    .banner-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+
+    .banner-top, .banner-bottom {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+      background-color: rgba(34, 34, 34, 0.8);
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    /* Aseguramos que los anuncios se ajusten al contenedor */
+    .banner-top iframe, .banner-bottom iframe, 
+    .ad-container iframe, .ad-between-movies iframe {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .layout {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 10px;
+    }
+
+    @media (min-width: 768px) {
+      .layout {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+    }
+
+    /* Sidebar responsive */
+    .sidebar {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    @media (min-width: 768px) {
+      .sidebar {
+        width: 160px;
+        position: sticky;
+        top: 50px;
+        height: max-content;
+        z-index: 10;
+      }
+    }
+
+    /* Para TV y pantallas muy grandes */
+    @media (min-width: 1800px) {
+      .layout {
+        max-width: 1800px;
+      }
+      
+      .sidebar {
+        width: 200px;
+      }
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 10px;
+      min-width: 0; /* Evita que los elementos internos fuercen el ancho */
+    }
+
+    @media (min-width: 576px) {
+      .main-content {
+        padding: 20px;
+      }
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+      font-size: clamp(20px, 4vw, 32px); /* Título responsive */
+    }
+
+    .catalog {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      width: 100%;
+    }
+
+    /* Media queries modificados para asegurar 5 películas por fila */
+    @media (min-width: 480px) {
+      .catalog {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 768px) {
+      .catalog {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+    }
+
+    @media (min-width: 992px) {
+      .catalog {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    /* Aseguramos exactamente 5 películas por fila en pantallas medianas y grandes */
+    @media (min-width: 1200px) {
+      .catalog {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+
+    .movie-card {
+      background-color: var(--card-background);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      transition: transform 0.3s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .movie-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .movie-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+    }
+    
+    /* Ajuste para pantallas móviles */
+    @media (max-width: 480px) {
+      .movie-card img {
+        max-height: 200px;
+        aspect-ratio: auto;
+      }
+    }
+
+    /* TV: imágenes más grandes */
+    @media (min-width: 1800px) {
+      .movie-card img {
+        max-height: 400px;
+      }
+    }
+
+    .movie-info {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .movie-title {
+      font-size: clamp(16px, 2vw, 18px); /* Texto responsive */
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .movie-description {
+      font-size: clamp(12px, 1.5vw, 14px); /* Texto responsive */
+      margin-bottom: 15px;
+      color: var(--text-muted);
+      flex-grow: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Para móviles, hacemos descripciones más cortas pero mantenemos el botón visible */
+    @media (max-width: 480px) {
+      .movie-description {
+        -webkit-line-clamp: 2;
+        margin-bottom: 10px;
+      }
+    }
+
+    /* Para TV, mostramos más texto */
+    @media (min-width: 1800px) {
+      .movie-description {
+        -webkit-line-clamp: 4;
+        font-size: 16px;
+      }
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: clamp(8px, 1.5vw, 10px) clamp(10px, 2vw, 15px); /* Botón responsive */
+      background-color: var(--primary-color);
+      color: var(--text-light);
+      text-decoration: none;
+      border-radius: 5px;
+      text-align: center;
+      transition: background-color 0.3s;
+      flex: 1;
+      min-width: 80px;
+      font-size: clamp(14px, 1.5vw, 16px); /* Texto responsive */
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--secondary-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--secondary-hover);
+    }
+
+    /* Contenedores de anuncios responsivos */
+    .ad-container, .mid-content-ad, .ad-between-movies {
+      text-align: center;
+      margin: 20px auto;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      z-index: 5;
+      background-color: rgba(34, 34, 34, 0.8);
+      padding: 10px;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Aseguramos que los contenedores de anuncios puedan redimensionarse */
+    .ad-container div, .mid-content-ad div, .ad-between-movies div {
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    /* Anuncios entre películas visibles en todos los dispositivos */
+    .ad-between-movies {
+      grid-column: 1 / -1;
+      margin: 15px 0;
+    }
+
+    /* Banner flotante responsive */
+    .floating-banner {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 320px;
+      background-color: rgba(34, 34, 34, 0.9);
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      z-index: 99;
+      text-align: center;
+    }
+
+    .close-banner {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Etiqueta para anuncios visible en todos los dispositivos */
+    .ad-label {
+      display: block;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: clamp(10px, 1.5vw, 12px);
+      margin-bottom: 5px;
+    }
+
+    /* En dispositivos muy pequeños, hacer todo más compacto pero mantener botón visible */
+    @media (max-width: 360px) {
+      .catalog {
+        gap: 10px;
+      }
+      
+      .movie-card {
+        max-height: 320px; /* Un poco más alto para caber el botón */
+      }
+      
+      .movie-info {
+        padding: 10px;
+      }
+      
+      .btn {
+        padding: 6px 8px;
+        font-size: 12px;
+        display: block; /* Asegura visibilidad */
+      }
+    }
+    
+    /* Para TVs y pantallas muy grandes */
+    @media (min-width: 1800px) {
+      h1 {
+        font-size: 40px;
+        margin: 30px 0;
+      }
+      
+      .btn {
+        padding: 15px 20px;
+        font-size: 18px;
+      }
+      
+      .movie-title {
+        font-size: 22px;
+      }
+      
+      .floating-banner {
+        max-width: 400px;
+      }
+    }
+
+    /* Nueva clase para agrupar películas en filas de 5 */
+    .movie-row {
+      display: contents;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Mensaje de apoyo -->
+  <div class="top-message">
+    ¡APOYA LA PÁGINA CON UN CLICK! <a href="https://www.profitableratecpm.com/wy4ysndt?key=12c98d265ef2e657283053a557f43edd" target="_blank">👉 HAZ CLICK AQUÍ 👈</a>
+  </div>
+
+  <!-- Banner superior con script real -->
+  <div class="banner-container">
+    <div class="banner-top">
+      <div class="ad-label">Banner Superior</div>
+      <script type="text/javascript">
+        atOptions = {
+          'key' : 'b330ccd204185aee9ef640adccf896d2',
+          'format' : 'iframe',
+          'height' : 90,
+          'width' : 728,
+          'params' : {}
+        };
+      </script>
+      <script type="text/javascript" src="//www.highperformanceformat.com/b330ccd204185aee9ef640adccf896d2/invoke.js"></script>
+    </div>
+  </div>
+
+  <div class="layout">
+    <!-- Publicidad del lado izquierdo con script real -->
+    <div class="sidebar">
+      <div>
+        <div class="ad-label">Anuncio Lateral</div>
+        <script type="text/javascript">
+          atOptions = {
+            'key' : 'a55c7cdc78df0520f71c2b00e4046167',
+            'format' : 'iframe',
+            'height' : 300,
+            'width' : 160,
+            'params' : {}
+          };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/a55c7cdc78df0520f71c2b00e4046167/invoke.js"></script>
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+      <h1>Catálogo de Películas</h1>
+      
+      <!-- Anuncio después del título usando el script container -->
+      <div class="ad-container">
+        <div class="ad-label">¡Apóyanos con un click!</div>
+        <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
+        <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
+      </div>
+      
+      <div class="catalog">
+        <!-- PELÍCULA ÚNICA -->
+        <div class="movie-row">
+           <!-- Película 1 -->
+          <div class="movie-card">
+            <img src="https://cuevana.pro/resize/200/storage/76625/D12JvWaChGVcRQtvFV1F2nvDY3Zd29O6OMdzCqQX.jpg">
+            <div class="movie-info">
+              <div class="movie-title">Película En la boca del miedo</div>
+              <div class="movie-description">John Trent es un cínico investigador que sigue la pista de Sutter Cane, un escritor que desaparece misteriosamente y que, a través de sus novelas de terror, ejerce un extraño poder sobre sus lectores.</div>
+              <a href="javascript:void(0)" class="btn" id="verPelicula" onclick="mostrarAnuncio()">Ver</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Anuncio central en medio del contenido -->
+      <div class="mid-content-ad">
+        <div class="ad-label">Contenido recomendado</div>
+        <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
+        <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
+      </div>
+      
+      <!-- Anuncio contenido principal inferior -->
+      <div class="ad-container">
+        <div class="ad-label">¡Tu apoyo nos ayuda a seguir creciendo!</div>
+        <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
+        <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
+      </div>
+    </div>
+
+    <!-- Publicidad del lado derecho -->
+    <div class="sidebar">
+      <div>
+        <div class="ad-label">Anuncio Lateral</div>
+        <script type="text/javascript">
+          atOptions = {
+            'key' : 'a55c7cdc78df0520f71c2b00e4046167',
+            'format' : 'iframe',
+            'height' : 300,
+            'width' : 160,
+            'params' : {}
+          };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/a55c7cdc78df0520f71c2b00e4046167/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Banner inferior -->
+  <div class="banner-container">
+    <div class="banner-bottom">
+      <div class="ad-label">Banner Inferior</div>
+      <script type="text/javascript">
+        atOptions = {
+          'key' : 'b330ccd204185aee9ef640adccf896d2',
+          'format' : 'iframe',
+          'height' : 90,
+          'width' : 728,
+          'params' : {}
+        };
+      </script>
+      <script type="text/javascript" src="//www.highperformanceformat.com/b330ccd204185aee9ef640adccf896d2/invoke.js"></script>
+    </div>
+  </div>
+  
+  <!-- Banner flotante que sigue al desplazamiento -->
+  <div class="floating-banner" id="floatingBanner" style="display: none;">
+    <button class="close-banner" onclick="document.getElementById('floatingBanner').style.display='none'">×</button>
+    <div class="ad-label">Anuncio Flotante</div>
+    <script async="async" data-cfasync="false" src="//pl26063295.profitableratecpm.com/2537ae2ea8b16bc9e554273a94dfd098/invoke.js"></script>
+    <div id="container-2537ae2ea8b16bc9e554273a94dfd098"></div>
+  </div>
+
+  <script>
+    // URL de la película
+    const urlPelicula = "https://pixeldrain.com/u/fP1Z1yDM";
+    let primerClic = true;
+    
+    // Función para mostrar anuncio y luego redirigir a la película
+    function mostrarAnuncio() {
+      if (primerClic) {
+        // Primer clic: Mostrar anuncio
+        primerClic = false;
+        
+        // Ejecutar script del anuncio
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = '//pl26063313.profitableratecpm.com/93/61/3d/93613d042ce505fe468e829efbb21520.js';
+        document.head.appendChild(script);
+        
+        // Cambiar texto del botón
+        document.getElementById('verPelicula').textContent = "Haz clic para ver la película";
+        
+        // También podrías mostrar un mensaje
+        alert("Espera un momento mientras carga el contenido. Haz clic nuevamente para ver la película.");
+      } else {
+        // Segundo clic: Redirigir a la película
+        window.open(urlPelicula, '_blank');
+        // Restablecer para la próxima vez
+        primerClic = true;
+        document.getElementById('verPelicula').textContent = "Ver";
+      }
+    }
+    
+    // Función para mostrar publicidad flotante después de un tiempo de navegación
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        document.getElementById('floatingBanner').style.display = 'block';
+      }, 3000); // Mostrar después de 3 segundos
+    });
+    
+    // Función para detectar el tipo de dispositivo y ajustar layout si es necesario
+    function detectDevice() {
+      const width = window.innerWidth;
+      
+      // Si es móvil muy pequeño, ajustar tamaños pero mantener botón visible
+      if (width < 360) {
+        document.documentElement.style.setProperty('--movie-card-height', '300px');
+      } else if (width >= 1800) {
+        // Si es TV o pantalla grande
+        document.documentElement.style.setProperty('--movie-card-height', '450px');
+      } else {
+        // Tamaño normal
+        document.documentElement.style.setProperty('--movie-card-height', '350px');
+      }
+    }
+    
+    // Ejecutar al cargar y al cambiar tamaño
+    window.addEventListener('DOMContentLoaded', detectDevice);
+    window.addEventListener('resize', detectDevice);
+  </script>
+
+<a href="index.html">
+  <button style="padding: 20px 40px; font-size: 20px;">Regresar a la Pagina 1</button>
+</a>
+
+  
+</body>
+</html>
